@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://bom10y7e03gr1"]
+
+[ext_resource type="Texture2D" uid="uid://doc7t6hw5jq6t" path="res://Assets/Images/Skins/FNF/Ratings/marvelous.png" id="1_l7n5h"]
+[ext_resource type="Texture2D" uid="uid://ck1o7jke8dl5n" path="res://Assets/Images/Skins/FNF/Ratings/sick.png" id="2_e5dxq"]
+[ext_resource type="Texture2D" uid="uid://dm0bdyq4hqqyc" path="res://Assets/Images/Skins/FNF/Ratings/good.png" id="3_wafx8"]
+[ext_resource type="Texture2D" uid="uid://c2hqekf5atpha" path="res://Assets/Images/Skins/FNF/Ratings/bad.png" id="4_eq5tp"]
+[ext_resource type="Texture2D" uid="uid://jyul76ww6hgu" path="res://Assets/Images/Skins/FNF/Ratings/shit.png" id="5_cl8ih"]
+[ext_resource type="Script" path="res://Scenes/Rating.gd" id="6_sni21"]
+[ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="7_7mau3"]
+[ext_resource type="Script" path="res://Script/MsText.gd" id="8_p4dyn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mrojl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_l7n5h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_e5dxq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wafx8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_eq5tp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_cl8ih")
+}],
+"loop": true,
+"name": &"ratings",
+"speed": 5.0
+}]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Label" type="Label" parent="."]
+offset_left = 557.0
+offset_top = 261.0
+offset_right = 652.0
+offset_bottom = 289.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("7_7mau3")
+theme_override_font_sizes/font_size = 20
+text = "0.00 ms"
+script = ExtResource("8_p4dyn")
+
+[node name="Rating" type="AnimatedSprite2D" parent="."]
+z_index = -1
+position = Vector2(570, 220)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_mrojl")
+animation = &"ratings"
+script = ExtResource("6_sni21")

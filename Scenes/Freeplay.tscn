@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://dnwsewr85wjs2"]
+
+[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_vcpxn"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
+[ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_n65er"]
+[ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
+[ext_resource type="Texture2D" uid="uid://cmerlb6jj63jj" path="res://Assets/Images/Icons/voiid-bf.png" id="5_6b31r"]
+[ext_resource type="Script" path="res://Scenes/Freeplay Selector.gd" id="6_ohx30"]
+
+[node name="Freeplay" type="Node2D"]
+
+[node name="BG" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(566, 325)
+texture = ExtResource("1_vcpxn")
+script = ExtResource("2_1uuha")
+bumpin_scale = Vector2(1.02, 1.02)
+
+[node name="Template" type="RichTextLabel" parent="."]
+visible = false
+clip_contents = false
+offset_right = 252.0
+offset_bottom = 91.0
+theme_override_fonts/normal_font = ExtResource("3_n65er")
+bbcode_enabled = true
+text = "TEST"
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("4_x5sm4")
+
+[node name="Icon" type="Sprite2D" parent="Template"]
+texture = ExtResource("5_6b31r")
+offset = Vector2(70, 45)
+hframes = 3
+script = ExtResource("2_1uuha")
+bumpin_scale = Vector2(0.95, 0.95)
+
+[node name="Songs" type="Node2D" parent="."]
+script = ExtResource("6_ohx30")
+
+[node name="Difficulty" type="Label" parent="."]
+offset_left = 811.0
+offset_top = 10.0
+offset_right = 1135.0
+offset_bottom = 100.0
+theme_override_fonts/font = ExtResource("3_n65er")
+text = "normal"
+uppercase = true

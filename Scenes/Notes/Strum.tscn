@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4dvjm2vp0i5n"]
+
+[ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="1_xd4rb"]
+[ext_resource type="Script" path="res://Scenes/Notes/Strum.gd" id="2_3k4fk"]
+
+[node name="Strum" type="AnimatedSprite2D"]
+scale = Vector2(0.65, 0.65)
+sprite_frames = ExtResource("1_xd4rb")
+animation = &"down press"
+frame = 3
+frame_progress = 1.0
+script = ExtResource("2_3k4fk")

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://3lcm08dveoqg"]
+
+[ext_resource type="Script" path="res://Scenes/Autoload/Transition.gd" id="1_d6jh7"]
+[ext_resource type="Texture2D" uid="uid://cn35nfp2x3uwf" path="res://Assets/Images/UI/Transition.png" id="2_vgg63"]
+
+[node name="Transition" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_d6jh7")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -1080)
+scale = Vector2(1.34895, 1)
+texture = ExtResource("2_vgg63")
+centered = false

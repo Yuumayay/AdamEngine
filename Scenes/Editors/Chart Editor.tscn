@@ -1,0 +1,1082 @@
+[gd_scene load_steps=8 format=3 uid="uid://bn6j7ish2vl78"]
+
+[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_cidsc"]
+[ext_resource type="Script" path="res://Scenes/Editors/Chart Editor.gd" id="1_peyb4"]
+[ext_resource type="Texture2D" uid="uid://3q80pn7hfifo" path="res://Assets/Images/Icons/bf.png" id="2_7tk71"]
+[ext_resource type="Script" path="res://Script/Mass.gd" id="2_8p4w6"]
+[ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="4_1wxbu"]
+[ext_resource type="Script" path="res://Script/Beat.gd" id="6_qd5oj"]
+[ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="7_88gig"]
+
+[node name="Chart Editor" type="Node2D"]
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(0.392157, 0.392157, 0.392157, 1)
+z_index = -1
+position = Vector2(566, 325)
+texture = ExtResource("1_cidsc")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(150, 50)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_7tk71")
+hframes = 2
+
+[node name="Rect" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("2_8p4w6")
+
+[node name="Note" type="AnimatedSprite2D" parent="Rect"]
+visible = false
+position = Vector2(26, 25)
+scale = Vector2(0.33, 0.33)
+sprite_frames = ExtResource("4_1wxbu")
+animation = &"event"
+
+[node name="Line" type="Line2D" parent="Rect"]
+z_index = 1
+position = Vector2(26, 25)
+points = PackedVector2Array(0, 0, 0, 0)
+
+[node name="Mass" type="Node2D" parent="."]
+script = ExtResource("1_peyb4")
+
+[node name="Line" type="Line2D" parent="."]
+points = PackedVector2Array(0, 300, 1200, 300)
+width = 5.0
+
+[node name="Beat" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(0, 300, 1200, 300)
+width = 2.5
+default_color = Color(1, 0, 0, 1)
+script = ExtResource("6_qd5oj")
+
+[node name="Label" type="Label" parent="Beat"]
+offset_left = 751.0
+offset_top = 282.0
+offset_right = 791.0
+offset_bottom = 323.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("7_88gig")
+theme_override_font_sizes/font_size = 20
+text = "4"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Container" type="TabContainer" parent="."]
+offset_left = 799.0
+offset_top = 6.0
+offset_right = 1254.0
+offset_bottom = 854.0
+scale = Vector2(0.75, 0.75)
+focus_mode = 1
+drag_to_rearrange_enabled = true
+
+[node name="Charting" type="MarginContainer" parent="Container"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="FlowContainer" parent="Container/Charting"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="Metronome" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Metronome"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Metronome/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Metronome/Margin/Flow"]
+layout_mode = 2
+focus_mode = 0
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Metronome/Margin/Flow"]
+layout_mode = 2
+text = "Metronome"
+vertical_alignment = 1
+
+[node name="Autoscroll" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Autoscroll"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Autoscroll/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Autoscroll/Margin/Flow"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Autoscroll/Margin/Flow"]
+layout_mode = 2
+text = "Autoscroll"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Space2" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space2"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+
+[node name="BPM" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/BPM"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/BPM/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+text = "Metronome BPM"
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.1
+value = 150.0
+alignment = 1
+
+[node name="Offset" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Offset"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Offset/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Offset/Margin/Flow"]
+layout_mode = 2
+text = "Metronome Offset"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/Offset/Margin/Flow"]
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+step = 25.0
+alignment = 1
+suffix = "ms"
+
+[node name="Space" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Inst Wave" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Inst Wave"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Inst Wave/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Inst Wave/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Inst Wave/Margin/Flow"]
+layout_mode = 2
+text = "Inst Waveform"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Voices Wave" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Voices Wave"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Voices Wave/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Voices Wave/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Voices Wave/Margin/Flow"]
+layout_mode = 2
+text = "Voices Waveform"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Space3" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space3"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+
+[node name="Ignore Warning" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Ignore Warning"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Ignore Warning/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Ignore Warning/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Ignore Warning/Margin/Flow"]
+layout_mode = 2
+text = "Ignore Progress Warning"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Auto Save" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Auto Save"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Auto Save/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Auto Save/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Auto Save/Margin/Flow"]
+layout_mode = 2
+text = "Auto Save"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Space5" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space5"]
+layout_mode = 2
+theme_override_constants/margin_left = 400
+
+[node name="Playback Rate" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Playback Rate"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Playback Rate/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Playback Rate/Margin/Flow"]
+layout_mode = 2
+text = "Playback Rate"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/Playback Rate/Margin/Flow"]
+layout_mode = 2
+min_value = 0.1
+max_value = 3.0
+step = 0.1
+value = 1.0
+alignment = 1
+suffix = "x"
+
+[node name="Mouse Scroll Speed" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Mouse Scroll Speed"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Mouse Scroll Speed/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
+layout_mode = 2
+text = "Mouse Scroll Speed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
+layout_mode = 2
+min_value = 0.1
+max_value = 3.0
+step = 0.1
+value = 1.0
+alignment = 1
+suffix = "x"
+
+[node name="Space6" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space6"]
+layout_mode = 2
+theme_override_constants/margin_left = 400
+
+[node name="Show Strums" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Show Strums"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Show Strums/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Show Strums/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Show Strums/Margin/Flow"]
+layout_mode = 2
+text = "Show Strums
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Space7" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space7"]
+layout_mode = 2
+theme_override_constants/margin_left = 400
+
+[node name="Inst Volume" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Inst Volume"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Inst Volume/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Inst Volume/Margin/Flow"]
+layout_mode = 2
+text = "Inst Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/Inst Volume/Margin/Flow"]
+layout_mode = 2
+value = 60.0
+alignment = 1
+suffix = "%"
+
+[node name="Voices Volume" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Voices Volume"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Voices Volume/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Voices Volume/Margin/Flow"]
+layout_mode = 2
+text = "Voices Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Charting/Flow/Voices Volume/Margin/Flow"]
+layout_mode = 2
+value = 100.0
+alignment = 1
+suffix = "%"
+
+[node name="Space4" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space4"]
+layout_mode = 2
+theme_override_constants/margin_left = 400
+
+[node name="Play Hitsound" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Play Hitsound"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Play Hitsound/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Play Hitsound/Margin/Flow"]
+layout_mode = 2
+text = "BF Hitsound Type"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Charting/Flow/Play Hitsound/Margin/Flow"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Type A"
+popup/item_1/id = 1
+
+[node name="Play Hitsound2" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Play Hitsound2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Charting/Flow/Play Hitsound2/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
+layout_mode = 2
+text = "Dad Hitsound Type"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Type A"
+popup/item_1/id = 1
+
+[node name="Space8" type="PanelContainer" parent="Container/Charting/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Space8"]
+layout_mode = 2
+theme_override_constants/margin_left = 400
+
+[node name="Place & Erase Sound" type="PanelContainer" parent="Container/Charting/Flow"]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="Container/Charting/Flow/Place & Erase Sound"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Charting/Flow/Place & Erase Sound/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
+layout_mode = 2
+text = "Place & Erase Sound"
+vertical_alignment = 1
+
+[node name="Events" type="MarginContainer" parent="Container"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="VFlowContainer" parent="Container/Events"]
+layout_mode = 2
+
+[node name="Events" type="PanelContainer" parent="Container/Events/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Events/Flow/Events"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Events/Flow/Events/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Events/Flow/Events/Margin/Flow"]
+layout_mode = 2
+text = "Events"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Events/Flow/Events/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+
+[node name="Label" type="Label" parent="Container/Events/Flow"]
+layout_mode = 2
+text = "No Events."
+
+[node name="Space" type="PanelContainer" parent="Container/Events/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Events/Flow/Space"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Value 1" type="PanelContainer" parent="Container/Events/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Events/Flow/Value 1"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Events/Flow/Value 1/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Events/Flow/Value 1/Margin/Flow"]
+layout_mode = 2
+text = "Value 1"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Container/Events/Flow/Value 1/Margin/Flow"]
+layout_mode = 2
+
+[node name="Space2" type="PanelContainer" parent="Container/Events/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Events/Flow/Space2"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Value 2" type="PanelContainer" parent="Container/Events/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Events/Flow/Value 2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Events/Flow/Value 2/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Events/Flow/Value 2/Margin/Flow"]
+layout_mode = 2
+text = "Value 2"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Container/Events/Flow/Value 2/Margin/Flow"]
+layout_mode = 2
+
+[node name="Note" type="MarginContainer" parent="Container"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="VFlowContainer" parent="Container/Note"]
+layout_mode = 2
+
+[node name="Note Length" type="PanelContainer" parent="Container/Note/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Note/Flow/Note Length"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Note/Flow/Note Length/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Note/Flow/Note Length/Margin/Flow"]
+layout_mode = 2
+text = "Note length"
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Note/Flow/Note Length/Margin/Flow"]
+layout_mode = 2
+max_value = 30000.0
+step = 50.0
+alignment = 1
+
+[node name="Space" type="PanelContainer" parent="Container/Note/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Note/Flow/Space"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Strum Time" type="PanelContainer" parent="Container/Note/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Note/Flow/Strum Time"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Note/Flow/Strum Time/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Note/Flow/Strum Time/Margin/Flow"]
+layout_mode = 2
+text = "Strum time (ms)"
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="Container/Note/Flow/Strum Time/Margin/Flow"]
+layout_mode = 2
+
+[node name="Space2" type="PanelContainer" parent="Container/Note/Flow"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Note/Flow/Space2"]
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Note Type" type="PanelContainer" parent="Container/Note/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Note/Flow/Note Type"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Note/Flow/Note Type/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Note/Flow/Note Type/Margin/Flow"]
+layout_mode = 2
+text = "Note type"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Note/Flow/Note Type/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+
+[node name="Options" type="MarginContainer" parent="Container"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="FlowContainer" parent="Container/Options"]
+layout_mode = 2
+
+[node name="Player" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Player"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Player/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Player/Margin/Flow"]
+layout_mode = 2
+text = "Player
+"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Player/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "bf"
+popup/item_0/id = 0
+
+[node name="Girlfriend" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Girlfriend"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Girlfriend/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Girlfriend/Margin/Flow"]
+layout_mode = 2
+text = "Girlfriend"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Girlfriend/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "gf"
+popup/item_0/id = 0
+
+[node name="Opponent" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Opponent"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Opponent/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Opponent/Margin/Flow"]
+layout_mode = 2
+text = "Opponent"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Opponent/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "dad"
+popup/item_0/id = 0
+
+[node name="Stage" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Stage"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Stage/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Stage/Margin/Flow"]
+layout_mode = 2
+text = "Stage"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Stage/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "stage"
+popup/item_0/id = 0
+
+[node name="Player Modchart" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Player Modchart"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Player Modchart/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Player Modchart/Margin/Flow"]
+layout_mode = 2
+text = "Player Modchart"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Player Modchart/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "none"
+popup/item_0/id = 0
+
+[node name="Dad Modchart" type="PanelContainer" parent="Container/Options/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Options/Flow/Dad Modchart"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="HFlowContainer" parent="Container/Options/Flow/Dad Modchart/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="Setting Name" type="Label" parent="Container/Options/Flow/Dad Modchart/Margin/Flow"]
+layout_mode = 2
+text = "Dad Modchart"
+vertical_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Container/Options/Flow/Dad Modchart/Margin/Flow"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "none"
+popup/item_0/id = 0
+
+[node name="Section" type="MarginContainer" parent="Container"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="FlowContainer" parent="Container/Section"]
+layout_mode = 2
+
+[node name="BPM" type="PanelContainer" parent="Container/Section/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Section/Flow/BPM"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Section/Flow/BPM/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Section/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+text = "Song BPM:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Section/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.1
+value = 150.0
+alignment = 1
+custom_arrow_step = 0.1
+
+[node name="BPM2" type="PanelContainer" parent="Container/Section/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Section/Flow/BPM2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Section/Flow/BPM2/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Section/Flow/BPM2/Margin/Flow"]
+layout_mode = 2
+text = "Song BPM:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Section/Flow/BPM2/Margin/Flow"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.1
+value = 150.0
+alignment = 1
+custom_arrow_step = 0.1
+
+[node name="Song" type="MarginContainer" parent="Container"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Flow" type="FlowContainer" parent="Container/Song"]
+layout_mode = 2
+
+[node name="BPM" type="PanelContainer" parent="Container/Song/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Song/Flow/BPM"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Song/Flow/BPM/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Song/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+text = "Song BPM:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Song/Flow/BPM/Margin/Flow"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.1
+value = 150.0
+alignment = 1
+custom_arrow_step = 0.1
+
+[node name="BPM2" type="PanelContainer" parent="Container/Song/Flow"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Container/Song/Flow/BPM2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Flow" type="VFlowContainer" parent="Container/Song/Flow/BPM2/Margin"]
+layout_mode = 2
+
+[node name="Setting Name" type="Label" parent="Container/Song/Flow/BPM2/Margin/Flow"]
+layout_mode = 2
+text = "Song BPM:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Container/Song/Flow/BPM2/Margin/Flow"]
+layout_mode = 2
+max_value = 99999.0
+step = 0.1
+value = 150.0
+alignment = 1
+custom_arrow_step = 0.1

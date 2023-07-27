@@ -1,0 +1,60 @@
+[gd_scene load_steps=6 format=3 uid="uid://bet63uxyrwco7"]
+
+[ext_resource type="Script" path="res://Scenes/Title Menu.gd" id="1_c346j"]
+[ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="2_yeaf2"]
+[ext_resource type="Texture2D" uid="uid://dxxvknnlpy2ve" path="res://Assets/Images/Title Menu/logoBumpin.png" id="3_vv2f3"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="4_6ltcd"]
+[ext_resource type="Script" path="res://Script/Enter.gd" id="5_748cc"]
+
+[node name="Title Menu" type="Node2D"]
+script = ExtResource("1_c346j")
+
+[node name="BG" type="ColorRect" parent="."]
+z_index = -1
+offset_right = 1158.0
+offset_bottom = 661.0
+color = Color(0, 0, 0, 1)
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="Intro Text" type="Label" parent="UI"]
+offset_left = 458.0
+offset_top = 163.0
+offset_right = 706.0
+offset_bottom = 253.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_yeaf2")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Logo" type="Node2D" parent="."]
+visible = false
+
+[node name="Logo" type="Sprite2D" parent="Logo"]
+position = Vector2(328, 219)
+texture = ExtResource("3_vv2f3")
+hframes = 2
+vframes = 2
+script = ExtResource("4_6ltcd")
+og_scale = Vector2(0.9, 0.9)
+bumpin_scale = Vector2(1, 1)
+
+[node name="Enter" type="RichTextLabel" parent="Logo"]
+modulate = Color(0, 1, 1, 1)
+offset_left = 2.0
+offset_top = 539.0
+offset_right = 1156.0
+offset_bottom = 647.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 75
+bbcode_enabled = true
+text = "[center][wave amp=50 freq=5]Press Enter to Begin[/wave][/center]"
+scroll_active = false
+script = ExtResource("5_748cc")
+
+[node name="gfpos" type="Node2D" parent="Logo"]
+z_index = -1
+position = Vector2(761, 259)
+scale = Vector2(0.7, 0.7)

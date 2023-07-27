@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cbj3chbg7nud6"
+path="res://.godot/imported/Tock.ogg-4d3af0e05f1abc89b499ff0ab54f4836.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/FNF/Chart Editor/Tock.ogg"
+dest_files=["res://.godot/imported/Tock.ogg-4d3af0e05f1abc89b499ff0ab54f4836.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

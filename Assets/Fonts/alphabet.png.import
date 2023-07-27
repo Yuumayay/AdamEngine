@@ -1,0 +1,21 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://c4plq10geby5v"
+path="res://.godot/imported/alphabet.png-101f1f2e8369ab809558fd76d2a4504c.fontdata"
+
+[deps]
+
+source_file="res://Assets/Fonts/alphabet.png"
+dest_files=["res://.godot/imported/alphabet.png-101f1f2e8369ab809558fd76d2a4504c.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("65-90", "44", "32", "48-57", "45-46", "58", "64", "95")
+columns=43
+rows=1
+image_margin=Rect2i(-17, 0, 0, 0)
+character_margin=Rect2i(34, 0, 0, 0)
+fallbacks=[]
+compress=true

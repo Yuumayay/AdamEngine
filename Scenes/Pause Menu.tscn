@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctx0chsaxufw2"]
+
+[ext_resource type="Script" path="res://Scenes/Pause Menu.gd" id="1_134xa"]
+[ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="1_hh2s2"]
+
+[node name="Pause Menu" type="CanvasLayer"]
+layer = 2
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Rect" type="ColorRect" parent="Control"]
+modulate = Color(1, 1, 1, 0.313726)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Selectable" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_134xa")
+
+[node name="Resume" type="Label" parent="Control/Selectable"]
+layout_mode = 0
+offset_right = 318.0
+offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("1_hh2s2")
+text = "resume"
+uppercase = true
+
+[node name="Restart" type="Label" parent="Control/Selectable"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 104.0
+offset_right = 441.0
+offset_bottom = 194.0
+theme_override_fonts/font = ExtResource("1_hh2s2")
+text = "restart"
+uppercase = true
+
+[node name="Back" type="Label" parent="Control/Selectable"]
+layout_mode = 0
+offset_left = 158.0
+offset_top = 210.0
+offset_right = 370.0
+offset_bottom = 300.0
+theme_override_fonts/font = ExtResource("1_hh2s2")
+text = "back"
+uppercase = true

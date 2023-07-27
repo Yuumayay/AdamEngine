@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://8uklr7m83xl2"]
+
+[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_t2tav"]
+[ext_resource type="Script" path="res://Scenes/Autoload/Debug Menu.gd" id="1_v2yh0"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_sywsq"]
+[ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="4_5ga1h"]
+[ext_resource type="Script" path="res://Script/Song Template.gd" id="5_y6ts6"]
+[ext_resource type="Texture2D" uid="uid://cmerlb6jj63jj" path="res://Assets/Images/Icons/voiid-bf.png" id="6_3sywo"]
+
+[node name="Debug Menu" type="Node2D"]
+visible = false
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(0.392157, 0.392157, 0.392157, 1)
+z_index = -1
+position = Vector2(566, -400)
+texture = ExtResource("1_t2tav")
+script = ExtResource("2_sywsq")
+bumpin_scale = Vector2(1.02, 1.02)
+what_music = "Debug Menu"
+
+[node name="Template" type="RichTextLabel" parent="."]
+visible = false
+clip_contents = false
+offset_right = 252.0
+offset_bottom = 91.0
+theme_override_fonts/normal_font = ExtResource("4_5ga1h")
+bbcode_enabled = true
+text = "TEST"
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("5_y6ts6")
+
+[node name="Icon" type="Sprite2D" parent="Template"]
+texture = ExtResource("6_3sywo")
+offset = Vector2(70, 45)
+hframes = 3
+script = ExtResource("2_sywsq")
+bumpin_scale = Vector2(0.95, 0.95)
+what_music = "Debug Menu"
+
+[node name="List" type="Node2D" parent="."]
+script = ExtResource("1_v2yh0")

@@ -1,0 +1,6 @@
+{
+    "introtext": {
+        "texts": ["<erase>", "adam engine by", "\nyuumayay\nmicbear", "<erase>", "test", "\ntest", "<erase>", "<random>", "", "", "<erase>", "friday", "\nnight", "\nfunkin", "<end>"],
+        "time": [0, 2, 6, 8, 10, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32]
+    }
+}

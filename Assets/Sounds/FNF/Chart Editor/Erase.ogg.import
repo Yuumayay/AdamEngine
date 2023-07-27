@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dk4gp4o5oeayg"
+path="res://.godot/imported/Erase.ogg-f13e13a043ab04ddcff309aea0fce99e.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/FNF/Chart Editor/Erase.ogg"
+dest_files=["res://.godot/imported/Erase.ogg-f13e13a043ab04ddcff309aea0fce99e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cce1tywb3iffn"
+path="res://.godot/imported/Place.ogg-95ed2c18dde6bfb26d0817618fb2c238.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/FNF/Chart Editor/Place.ogg"
+dest_files=["res://.godot/imported/Place.ogg-95ed2c18dde6bfb26d0817618fb2c238.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

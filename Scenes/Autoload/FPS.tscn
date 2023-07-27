@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwerus23lfets"]
+
+[ext_resource type="Script" path="res://Scenes/Autoload/FPS.gd" id="1_gtqlk"]
+
+[node name="FPS" type="CanvasLayer"]
+layer = 101
+script = ExtResource("1_gtqlk")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS: 000"
