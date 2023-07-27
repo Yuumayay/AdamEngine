@@ -11,17 +11,22 @@ script = ExtResource("1_c346j")
 
 [node name="BG" type="ColorRect" parent="."]
 z_index = -1
-offset_right = 1158.0
-offset_bottom = 661.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="UI" type="Node2D" parent="."]
 
 [node name="Intro Text" type="Label" parent="UI"]
-offset_left = 458.0
-offset_top = 163.0
-offset_right = 706.0
-offset_bottom = 253.0
+offset_left = 59.0
+offset_top = 220.0
+offset_right = 1225.0
+offset_bottom = 310.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_yeaf2")
 horizontal_alignment = 1
@@ -31,7 +36,7 @@ uppercase = true
 visible = false
 
 [node name="Logo" type="Sprite2D" parent="Logo"]
-position = Vector2(328, 219)
+position = Vector2(341, 228)
 texture = ExtResource("3_vv2f3")
 hframes = 2
 vframes = 2
@@ -41,10 +46,10 @@ bumpin_scale = Vector2(1, 1)
 
 [node name="Enter" type="RichTextLabel" parent="Logo"]
 modulate = Color(0, 1, 1, 1)
-offset_left = 2.0
-offset_top = 539.0
-offset_right = 1156.0
-offset_bottom = 647.0
+offset_left = 64.0
+offset_top = 600.0
+offset_right = 1218.0
+offset_bottom = 708.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 10
@@ -56,5 +61,5 @@ script = ExtResource("5_748cc")
 
 [node name="gfpos" type="Node2D" parent="Logo"]
 z_index = -1
-position = Vector2(761, 259)
+position = Vector2(873, 339)
 scale = Vector2(0.7, 0.7)

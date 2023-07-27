@@ -11,7 +11,7 @@
 
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(566, 325)
+position = Vector2(641, 358)
 texture = ExtResource("1_vcpxn")
 script = ExtResource("2_1uuha")
 bumpin_scale = Vector2(1.02, 1.02)
@@ -39,10 +39,10 @@ bumpin_scale = Vector2(0.95, 0.95)
 script = ExtResource("6_ohx30")
 
 [node name="Difficulty" type="Label" parent="."]
-offset_left = 811.0
-offset_top = 10.0
-offset_right = 1135.0
-offset_bottom = 100.0
+offset_left = 949.0
+offset_top = 8.0
+offset_right = 1273.0
+offset_bottom = 98.0
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "normal"
 uppercase = true

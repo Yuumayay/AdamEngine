@@ -80,14 +80,14 @@ func strum_set():
 	for i in Game.key_count * 2:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
 		new_strum.dir = i
-		new_strum.position = Vector2(120, 550)
+		new_strum.position = Vector2(125, 600)
 		new_strum.scale = Vector2(0.7 * (4.0 / Game.key_count), 0.7 * (4.0 / Game.key_count))
 		if i >= Game.key_count:
 			if Setting.s_get("gameplay", "botplay"):
 				new_strum.type = 2
 			else:
 				new_strum.type = 1
-			new_strum.position.x += 150.0 * (0.7 * 4.0 / Game.key_count)
+			new_strum.position.x += 300.0 * (0.7 * 4.0 / Game.key_count)
 		else:
 			new_strum.type = 0
 		new_strum.position.x += 115.0 * (4.0 / Game.key_count) * i
@@ -119,6 +119,7 @@ func keybind(key):
 			Setting.input.append_array(Setting.keybind_default[str(n2) + "k"])
 	for i in key:
 		Game.cur_input.append(0)
+		Game.cur_input_sub.append(0)
 		Game.dad_input.append(0)
 
 func countdown():
@@ -150,8 +151,11 @@ func quit():
 	Game.note_property.clear()
 	Game.notes.clear()
 	Game.cur_input.clear()
+	Game.cur_input_sub.clear()
 	Game.dad_input.clear()
 	Game.song_data.clear()
+	Game.who_sing.clear()
+	Game.who_sing_section.clear()
 	View.strum_pos.clear()
 	Audio.a_title()
 	await Trans.t_trans("Freeplay")
@@ -177,8 +181,11 @@ func restart():
 	Game.note_property.clear()
 	Game.notes.clear()
 	Game.cur_input.clear()
+	Game.cur_input_sub.clear()
 	Game.dad_input.clear()
 	Game.song_data.clear()
+	Game.who_sing.clear()
+	Game.who_sing_section.clear()
 	View.strum_pos.clear()
 	await Trans.t_trans("Gameplay")
 	Game.total_hit = 0

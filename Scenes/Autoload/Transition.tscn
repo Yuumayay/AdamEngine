@@ -9,6 +9,6 @@ script = ExtResource("1_d6jh7")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -1080)
-scale = Vector2(1.34895, 1)
+scale = Vector2(1.51171, 1.075)
 texture = ExtResource("2_vgg63")
 centered = false

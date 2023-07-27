@@ -4,34 +4,44 @@
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_t8xj5"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="3_q8xqn"]
 [ext_resource type="Script" path="res://Scenes/Main Menu Selector.gd" id="3_wrgma"]
-[ext_resource type="Texture2D" uid="uid://d0snx2cw53sxj" path="res://Assets/Images/Main Menu/freeplay placeholder.png" id="4_jnanj"]
+[ext_resource type="Script" path="res://Script/VersionText.gd" id="4_g0x1x"]
 [ext_resource type="Script" path="res://Script/Main Menu Selectable.gd" id="5_ota4b"]
 
 [node name="Main Menu" type="Node2D"]
 
 [node name="BG" type="Sprite2D" parent="."]
-position = Vector2(566, 325)
+position = Vector2(641, 358)
 texture = ExtResource("1_fmid5")
 script = ExtResource("2_t8xj5")
 bumpin_scale = Vector2(1.02, 1.02)
 
 [node name="Version" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 599.0
-offset_right = 503.0
-offset_bottom = 646.0
+offset_left = 5.0
+offset_top = 677.0
+offset_right = 134.0
+offset_bottom = 698.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_q8xqn")
 theme_override_font_sizes/font_size = 20
-text = "Adam Engine - Alpha 1
-Friday Night Funkin v0.2.8"
+text = "Adam Engine"
+script = ExtResource("4_g0x1x")
 
-[node name="Template" type="Sprite2D" parent="."]
+[node name="Version2" type="Label" parent="."]
+offset_left = 5.0
+offset_top = 698.0
+offset_right = 134.0
+offset_bottom = 719.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_q8xqn")
+theme_override_font_sizes/font_size = 20
+text = "Friday Night Funkin' v0.2.8"
+
+[node name="Template" type="Node2D" parent="."]
 visible = false
 position = Vector2(963, 109)
 scale = Vector2(0.75, 0.75)
-texture = ExtResource("4_jnanj")
 script = ExtResource("5_ota4b")
 
 [node name="List" type="Node2D" parent="."]

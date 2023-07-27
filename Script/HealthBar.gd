@@ -7,6 +7,13 @@ var last_health := 50.0
 @onready var p1 = $icons/iconP1
 @onready var p2 = $icons/iconP2
 
+var p1_win: int
+var p1_normal: int
+var p1_lose: int
+var p2_win: int
+var p2_normal: int
+var p2_lose: int
+
 func _ready():
 	await get_tree().create_timer(0.05).timeout
 	if FileAccess.file_exists("res://Assets/Images/Icons/icon-" + Game.p1_json.healthicon + ".png"):
@@ -17,6 +24,37 @@ func _ready():
 		p2.texture = load("res://Assets/Images/Icons/icon-" + Game.p2_json.healthicon + ".png")
 	elif FileAccess.file_exists("res://Assets/Images/Icons/" + Game.p2_json.healthicon + ".png"):
 		p2.texture = load("res://Assets/Images/Icons/" + Game.p2_json.healthicon + ".png")
+	
+	if p1.texture.get_width() == 150:
+		p1_win = 0
+		p1_normal = 0
+		p1_lose = 0
+		p1.hframes = 1
+	elif p1.texture.get_width() == 300:
+		p1_win = 0
+		p1_normal = 0
+		p1_lose = 1
+		p1.hframes = 2
+	elif p1.texture.get_width() == 450:
+		p1_win = 2
+		p1_normal = 0
+		p1_lose = 1
+		p1.hframes = 3
+	if p2.texture.get_width() == 150:
+		p2_win = 0
+		p2_normal = 0
+		p2_lose = 0
+		p2.hframes = 1
+	elif p2.texture.get_width() == 300:
+		p2_win = 0
+		p2_normal = 0
+		p2_lose = 1
+		p2.hframes = 2
+	elif p2.texture.get_width() == 450:
+		p2_win = 2
+		p2_normal = 0
+		p2_lose = 1
+		p2.hframes = 3
 	
 	var styleboxbg = StyleBoxFlat.new()
 	var styleboxfill = StyleBoxFlat.new()
@@ -39,11 +77,11 @@ func _process(_delta):
 		t.set_trans(Tween.TRANS_QUART)
 		last_health = Game.health
 		if Game.health_percent > 80.0:
-			p1.frame = 0
-			p2.frame = 1
+			p1.frame = p1_win
+			p2.frame = p2_lose
 		elif Game.health_percent < 20.0:
-			p1.frame = 1
-			p2.frame = 0
+			p1.frame = p1_lose
+			p2.frame = p2_win
 		else:
-			p1.frame = 0
-			p2.frame = 0
+			p1.frame = p1_normal
+			p2.frame = p2_normal

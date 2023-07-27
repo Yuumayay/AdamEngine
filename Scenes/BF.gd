@@ -130,7 +130,7 @@ func player_process(delta):
 	else:
 		animRemain -= delta
 	for i in range(Game.key_count):
-		if Game.cur_input[i] == 2:
+		if Game.cur_input[i] == 2 or Game.cur_input_sub[i] == 2:
 			if Setting.s_get("gameplay", "botplay"):
 				Game.cur_input[i] = 0
 			animDirection(i)

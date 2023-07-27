@@ -117,5 +117,5 @@ func update_position():
 		if i == get_child(select):
 			bg.modulate = lerp(bg.modulate, i.color, 0.05)
 		i.position.x = lerp(i.position.x, abs(select - i.ind) * -25.0 + 225.0, 0.25)
-		i.position.y = lerp(i.position.y, -select * 150.0 + (275.0 + i.ind * 150.0), 0.25)
+		i.position.y = lerp(i.position.y, -select * 150.0 + (350.0 + i.ind * 150.0), 0.25)
 		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.ind) / 5.0, 0.25)

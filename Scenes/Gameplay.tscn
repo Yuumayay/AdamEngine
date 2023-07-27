@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=15 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://3q80pn7hfifo" path="res://Assets/Images/Icons/bf.png" id="9_y4rhq"]
 [ext_resource type="Script" path="res://Script/Info.gd" id="11_0kbrg"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="11_mwtkh"]
+[ext_resource type="Script" path="res://Script/VersionText.gd" id="13_3bbrj"]
 [ext_resource type="Script" path="res://Script/Camera.gd" id="13_k8e81"]
 
 [node name="Gameplay" type="Node2D"]
@@ -21,7 +22,7 @@ script = ExtResource("1_ble4j")
 script = ExtResource("2_ym0k6")
 
 [node name="Sprite2D2" type="Sprite2D" parent="Stages"]
-position = Vector2(574, 322)
+position = Vector2(576, 46)
 texture = ExtResource("2_aef0f")
 
 [node name="Sprite2D3" type="Sprite2D" parent="Stages"]
@@ -29,7 +30,7 @@ position = Vector2(568, 526)
 texture = ExtResource("3_48ojs")
 
 [node name="Sprite2D" type="Sprite2D" parent="Stages"]
-position = Vector2(578, 322)
+position = Vector2(574, 40)
 texture = ExtResource("4_ftvk0")
 
 [node name="Characters" type="Node2D" parent="."]
@@ -45,10 +46,10 @@ texture = ExtResource("4_ftvk0")
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HealthBarBG" type="TextureRect" parent="UI"]
-offset_left = 276.0
-offset_top = 64.0
-offset_right = 877.0
-offset_bottom = 104.0
+offset_left = 356.0
+offset_top = 57.0
+offset_right = 957.0
+offset_bottom = 97.0
 scale = Vector2(1, 0.5)
 texture = ExtResource("6_ggca7")
 script = ExtResource("7_a67nu")
@@ -86,10 +87,10 @@ what_music = "Inst"
 script = ExtResource("11_0kbrg")
 
 [node name="Label1" type="Label" parent="Info"]
-offset_left = 375.0
-offset_top = 133.0
-offset_right = 774.0
-offset_bottom = 156.0
+offset_left = 454.0
+offset_top = 129.0
+offset_right = 853.0
+offset_bottom = 152.0
 grow_horizontal = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
@@ -115,17 +116,18 @@ Misses: 0
 Combo: 0"
 
 [node name="Label3" type="Label" parent="Info"]
-offset_left = 11.0
-offset_top = 616.0
-offset_right = 296.0
-offset_bottom = 641.0
-theme_override_colors/font_color = Color(0.741176, 0.803922, 1, 1)
+offset_left = 7.0
+offset_top = 690.0
+offset_right = 292.0
+offset_bottom = 715.0
+theme_override_colors/font_color = Color(0.756863, 0.8, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("11_mwtkh")
 theme_override_font_sizes/font_size = 25
-text = "Adam Engine - Alpha 1"
+text = "Adam Engine"
+script = ExtResource("13_3bbrj")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(578, 330)
+position = Vector2(638, 363)
 script = ExtResource("13_k8e81")

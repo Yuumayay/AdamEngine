@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://cod07bdbqm65m"]
+
+[ext_resource type="Script" path="res://Scenes/Story Mode.gd" id="1_uus7e"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="2_kn2e5"]
+[ext_resource type="Texture2D" uid="uid://bvpfemptbcnvf" path="res://Assets/Images/Story Mode/Difficulties/normal.png" id="3_skovm"]
+
+[node name="Story Mode" type="Node2D"]
+script = ExtResource("1_uus7e")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1286.0
+offset_bottom = 498.0
+color = Color(0.937255, 0.788235, 0.34902, 1)
+
+[node name="Rect" type="ColorRect" parent="."]
+offset_right = 1288.0
+offset_bottom = 40.0
+color = Color(0, 0, 0, 1)
+
+[node name="Rect2" type="ColorRect" parent="."]
+offset_left = -2.0
+offset_top = 424.0
+offset_right = 1286.0
+offset_bottom = 726.0
+color = Color(0, 0, 0, 1)
+
+[node name="Tracks" type="Label" parent="."]
+offset_left = 118.0
+offset_top = 470.0
+offset_right = 292.0
+offset_bottom = 517.0
+theme_override_colors/font_color = Color(0.854902, 0.352941, 0.576471, 1)
+theme_override_fonts/font = ExtResource("2_kn2e5")
+theme_override_font_sizes/font_size = 50
+text = "tracks"
+uppercase = true
+
+[node name="SongList" type="Label" parent="."]
+anchors_preset = -1
+offset_left = 101.0
+offset_top = 547.0
+offset_right = 308.0
+offset_bottom = 664.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.854902, 0.352941, 0.576471, 1)
+theme_override_fonts/font = ExtResource("2_kn2e5")
+theme_override_font_sizes/font_size = 30
+text = "asdasdasd
+iamangrynow
+debug"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Difficulty" type="Sprite2D" parent="."]
+position = Vector2(1042, 512)
+texture = ExtResource("3_skovm")
+
+[node name="Weeks" type="Node2D" parent="."]

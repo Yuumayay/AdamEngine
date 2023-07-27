@@ -30,6 +30,11 @@ Setting="*res://Script/Autoload/SettingManager.gd"
 FPS="*res://Scenes/Autoload/FPS.tscn"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")

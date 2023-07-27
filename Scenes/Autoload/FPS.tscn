@@ -7,6 +7,10 @@ layer = 101
 script = ExtResource("1_gtqlk")
 
 [node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 69.0
+offset_bottom = 30.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 text = "FPS: 000"

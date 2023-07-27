@@ -17,7 +17,7 @@ func _ready():
 
 func _process(_delta):
 	if Game.cur_state == Game.NOT_PLAYING: return
-	if Game.cur_input[dir - type * Game.key_count] == 0:
+	if Game.cur_input[dir - type * Game.key_count] == 0 and Game.cur_input_sub[dir - type * Game.key_count] == 0:
 		if Game.note_anim[dir - type * Game.key_count].contains("2"):
 			animation = Game.note_anim[dir - type * Game.key_count].replace("2", "") + " static"
 		else:
@@ -96,7 +96,7 @@ func player_strum():
 		var msdiff = Audio.cur_ms - i.ms
 		if Audio.cur_ms >= i.ms - Game.rating_offset[Game.MISS]:
 			if i.sus == 0:
-				if Game.cur_input[dir - type * Game.key_count] == 2:
+				if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 					Audio.a_play("Hit")
 					i.free_f = true
@@ -109,7 +109,7 @@ func player_strum():
 					i.modulate.a = 0.5
 			else:
 				if i.self_modulate.a == 0:
-					if Game.cur_input[dir - type * Game.key_count] == 1:
+					if Game.cur_input[dir - type * Game.key_count] == 1 or Game.cur_input_sub[dir - type * Game.key_count] == 1:
 						i.self_modulate.a = 0
 						var line: Line2D = i.get_node("Line")
 						if msdiff >= 0:
@@ -121,7 +121,7 @@ func player_strum():
 						i.free_f = true
 						i.modulate.a = 0.5
 				else:
-					if Game.cur_input[dir - type * Game.key_count] == 2:
+					if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 						animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 						Audio.a_play("Hit")
 						i.self_modulate.a = 0

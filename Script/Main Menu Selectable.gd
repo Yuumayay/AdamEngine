@@ -1,4 +1,12 @@
-extends Sprite2D
+extends Node2D
+
+func _ready():
+	if get_child_count() == 0:
+		var spr = Game.load_XMLSprite("res://Assets/Images/Main Menu/FNF_main_menu_assets.xml", "", true, 24)
+		spr.name = "Sprite"
+		add_child(spr)
+	else:
+		$Sprite.play(name.to_lower() + " basic")
 
 func accepted(selected: bool):
 	var t = get_tree().create_tween()
@@ -9,7 +17,7 @@ func accepted(selected: bool):
 			await get_tree().create_timer(0.05).timeout
 			modulate = Color(1, 1, 1, 1)
 			await get_tree().create_timer(0.05).timeout
-		Trans.t_trans("Freeplay")
+		Trans.t_trans(name)
 	else:
 		t.tween_property(self, "position", Vector2(position.x - 100, position.y), 0.25)
 		t.tween_property(self, "position", Vector2(2000, position.y), 0.25)

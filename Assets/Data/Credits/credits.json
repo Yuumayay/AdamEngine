@@ -1,0 +1,7 @@
+{
+    "comment": ["0 = name, 1 = desc, 2 = selfdesc, 3 = color, 4 = url"],
+    "peoples": [
+        ["Yuumayay", "Main Creator", "sussy", [255, 255, 0], "https://twitter.com/yuumayay"],
+        ["Micbear", "Yuumayay Director", "Sigh, kuma-kuma", [100, 100, 100]]
+    ]
+}

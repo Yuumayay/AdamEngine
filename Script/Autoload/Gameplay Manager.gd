@@ -27,6 +27,7 @@ var who_sing_section: Array
 var mustHit: bool
 var cur_input: Array
 var cur_input_str: String
+var cur_input_sub: Array
 var dad_input: Array
 
 enum {PERF, SICK, GOOD, BAD, SHIT, MISS}
@@ -184,6 +185,15 @@ func what_engine(data):
 
 # XML load
 func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
+	if !FileAccess.file_exists(path):
+		Audio.a_play("Error")
+		printerr("invalid path. cannot load xml")
+		var sprite = AnimatedSprite2D.new()
+		var frames:SpriteFrames = SpriteFrames.new()
+		frames.add_frame("default", load("res://Assets/Images/UI/Missing.png"))
+		sprite.frames = frames
+		return sprite
+	
 	var sprite_data:AnimatedSprite2D = AnimatedSprite2D.new() 
 	
 	var base_path:StringName = path.get_basename()
@@ -318,16 +328,14 @@ func _input(event):
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 				cur_input[input] = 1
-	if sub_input != -1 and cur_input:
+	if sub_input != -1 and cur_input_sub:
 		if event.is_released():
-			cur_input_str = ""
-			cur_input[sub_input] = 0
+			cur_input_sub[sub_input] = 0
 			#print("lol")
 		else:
-			if cur_input[sub_input] == 0:
-				cur_input_str = event.as_text()
-				cur_input[sub_input] = 2
+			if cur_input_sub[sub_input] == 0:
+				cur_input_sub[sub_input] = 2
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
-				cur_input[sub_input] = 1
+				cur_input_sub[sub_input] = 1
 			#print(cur_input)

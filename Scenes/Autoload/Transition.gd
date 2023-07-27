@@ -20,13 +20,13 @@ func t_trans(change_to) -> void:
 	
 	await get_tree().create_timer(0.25).timeout
 	
-	root.remove_child(root.get_node(cur_scene))
+	root.remove_child(root.get_node(NodePath(cur_scene)))
 	root.add_child(next_scene)
 	
 	cur_scene = change_to
 	
 	var t2 = create_tween()
-	t2.tween_property(sprite, "position", Vector2(sprite.position.x, 648), 0.25)
+	t2.tween_property(sprite, "position", Vector2(sprite.position.x, 720), 0.25)
 	t2.play()
 	
 	await get_tree().create_timer(0.25).timeout

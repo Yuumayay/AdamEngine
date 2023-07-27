@@ -3,4 +3,6 @@ extends CanvasLayer
 @onready var label: Label = $Label
 
 func _process(_delta):
-	label.text = "FPS: " + str(Engine.get_frames_per_second())
+	var mem = Performance.get_monitor(Performance.MEMORY_STATIC) / 104857.6
+	label.text = "FPS: " + str(Engine.get_frames_per_second()) + "\nMemory: " + str(round(mem) / 10) + " MB"
+	

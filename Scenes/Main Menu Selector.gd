@@ -10,25 +10,24 @@ var selectable: Array = main_menu_offset.SelectableList
 func _ready():
 	var ind = 0
 	for i in selectable:
-		var new_selectable: Sprite2D = get_parent().get_node("Template").duplicate()
+		var new_selectable: Node2D = get_parent().get_node("Template").duplicate()
 		new_selectable.position.y = 50 + ind * 150
-		new_selectable.texture = load("res://Assets/Images/Main Menu/" + i.to_lower() + " placeholder.png")
+		#new_selectable.texture = load("res://Assets/Images/Main Menu/" + i.to_lower() + " placeholder.png")
 		new_selectable.name = i
 		new_selectable.visible = true
 		ind += 1
 		add_child(new_selectable)
 	child_count = get_child_count() - 1
-	print(child_count)
 
 func _process(_delta):
 	if Game.can_input:
-		if Input.is_action_just_pressed("ui_up"):
+		if Input.is_action_just_pressed("game_ui_up"):
 			Audio.a_scroll()
 			if select == 0:
 				select = child_count
 			else:
 				select -= 1
-		if Input.is_action_just_pressed("ui_down"):
+		if Input.is_action_just_pressed("game_ui_down"):
 			Audio.a_scroll()
 			if select == child_count:
 				select = 0
