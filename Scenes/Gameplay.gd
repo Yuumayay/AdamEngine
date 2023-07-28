@@ -9,27 +9,29 @@ var timer: SceneTreeTimer
 
 var pause = preload("res://Scenes/Pause Menu.tscn")
 
+var countdowns: Array = [preload("res://Assets/Images/Skins/FNF/Countdown/ready.png"),
+preload("res://Assets/Images/Skins/FNF/Countdown/set.png"),
+preload("res://Assets/Images/Skins/FNF/Countdown/go.png")]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Audio.a_stop("Freaky Menu")
-	var song_data
-	if Game.cur_diff == "normal":
-		song_data = File.f_read("res://Assets/Data/Song Charts/" + Game.cur_song.to_lower() + "/" + Game.cur_song.to_lower() + ".json", ".json")
-	else:
-		song_data = File.f_read("res://Assets/Data/Song Charts/" + Game.cur_song.to_lower() + "/" + Game.cur_song.to_lower() + "-" + Game.cur_diff + ".json", ".json")
+	var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
 	Game.setup(song_data)
 	
 	cam_zoom = Game.defaultZoom
+	$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
-	if FileAccess.file_exists(Paths.p_song(Game.cur_song.to_lower() + "/Voices")):
-		Audio.a_set("Voices", Paths.p_song(Game.cur_song.to_lower() + "/Voices"))
+	if Paths.p_song(Game.cur_song.to_lower(), "Voices"):
+		Audio.a_set("Voices", Paths.p_song(Game.cur_song.to_lower(), "Voices"))
 	else:
 		Audio.a_set("Voices", "")
-	Audio.a_set("Inst", Paths.p_song(Game.cur_song.to_lower() + "/Inst"))
+	Audio.a_set("Inst", Paths.p_song(Game.cur_song.to_lower(), "Inst"))
 	
 	keybind(Game.key_count)
 	strum_set()
 	character_set()
+	#note_set()
 	countdown()
 	
 	
@@ -38,13 +40,12 @@ func _process(_delta):
 		if !timer:
 			timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
 		Audio.cur_ms = timer.time_left * -1000
-	$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	if Game.cur_state == Game.NOT_PLAYING: return
 	if Game.cur_state != Game.SPAWN_END:
 		for i in range(20000):
 			if Game.cur_state == Game.SPAWN_END or !Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
 				break
-			note_spawn()
+			note_spawn_load()
 	if Game.cur_state == Game.SPAWN_END:
 		if !Audio.a_check("Inst"):
 			quit()
@@ -60,7 +61,7 @@ func _process(_delta):
 			Audio.a_pause("Voices")
 			
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
-func note_spawn():
+func note_spawn_load():
 	if Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
 		#print("spawned")
 		var new_note = note_scn.instantiate()
@@ -68,9 +69,18 @@ func note_spawn():
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
 		new_note.sus = Game.sus[note_count]
+		new_note.visible = true
 		if Game.dir[note_count] >= Game.key_count:
 			new_note.player = 1
 		note_group.add_child(new_note)
+		if note_count == Game.ms.size() - 1:
+			Game.cur_state = Game.SPAWN_END
+		else:
+			note_count += 1
+
+func note_spawn():
+	if Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
+		note_group.get_node(str(note_count)).visible = true
 		if note_count == Game.ms.size() - 1:
 			Game.cur_state = Game.SPAWN_END
 		else:
@@ -100,10 +110,24 @@ func character_set():
 		character.type = i
 		$Characters.add_child(character)
 
+func note_set():
+	var ind := 0
+	for i in Game.dir:
+		#print("spawned")
+		var new_note = note_scn.instantiate()
+		new_note.ind = ind
+		new_note.dir = Game.dir[ind]
+		new_note.ms = Game.ms[ind]
+		new_note.sus = Game.sus[ind]
+		new_note.name = str(ind)
+		if Game.dir[ind] >= Game.key_count:
+			new_note.player = 1
+		note_group.add_child(new_note)
+		ind += 1
+
 func keybind(key):
 	if key <= 18:
-		if key == 4:
-			Setting.sub_input = Setting.keybind_default_sub[str(key) + "k"]
+		Setting.sub_input = Setting.keybind_default_sub[str(key) + "k"]
 		Game.note_anim = View.keys[str(key) + "k"]
 		Setting.input = Setting.keybind_default[str(key) + "k"]
 	else:
@@ -121,16 +145,23 @@ func keybind(key):
 		Game.cur_input.append(0)
 		Game.cur_input_sub.append(0)
 		Game.dad_input.append(0)
+		Game.bf_miss.append(0)
 
 func countdown():
 	Game.cur_state = Game.COUNTDOWN
 	await get_tree().create_timer(60.0 / Audio.bpm).timeout
 	Audio.a_play("Three")
 	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	$Countdown/Sprite.texture = countdowns[0]
+	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("Two")
 	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	$Countdown/Sprite.texture = countdowns[1]
+	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("One")
 	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	$Countdown/Sprite.texture = countdowns[2]
+	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("Go")
 	await get_tree().create_timer(60.0 / Audio.bpm).timeout
 	start()
@@ -156,6 +187,7 @@ func quit():
 	Game.song_data.clear()
 	Game.who_sing.clear()
 	Game.who_sing_section.clear()
+	Game.bf_miss.clear()
 	View.strum_pos.clear()
 	Audio.a_title()
 	await Trans.t_trans("Freeplay")
@@ -167,6 +199,7 @@ func quit():
 	Game.total_hit = 0.0
 	Game.hit = 0
 	Game.combo = 0
+	Game.max_combo = 0
 	Game.fc_state = "N/A"
 	Game.rating_total = [0,0,0,0,0,0]
 
@@ -187,7 +220,8 @@ func restart():
 	Game.who_sing.clear()
 	Game.who_sing_section.clear()
 	View.strum_pos.clear()
-	await Trans.t_trans("Gameplay")
+	Trans.t_trans("Gameplay")
+	await get_tree().create_timer(0.25).timeout
 	Game.total_hit = 0
 	Game.score = 0
 	Game.health = 1.0
@@ -196,5 +230,6 @@ func restart():
 	Game.total_hit = 0.0
 	Game.hit = 0
 	Game.combo = 0
+	Game.max_combo = 0
 	Game.fc_state = "N/A"
 	Game.rating_total = [0,0,0,0,0,0]

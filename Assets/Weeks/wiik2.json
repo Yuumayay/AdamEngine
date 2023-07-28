@@ -1,0 +1,49 @@
+{
+	"storyName": "you fucked up matts bussy ass",
+	"difficulties": "hard",
+	"hideFreeplay": false,
+	"weekBackground": "wiik2",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"songs": [
+		[
+			"burnout",
+			"mattangry",
+			[
+				106,
+				0,
+				155
+			]
+		],
+		[
+			"sporting",
+			"mattangry",
+			[
+				106,
+				0,
+				155
+			]
+		],
+		[
+			"boxing-match",
+			"mattangry",
+			[
+				106,
+				0,
+				155
+			]
+		]
+	],
+	"hideStoryMode": false,
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"weekName": "Custom Week"
+}

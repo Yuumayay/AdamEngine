@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dnwsewr85wjs2"]
+[gd_scene load_steps=8 format=3 uid="uid://dnwsewr85wjs2"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_vcpxn"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
 [ext_resource type="Texture2D" uid="uid://cmerlb6jj63jj" path="res://Assets/Images/Icons/voiid-bf.png" id="5_6b31r"]
 [ext_resource type="Script" path="res://Scenes/Freeplay Selector.gd" id="6_ohx30"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="6_rqsen"]
 
 [node name="Freeplay" type="Node2D"]
 
@@ -34,6 +35,23 @@ offset = Vector2(70, 45)
 hframes = 3
 script = ExtResource("2_1uuha")
 bumpin_scale = Vector2(0.95, 0.95)
+
+[node name="Error" type="Label" parent="Template/Icon"]
+visible = false
+anchors_preset = -1
+offset_left = 43.0
+offset_top = -39.0
+offset_right = 83.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_rqsen")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Songs" type="Node2D" parent="."]
 script = ExtResource("6_ohx30")

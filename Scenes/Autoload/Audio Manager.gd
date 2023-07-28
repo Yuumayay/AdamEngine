@@ -9,6 +9,10 @@ var cur_beat_float: float
 var cur_sec: float
 var cur_section: int
 
+var beat_hit_bool: bool = false
+
+var bpm_array: Array = [400, 800]
+
 func a_play(key: String, pitch = 1.0, volume = 0.0, position = 0.0):
 	var target: AudioStreamPlayer = get_node_or_null(key)
 	if target:
@@ -49,13 +53,14 @@ func a_check(key: String):
 	else:
 		printerr("audio_check: node not found")
 
-func a_set(key: String, path: String):
+func a_set(key: String, path: String, loop = false):
 	var target: AudioStreamPlayer = get_node(key)
 	if path == "":
 		target.stream = null
 	else:
 		if FileAccess.file_exists(path):
 			var soundfile: AudioStreamOggVorbis = load(path)
+			soundfile.loop = loop
 			target.stream = soundfile
 		else:
 			printerr("audio_set: sound not found")
@@ -106,11 +111,12 @@ func a_get_sec(key: String):
 	else:
 		printerr("audio_get_sec: node not found")
 
-var value = 0
+var value := 0
 
 func _process(_delta):
 	if a_check("Inst"):
-		if Game.cur_state != Game.PAUSE:
+		if Game.cur_state != Game.PAUSE and Game.cur_state != Game.NOT_PLAYING:
+			beat_hit_bool = false
 			cur_beat = a_get_beat("Inst", bpm)
 			cur_beat_float = a_get_beat_float("Inst", bpm)
 			cur_sec = a_get_sec("Inst")
@@ -120,6 +126,15 @@ func _process(_delta):
 			if value != a_get_beat("Inst", bpm, 1):
 				emit_signal("beat_hit")
 				value = a_get_beat("Inst", bpm, 1)
+				if bpm < bpm_array[0]:
+					if value % 2 == 0:
+						beat_hit_bool = true
+				elif bpm < bpm_array[1]:
+					if value % 4 == 0:
+						beat_hit_bool = true
+				else:
+					if value % 8 == 0:
+						beat_hit_bool = true
 			if Game.who_sing_section[cur_section]:
 				Game.mustHit = true
 			else:

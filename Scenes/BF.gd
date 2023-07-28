@@ -1,14 +1,15 @@
 extends Node2D
 
-enum {PLAYER, DAD}
+enum {PLAYER, DAD, GF}
 @export var type: int = 0
 
 @onready var bf : AnimatedSprite2D = $bf
 
 var note_anim: Array = ["singleft", "singdown", "singup", "singright"]
+var miss_anim: Array = ["singleftmiss", "singdownmiss", "singupmiss", "singrightmiss"]
 var idle_anim = "idle"
 
-enum {IDLE = -1, NOTE}
+enum {IDLE = -1, NOTE, MISS}
 var state: int = -1
 var dir_2: int = 1
 
@@ -18,6 +19,8 @@ var animRemain: float = 0.0
 var json :Dictionary
 var offset_dic = {}
 
+var load_fail: bool = false
+
 func _ready():
 	var spr : AnimatedSprite2D
 	
@@ -25,9 +28,10 @@ func _ready():
 		json = Game.p1_json
 		
 		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"):
-			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, true, 24, 1)
+			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, false, 24, 1)
 		else:
-			spr = Game.load_XMLSprite("res://Assets/Images/characters/BOYFRIEND.xml", idle_anim, true, 24, 1)
+			spr = Game.load_XMLSprite("res://Assets/Images/characters/BOYFRIEND.xml", idle_anim, false, 24, 1)
+			load_fail = true
 		spr.name = "bf"
 		position = Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1])# + Vector2(json["position"][0], json["position"][1])
 		position += Vector2(400, 400)
@@ -36,9 +40,10 @@ func _ready():
 		json = Game.p2_json
 		
 		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"):
-			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, true, 24, 2)
+			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, false, 24, 2)
 		else:
-			spr = Game.load_XMLSprite("res://Assets/Images/characters/DADDY_DEAREST.xml", idle_anim, true, 24, 2)
+			spr = Game.load_XMLSprite("res://Assets/Images/characters/DADDY_DEAREST.xml", idle_anim, false, 24, 2)
+			load_fail = true
 		spr.name = "dad"
 		position = Vector2(Game.stage.opponent[0], Game.stage.opponent[1])# + Vector2(json["position"][0], json["position"][1])
 		#psychの謎仕様として、characterのjsonのoffsetは読まない
@@ -50,14 +55,15 @@ func _ready():
 	print(position)
 	bf.play(idle_anim)
 	
+	if load_fail or Game.character_load_fail:
+		loadFail()
+	
 	var atlastexture = bf.sprite_frames.get_frame_texture(idle_anim, 0)
 	if atlastexture:
 		var s = atlastexture.get_size()
 		print("sp", atlastexture, s)
 		
 		bf.offset = -Vector2(s.x / 2, s.y / 2)
-	
-	
 	
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
@@ -76,9 +82,8 @@ func animDirection(dir: int):
 	
 	state = NOTE
 	
-	#var note_anim_name = multikey()
-	#var animname = note_anim_prefix + note_anim_name
-	var animname = note_anim[dir % 4]
+	var note_anim_name = multikey(dir)
+	var animname = "sing" + note_anim_name
 	if animRemain != 0:
 		bf.stop()
 	bf.play(animname)
@@ -86,15 +91,24 @@ func animDirection(dir: int):
 	
 	setOffset(animname)
 	
-	#await bf.animation_looped
+	animRemain = 60.0 / Audio.bpm * (animLength / 4.0)
+
+func animDirectionMiss(dir: int):
+	state = MISS
+	
+	var note_anim_name = multikey(dir)
+	var animname = "sing" + note_anim_name + "miss"
+	if animRemain != 0:
+		bf.stop()
+	bf.play(animname)
+	bf.sprite_frames.set_animation_loop(animname, false)
+	
+	setOffset(animname)
 	
 	animRemain = 60.0 / Audio.bpm * (animLength / 4.0)
-	
-	#if bf.is_playing():
-	#	return
 
-func multikey():
-	var note_anim_name = Game.note_anim[dir_2]
+func multikey(direction):
+	var note_anim_name = Game.note_anim[direction]
 	if note_anim_name.contains("2"):
 		note_anim_name = note_anim_name.replace("2", "")
 	if note_anim_name.begins_with("r"):
@@ -134,11 +148,19 @@ func player_process(delta):
 			if Setting.s_get("gameplay", "botplay"):
 				Game.cur_input[i] = 0
 			animDirection(i)
+		if Game.bf_miss[i] == 1:
+			Game.bf_miss[i] = 0
+			animDirectionMiss(i)
 	if animRemain <= 0:
 		if state != IDLE:
 			state = IDLE
 			bf.play(idle_anim)
 			setOffset(idle_anim)
+		else:
+			if Audio.beat_hit_bool:
+				bf.stop()
+				bf.play(idle_anim)
+				setOffset(idle_anim)
 
 func dad_process(delta):
 	if Game.dad_input[dir_2] == 1:
@@ -153,8 +175,34 @@ func dad_process(delta):
 	if animRemain <= 0:
 		if state != IDLE:
 			state = IDLE
-			bf.play(idle_anim)
+			bf.play(idle_anim, 1.0, true)
 			setOffset(idle_anim)
+		else:
+			if Audio.beat_hit_bool:
+				bf.stop()
+				bf.play(idle_anim, 1.0, true)
+				setOffset(idle_anim)
+
+func loadFail():
+	print("fail")
+	var label = Label.new()
+	label.add_theme_font_size_override("font_size", 32)
+	label.add_theme_font_override("font", load("res://Assets/Fonts/vcr.ttf"))
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	label.add_theme_color_override("font_color", Color(1, 0, 0))
+	label.add_theme_constant_override("outline_size", 5)
+	if type == PLAYER:
+		label.text = "Character \"" + Game.player1 + "\"\ndoes not exist"
+	elif type == DAD:
+		label.text = "Character \"" + Game.player2 + "\"\ndoes not exist"
+	label.position = bf.position - Vector2(400, 400)
+	bf.add_child(label)
+	
+	var shader: Shader = load("res://Assets/Shader/ChangeHue.gdshader")
+	var shader_material = ShaderMaterial.new()
+	shader_material.shader = shader
+	shader_material.set_shader_parameter("saturation", 0)
+	bf.set("material", shader_material)
 
 #"""
 ## VARIABLES #

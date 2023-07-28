@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=16 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
 [ext_resource type="Script" path="res://Script/Stages.gd" id="2_ym0k6"]
 [ext_resource type="Texture2D" uid="uid://d3l5qb04fw28b" path="res://Assets/Images/Stages/stagefront.png" id="3_48ojs"]
 [ext_resource type="Texture2D" uid="uid://ge1x4us6wtvp" path="res://Assets/Images/Stages/stagecurtains.png" id="4_ftvk0"]
+[ext_resource type="Script" path="res://Script/Countdown.gd" id="6_7pr8o"]
 [ext_resource type="Texture2D" uid="uid://mecxcewe4tas" path="res://Assets/Images/Skins/FNF/Bars/healthBar.png" id="6_ggca7"]
 [ext_resource type="Script" path="res://Script/HealthBar.gd" id="7_a67nu"]
 [ext_resource type="Texture2D" uid="uid://3asp33d2ye2t" path="res://Assets/Images/Icons/icon-dad.png" id="8_nygbt"]
@@ -35,9 +36,11 @@ texture = ExtResource("4_ftvk0")
 
 [node name="Characters" type="Node2D" parent="."]
 
-[node name="Countdown" type="Node2D" parent="."]
+[node name="Countdown" type="CanvasLayer" parent="."]
+script = ExtResource("6_7pr8o")
 
 [node name="Sprite" type="Sprite2D" parent="Countdown"]
+position = Vector2(641, 365)
 
 [node name="Strums" type="CanvasLayer" parent="."]
 
@@ -113,14 +116,16 @@ Good: 0
 Bad: 0
 Shit: 0
 Misses: 0
-Combo: 0"
+
+Combo: 0
+Max Combo: 0"
 
 [node name="Label3" type="Label" parent="Info"]
 offset_left = 7.0
 offset_top = 690.0
 offset_right = 292.0
 offset_bottom = 715.0
-theme_override_colors/font_color = Color(0.756863, 0.8, 1, 1)
+theme_override_colors/font_color = Color(0.776471, 0.792157, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("11_mwtkh")

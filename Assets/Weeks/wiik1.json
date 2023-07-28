@@ -1,0 +1,49 @@
+{
+	"storyName": "TRAINING LESSONS",
+	"difficulties": "hard",
+	"hideFreeplay": false,
+	"weekBackground": "wiik1",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": false,
+	"songs": [
+		[
+			"light-it-up",
+			"mattnormal",
+			[
+				40,
+				40,
+				40
+			]
+		],
+		[
+			"ruckus",
+			"mattnormal",
+			[
+				40,
+				40,
+				40
+			]
+		],
+		[
+			"target-practice",
+			"mattnormal",
+			[
+				40,
+				40,
+				40
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"weekName": "Custom Week"
+}

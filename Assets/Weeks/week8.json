@@ -89,6 +89,42 @@
 				182,
 				4
 			]
+		],
+		[
+			"Bloodbath",
+			"tankman",
+			[
+				246,
+				182,
+				4
+			]
+		],
+		[
+			"Bloodshed",
+			"tankman",
+			[
+				246,
+				182,
+				4
+			]
+		],
+		[
+			"Bleeding",
+			"tankman",
+			[
+				246,
+				182,
+				4
+			]
+		],
+		[
+			"King-Hit",
+			"tankman",
+			[
+				246,
+				182,
+				4
+			]
 		]
 	],
 	"hideFreeplay": false,

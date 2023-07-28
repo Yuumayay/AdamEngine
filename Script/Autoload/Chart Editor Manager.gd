@@ -1,6 +1,7 @@
 extends Node
 
 var placed_notes: Dictionary = {"notes": []}
+var notes_property: Dictionary = {"notes": []}
 
 var modcharts: Dictionary = {
 	"category": {
@@ -172,6 +173,8 @@ var modcharts: Dictionary = {
 	}
 }
 
+var key_count: Array = [[4], [4], [4]]
+
 var cur_section: int
 
 var bpm: float = 150
@@ -183,8 +186,15 @@ var playing: bool = false
 
 var cur_song = "test"
 
+var cur_x: float
 var cur_y: float
+var cur_zoom: float = 1.0
 
+var bf_count: int = 1
+var dad_count: int = 1
+var gf_count: int = 1
+
+## SETTING ##
 var metronome: bool = false
 var hit_sound: int = 0
 

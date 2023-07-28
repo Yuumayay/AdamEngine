@@ -35,7 +35,7 @@ func _ready():
 	if Audio.a_check("Freaky Menu"):
 		introend()
 	else:
-		Audio.a_set("Freaky Menu", menu_music_path)
+		Audio.a_set("Freaky Menu", menu_music_path, true)
 		Audio.a_title()
 	
 	if intro_text.size() == 2:

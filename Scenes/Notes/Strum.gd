@@ -114,7 +114,7 @@ func player_strum():
 						var line: Line2D = i.get_node("Line")
 						if msdiff >= 0:
 							line.set_point_position(0, Vector2(0, (View.strum_pos[dir].y - i.position.y) / i.scale.y))
-						if line.get_point_position(0).y + 50 * i.up_or_down <= line.get_point_position(1).y:
+						if line.get_point_position(0).y + 100 * i.up_or_down <= line.get_point_position(1).y:
 							i.free_f = true
 							i.visible = false
 					else:
@@ -132,14 +132,14 @@ func player_strum():
 						i.free_f = true
 						i.modulate.a = 0.5
 
-func judge(hit_ms, type):
+func judge(hit_ms, notetype):
 	emit_signal("bf_hit")
 	
 	var ms = abs(hit_ms)
 	var layer = rating.instantiate()
 	var new_rating = layer.get_node("Rating")
 	
-	if type == 4:
+	if notetype == 4:
 		Audio.a_play("Loss Shaggy")
 		Game.add_rating(Game.MISS)
 		Game.add_health(-999)

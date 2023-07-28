@@ -29,6 +29,7 @@ var cur_input: Array
 var cur_input_str: String
 var cur_input_sub: Array
 var dad_input: Array
+var bf_miss: Array
 
 enum {PERF, SICK, GOOD, BAD, SHIT, MISS}
 var rating_offset: Array = [0.0, 20.0, 45.0, 75.0, 90.0, 135.0]
@@ -40,11 +41,12 @@ var language: String = "English"
 
 var song_data: Dictionary
 
-var rating_total: Array = [0, 0, 0, 0, 0, 0]
-var rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
-var health_gain: Array = [0.1, 0.08, 0.05, 0, -0.05]
-var score_gain: Array = [400, 350, 200, 100, 0, -10]
+## GAMEPLAY CONSTS ##
+const rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
+const health_gain: Array = [0.1, 0.08, 0.05, 0, -0.05]
+const score_gain: Array = [400, 350, 200, 100, 0, -10]
 
+## GAMEPLAY PROPERTY ##
 var score: int
 var health: float = 1.0
 var health_percent: float = 50.0
@@ -52,7 +54,10 @@ var accuracy: float
 var total_hit: float
 var hit: int
 var combo: int
+var max_combo: int
 var fc_state: String = "N/A"
+
+var rating_total: Array = [0, 0, 0, 0, 0, 0]
 
 var p1_position: Vector2
 var p2_position: Vector2
@@ -60,6 +65,7 @@ var p2_position: Vector2
 ## STAGE JSON ##
 var stage: Dictionary
 var defaultZoom: float
+var isPixel: bool
 
 ## SONG JSON ##
 var cur_song: String = "test"
@@ -71,6 +77,7 @@ var player2: String = "dad"
 ## CHARACTER JSON ##
 var p1_json: Dictionary
 var p2_json: Dictionary
+var character_load_fail: bool
 
 func add_score(value):
 	score += value
@@ -93,6 +100,8 @@ func add_rating(value):
 		combo = 0
 	else:
 		combo += 1
+	if combo >= max_combo:
+		max_combo = combo
 	total_hit += rating_value[value]
 		
 	hit += 1
@@ -112,18 +121,23 @@ func setup(data):
 	
 	stage = File.f_read("res://Assets/Data/Stages/" + cur_stage + ".json", ".json")
 	defaultZoom = stage.defaultZoom
+	isPixel = stage.isPixelStage
 	
 	player1 = song.player1
 	player2 = song.player2
 	
 	if FileAccess.file_exists(Paths.p_chara(player1)):
 		p1_json = File.f_read(Paths.p_chara(player1), ".json")
+		character_load_fail = false
 	else:
 		p1_json = File.f_read(Paths.p_chara("bf"), ".json")
+		character_load_fail = true
 	if FileAccess.file_exists(Paths.p_chara(player2)):
 		p2_json = File.f_read(Paths.p_chara(player2), ".json")
+		character_load_fail = false
 	else:
 		p2_json = File.f_read(Paths.p_chara("dad"), ".json")
+		character_load_fail = true
 	
 	if song.has("mania"):
 		if song.mania == 0:
@@ -160,21 +174,23 @@ func what_engine(data):
 	data = JSON.stringify(data)
 	data = JSON.parse_string(data)
 	
-	if data.song.has("splashSkin"):
+	if data.song.has("splashSkin") or data.song.has("uiType"):
 		print("its psych")
+	elif data.song.notes[0].has("startTime") or data.song.has("eventJson"):
+		print("its forever")
 	elif data.song.has("songId"):
 		print("its agoti")
 	elif data.song.has("tableID"):
 		print("its camellia")
-	elif data.song.notes[0].has("startTime") or data.song.has("eventJson"):
-		print("its forever")
-	elif data.song.notes.has("keyNumber"):
-		print("its yoshi")
+	elif data.song.has("offset"):
+		print("its kade 1.8")
 	elif data.song.has("noteStyle"):
 		print("its kade 1.4+")
+	elif data.song.notes.has("keyNumber"):
+		print("its yoshi")
 	elif data.song.has("ui_Skin"):
 		print("its leather")
-	elif data.song.has("gfVersion") and data.song.has("player3") or data.song.has("hardness"):
+	elif data.song.has("autoIcons"):
 		print("its denpa")
 	elif data.song.has("screwYou"):
 		print("its strident")
@@ -315,7 +331,7 @@ func _input(event):
 	if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 	#print(event.as_text())
 	var input = Setting.input.find(event.as_text())
-	var sub_input = Setting.sub_input.find(event.as_text())
+	var sub_input = Setting.sub_input.find(event.as_text().to_lower())
 	if input != -1 and cur_input:
 		if event.is_released():
 			cur_input_str = ""

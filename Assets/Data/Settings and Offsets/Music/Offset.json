@@ -1,4 +1,4 @@
 {
-    "MenuMusic": ["freakyDenpa.ogg", 100],
+    "MenuMusic": ["freakyMenu.ogg", 102],
     "DebugMusic": ["freakyDebug.ogg", 200]
 }

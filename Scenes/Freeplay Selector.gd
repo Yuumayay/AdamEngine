@@ -26,8 +26,11 @@ func _ready():
 			elif FileAccess.file_exists("res://Assets/Images/Icons/" + i[1] + "-icons.png"):
 				icon = load("res://Assets/Images/Icons/" + i[1] + "-icons.png")
 			else:
+				var label = new_song.get_node("Icon").get_node("Error")
 				printerr("icon: icon not found")
 				icon = load("res://Assets/Images/Icons/icon-face.png")
+				label.visible = true
+				label.text = "Icon \"" + i[1] + "\"\ndoes not exist"
 			var songcolor: Color = Color(i[2][0] / 255.0, i[2][1] / 255.0, i[2][2] / 255.0, 1)
 		
 			new_song.text = songname.to_upper()
@@ -49,8 +52,8 @@ func _ready():
 	child_count = get_child_count() - 1
 	
 	for i in get_child_count():
-		if FileAccess.file_exists(Paths.p_chart(get_child(i).name.to_lower(), "hard")):
-			var songfile = File.f_read(Paths.p_chart(get_child(i).name.to_lower(), "hard"), ".json")
+		if Paths.p_chart(get_child(i).name, "hard"):
+			var songfile = File.f_read(Paths.p_chart(get_child(i).name, "hard"), ".json")
 			Game.what_engine(songfile)
 		else:
 			print("failed")
@@ -80,24 +83,7 @@ func _process(_delta):
 			else:
 				diffselect += 1
 		if Input.is_action_just_pressed("ui_accept"):
-			if Game.cur_diff == "normal":
-				if !FileAccess.file_exists("res://Assets/Data/Song Charts/" + Game.cur_song + "/" + Game.cur_song.to_lower() + ".json"):
-					Audio.a_play("Error")
-					printerr("song not found")
-					return
-			else:
-				if !FileAccess.file_exists("res://Assets/Data/Song Charts/" + Game.cur_song + "/" + Game.cur_song.to_lower() + "-" + Game.cur_diff + ".json"):
-					Audio.a_play("Error")
-					printerr("song not found")
-					return
-			Game.can_input = false
-			selected = true
-			Audio.a_accept()
-			for i in get_children():
-				if i == get_child(select):
-					i.accepted(true)
-				else:
-					i.accepted(false)
+			accept()
 		if Input.is_action_just_pressed("ui_cancel"):
 			Game.can_input = false
 			Audio.a_cancel()
@@ -107,7 +93,6 @@ func _process(_delta):
 func update_position():
 	get_parent().get_node("Difficulty").text = diff[diffselect]
 	Game.cur_diff = diff[diffselect]
-	Game.cur_song = get_child(select).name.to_lower()
 	if selected:
 		get_child(select).position.x = lerp(get_child(select).position.x, 0 * -25.0 + 225.0, 0.25)
 		get_child(select).position.y = lerp(get_child(select).position.y, -select * 150.0 + (275.0 + select * 150.0), 0.25)
@@ -119,3 +104,15 @@ func update_position():
 		i.position.x = lerp(i.position.x, abs(select - i.ind) * -25.0 + 225.0, 0.25)
 		i.position.y = lerp(i.position.y, -select * 150.0 + (350.0 + i.ind * 150.0), 0.25)
 		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.ind) / 5.0, 0.25)
+
+func accept():
+	Game.cur_song = get_child(select).name
+	if !Paths.p_chart(Game.cur_song, Game.cur_diff):
+		return
+	selected = true
+	Audio.a_accept()
+	for i in get_children():
+		if i == get_child(select):
+			i.accepted(true)
+		else:
+			i.accepted(false)

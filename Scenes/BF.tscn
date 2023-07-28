@@ -1,12 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://hkk5icaia67"]
+[gd_scene load_steps=5 format=3 uid="uid://hkk5icaia67"]
 
 [ext_resource type="Script" path="res://Scenes/BF.gd" id="1_88cbn"]
 [ext_resource type="SpriteFrames" uid="uid://t651iwdhtmrx" path="res://Assets/Images/Characters/BOYFRIEND.res" id="2_pefub"]
+[ext_resource type="Shader" path="res://Assets/Shader/ChangeHue.gdshader" id="2_xbpfo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lsoqo"]
+shader = ExtResource("2_xbpfo")
+shader_parameter/brightness = 0.0
+shader_parameter/contrast = 1.0
+shader_parameter/saturation = 1.0
+shader_parameter/redVal = 1.0
+shader_parameter/greenVal = 1.0
+shader_parameter/blueVal = 1.0
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_effect_factor = 0.0
 
 [node name="bfpos" type="Node2D"]
 script = ExtResource("1_88cbn")
 
 [node name="bf" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_lsoqo")
 sprite_frames = ExtResource("2_pefub")
 animation = &"bf hey!!"
 centered = false

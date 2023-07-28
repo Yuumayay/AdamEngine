@@ -39,8 +39,10 @@ func _ready():
 
 func _process(_delta):
 	if not Game.debug_mode:
-		for i in get_children():
-			i.visible = false
+		if bg.visible:
+			bg.visible = false
+			for i in get_children():
+				i.visible = false
 		return
 	if Game.can_input:
 		if Input.is_action_just_pressed("ui_up"):
@@ -71,7 +73,7 @@ func update_position():
 		if Game.trans: get_child(select).visible = false
 		get_child(select).position.x = lerp(get_child(select).position.x, 0 * -25.0 + 225.0, 0.25)
 		get_child(select).position.y = lerp(get_child(select).position.y, -select * 150.0 + (275.0 + select * 150.0), 0.25)
-		bg.modulate = get_child(select).color
+		#bg.modulate = get_child(select).color
 		return
 	for i in get_children():
 		i.visible = true

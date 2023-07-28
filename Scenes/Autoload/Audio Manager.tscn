@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://b736w0428g7i6"]
+[gd_scene load_steps=29 format=3 uid="uid://b736w0428g7i6"]
 
 [ext_resource type="Script" path="res://Scenes/Autoload/Audio Manager.gd" id="1_i1gpa"]
 [ext_resource type="AudioStream" uid="uid://mi5qxw8ah3m5" path="res://Assets/Music/freakyMenu.ogg" id="2_pawgv"]
@@ -13,10 +13,14 @@
 [ext_resource type="AudioStream" uid="uid://bfe77wgdjchp0" path="res://Assets/Sounds/FNF/Countdown/introGo.ogg" id="11_jiu46"]
 [ext_resource type="AudioStream" uid="uid://cce1tywb3iffn" path="res://Assets/Sounds/FNF/Chart Editor/Place.ogg" id="12_3s2qk"]
 [ext_resource type="AudioStream" uid="uid://dk4gp4o5oeayg" path="res://Assets/Sounds/FNF/Chart Editor/Erase.ogg" id="13_q0u0h"]
+[ext_resource type="AudioStream" uid="uid://t1or6d342g4v" path="res://Assets/Sounds/FNF/Editor/open.ogg" id="14_1chc2"]
 [ext_resource type="AudioStream" uid="uid://dl2mf04k73t5d" path="res://Assets/Sounds/FNF/Chart Editor/Tick.ogg" id="14_8657v"]
 [ext_resource type="AudioStream" uid="uid://cbj3chbg7nud6" path="res://Assets/Sounds/FNF/Chart Editor/Tock.ogg" id="15_2el16"]
+[ext_resource type="AudioStream" uid="uid://bfifsmht3bbwy" path="res://Assets/Sounds/FNF/Editor/open2.ogg" id="15_2t7ir"]
+[ext_resource type="AudioStream" uid="uid://by3cqjixf0oil" path="res://Assets/Sounds/FNF/Editor/close.ogg" id="16_k3go6"]
 [ext_resource type="AudioStream" uid="uid://cpmn0of4wiyc4" path="res://Assets/Sounds/FNF/Hitsound/hitsound.ogg" id="16_lbn2s"]
 [ext_resource type="AudioStream" uid="uid://cqmtc1yrop1m7" path="res://Assets/Sounds/FNF/Editor/Type.ogg" id="16_t7eyi"]
+[ext_resource type="AudioStream" uid="uid://b7q8onu4tiltx" path="res://Assets/Sounds/FNF/Editor/close2.ogg" id="17_7oxa3"]
 [ext_resource type="AudioStream" uid="uid://ce110akbje506" path="res://Assets/Sounds/FNF/Hitsound/CLAP.ogg" id="17_new4y"]
 [ext_resource type="AudioStream" uid="uid://bvlsv3jr7xkoc" path="res://Assets/Sounds/FNF/Hitsound/SNAP.ogg" id="18_kfjam"]
 [ext_resource type="AudioStream" uid="uid://men6ytxojj8g" path="res://Assets/Sounds/FNF/Misssound/missnote1.ogg" id="19_qln2c"]
@@ -68,6 +72,18 @@ stream = ExtResource("12_3s2qk")
 
 [node name="Erase" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_q0u0h")
+
+[node name="open" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_1chc2")
+
+[node name="open2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_2t7ir")
+
+[node name="close" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_k3go6")
+
+[node name="close2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17_7oxa3")
 
 [node name="Tick" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_8657v")

@@ -1,21 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://cod07bdbqm65m"]
+[gd_scene load_steps=5 format=3 uid="uid://cod07bdbqm65m"]
 
 [ext_resource type="Script" path="res://Scenes/Story Mode.gd" id="1_uus7e"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="2_kn2e5"]
 [ext_resource type="Texture2D" uid="uid://bvpfemptbcnvf" path="res://Assets/Images/Story Mode/Difficulties/normal.png" id="3_skovm"]
+[ext_resource type="Script" path="res://Script/Week Template.gd" id="4_ei46h"]
 
 [node name="Story Mode" type="Node2D"]
 script = ExtResource("1_uus7e")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 1286.0
-offset_bottom = 498.0
-color = Color(0.937255, 0.788235, 0.34902, 1)
-
-[node name="Rect" type="ColorRect" parent="."]
-offset_right = 1288.0
-offset_bottom = 40.0
-color = Color(0, 0, 0, 1)
 
 [node name="Rect2" type="ColorRect" parent="."]
 offset_left = -2.0
@@ -37,10 +28,10 @@ uppercase = true
 
 [node name="SongList" type="Label" parent="."]
 anchors_preset = -1
-offset_left = 101.0
-offset_top = 547.0
-offset_right = 308.0
-offset_bottom = 664.0
+offset_left = 104.0
+offset_top = 536.0
+offset_right = 311.0
+offset_bottom = 653.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.854902, 0.352941, 0.576471, 1)
 theme_override_fonts/font = ExtResource("2_kn2e5")
@@ -55,4 +46,64 @@ uppercase = true
 position = Vector2(1042, 512)
 texture = ExtResource("3_skovm")
 
+[node name="Template" type="Node2D" parent="."]
+visible = false
+script = ExtResource("4_ei46h")
+
+[node name="Sprite" type="Sprite2D" parent="Template"]
+
+[node name="Error" type="Label" parent="Template"]
+visible = false
+anchors_preset = -1
+offset_left = -156.0
+offset_top = -16.0
+offset_right = 168.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("2_kn2e5")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Weeks" type="Node2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_top = 39.0
+offset_right = 1286.0
+offset_bottom = 436.0
+color = Color(0.937255, 0.788235, 0.34902, 1)
+
+[node name="Rect" type="ColorRect" parent="."]
+offset_right = 1288.0
+offset_bottom = 70.0
+color = Color(0, 0, 0, 1)
+
+[node name="WeekName" type="Label" parent="."]
+anchors_preset = -1
+offset_left = 826.0
+offset_top = 16.0
+offset_right = 1263.0
+offset_bottom = 55.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_fonts/font = ExtResource("2_kn2e5")
+theme_override_font_sizes/font_size = 40
+text = "adam adam adam adam"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="WeekScore" type="Label" parent="."]
+anchors_preset = -1
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 455.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_kn2e5")
+theme_override_font_sizes/font_size = 40
+text = "week score: adam"
+uppercase = true

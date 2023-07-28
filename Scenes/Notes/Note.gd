@@ -66,7 +66,8 @@ func _ready():
 	
 func _process(delta):
 	if Game.cur_state == Game.NOT_PLAYING: return
-	position.y = View.strum_pos[dir].y + (Audio.cur_ms - ms) 
+	if visible == true:
+		position.y = View.strum_pos[dir].y + (Audio.cur_ms - ms) 
 	#position.y += speed * delta
 	if free_f:
 		remain_time -= delta
@@ -74,6 +75,7 @@ func _process(delta):
 			if modulate.a == 0.5:
 				Audio.a_play("Miss" + str(randi_range(1, 3)), 1.0, -5.0)
 				Game.add_rating(Game.MISS)
+				Game.bf_miss[dir - Game.key_count] = 1
 				if do_hit:
 					Game.add_health(-999)
 					Audio.a_play("Loss Matt")

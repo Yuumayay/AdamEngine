@@ -1,26 +1,75 @@
 extends Node2D
 
 @onready var template_rect: ColorRect = get_parent().get_node("Rect")
-@onready var container: TabContainer = get_parent().get_node("Container")
+#@onready var container: TabContainer = get_parent().get_node("Container")
 @onready var beat: Line2D = get_parent().get_node("Beat")
+@onready var cam = get_parent().get_node("Camera")
 
 func _ready():
-	if FileAccess.file_exists(Paths.p_song(Game.cur_song.to_lower() + "/Voices")):
-		Audio.a_set("Voices", Paths.p_song(Chart.cur_song.to_lower() + "/Voices"))
-	Audio.a_set("Inst", Paths.p_song(Chart.cur_song.to_lower() + "/Inst"))
+	if FileAccess.file_exists(Paths.p_song(Game.cur_song.to_lower(), "Voices")):
+		Audio.a_set("Voices", Paths.p_song(Chart.cur_song.to_lower(), "Voices"))
+	Audio.a_set("Inst", Paths.p_song(Chart.cur_song.to_lower(), "Inst"))
 	
-	draw_mass_and_line()
+	draw_all()
 	for i in range(80):
 		Audio.a_volume_set("Debug Menu", -i)
 		await get_tree().create_timer(0.001).timeout
 
-func draw_mass_and_line():
-	draw_mass(50, 250, 1, 32, 1, 0, Chart.cur_section, 0)
-	draw_mass(150, 250, Game.key_count, 32, 1, 1, Chart.cur_section, 1)
-	draw_mass(200 + (50 * Game.key_count), 250, Game.key_count, 32, 1, 2, Chart.cur_section, 2)
+func draw_all():
+	var total_x := 0
+	var space := 50
+	var bf_pos: Array
+	var dad_pos: Array
+	var gf_pos: Array
+	
+	# remove all child
+	for i in get_children():
+		remove_child(i)
+	
+	# event mass
+	draw_mass(50, 250, 1, 32, 1, 0, Chart.cur_section, 0, 0)
+	total_x += 50 + space
+	
+	# bf mass
+	for i in Chart.bf_count:
+		total_x += space
+		bf_pos.append(total_x)
+		draw_mass(total_x, 250, Chart.key_count[0][i], 32, 1, 0, Chart.cur_section, 1, i)
+		total_x += (50 * Chart.key_count[0][i])
+	
+	# dad mass
+	for i in Chart.dad_count:
+		total_x += space
+		dad_pos.append(total_x)
+		draw_mass(total_x, 250, Chart.key_count[1][i], 32, 1, 0, Chart.cur_section, 2, i)
+		total_x += (50 * Chart.key_count[1][i])
+	
+	# gf mass
+	for i in Chart.gf_count:
+		total_x += space
+		gf_pos.append(total_x)
+		draw_mass(total_x, 250, Chart.key_count[2][i], 32, 1, 0, Chart.cur_section, 3, i)
+		total_x += (50 * Chart.key_count[2][i])
+	
+	# beat line
 	draw_beat_line(8, Chart.cur_section * 4)
+	
+	# event icon
+	draw_icon(75, "botfriend", "EVENT", null)
+	
+	# bf icon
+	for i in Chart.bf_count:
+		draw_icon(bf_pos[i] + (50.0 * Chart.key_count[0][i] / 2.0), "bf", "PLAYER", i)
+	
+	# dad icon
+	for i in Chart.dad_count:
+		draw_icon(dad_pos[i] + (50.0 * Chart.key_count[1][i] / 2.0), "dad", "OPPONENT", i)
+	
+	# gf icon
+	for i in Chart.gf_count:
+		draw_icon(gf_pos[i] + (50.0 * Chart.key_count[2][i] / 2.0), "gf", "GF", i)
 
-func draw_mass(og_x, og_y, column, row, alpha, type, section, player):
+func draw_mass(og_x, og_y, column, row, alpha, type, section, player, p_ind):
 	var index = 0
 	var x = og_x
 	var y = og_y
@@ -33,16 +82,17 @@ func draw_mass(og_x, og_y, column, row, alpha, type, section, player):
 			var new_rect = template_rect.duplicate()
 			new_rect.position = Vector2(x, y)
 			if index % 2 == 0:
-				new_rect.color = Color(0.45, 0.45, 0.45)
+				new_rect.color = Color(0.5, 0.5, 0.5)
 			else:
 				new_rect.color = Color(0.55, 0.55, 0.55)
 			new_rect.visible = true
 			if ind >= 16:
 				new_rect.modulate.a = 0.5
-			new_rect.type = type
+			new_rect.note_type = type
 			new_rect.dir = i
 			new_rect.ms = ind + (Chart.cur_section * 16)
-			new_rect.player = player
+			new_rect.player_type = player
+			new_rect.player_ind = p_ind
 			add_child(new_rect)
 			index += 1
 
@@ -54,9 +104,72 @@ func draw_beat_line(value, value2):
 		new_beat.get_node("Label").text = str(i + value2)
 		add_child(new_beat)
 
-func _process(delta):
+func draw_icon(x, icon_name, p_type, p_ind):
+	var new_icon = Sprite2D.new()
+	new_icon.texture = Paths.p_icon(icon_name)
+	new_icon.position.x = x + 50
+	new_icon.position.y = 50
+	new_icon.hframes = floor(new_icon.texture.get_width() / 150.0)
+	new_icon.scale = Vector2(0.5, 0.5)
+	
+	new_icon.set_script(load("res://Script/CharterIcon.gd"))
+	new_icon.icon_name = icon_name
+	new_icon.p_type = p_type
+	if p_ind is int:
+		new_icon.p_ind = p_ind
+	new_icon.init()
+	
+	add_child.call_deferred(new_icon)
+
+func add_character(type):
+	if type == "PLAYER":
+		Chart.bf_count += 1
+		Chart.key_count[0].append(4)
+		draw_all()
+	elif type == "OPPONENT":
+		Chart.dad_count += 1
+		Chart.key_count[1].append(4)
+		draw_all()
+	elif type == "GF":
+		Chart.gf_count += 1
+		Chart.key_count[2].append(4)
+		draw_all()
+
+func set_key_count(type, ind, value):
+	if type == "PLAYER":
+		if Chart.key_count[0][ind] > value:
+			var index := 0
+			for i in Chart.placed_notes.notes:
+				print(i)
+				if i[0] >= value:
+					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
+				index += 1
+		Chart.key_count[0][ind] = value
+		draw_all()
+	elif type == "OPPONENT":
+		if Chart.key_count[1][ind] > value:
+			var index := 0
+			for i in Chart.placed_notes.notes:
+				if i[0] >= value:
+					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
+				index += 1
+		Chart.key_count[1][ind] = value
+		draw_all()
+	elif type == "GF":
+		if Chart.key_count[2][ind] > value:
+			var index := 0
+			for i in Chart.placed_notes.notes:
+				if i[0] >= value:
+					Chart.placed_notes.notes[index].erase()
+				index += 1
+		Chart.key_count[2][ind] = value
+		draw_all()
+
+func _process(_delta):
+	cam.position.x = 640 + Chart.cur_x
+	cam.zoom = Vector2(Chart.cur_zoom, Chart.cur_zoom)
 	#print(Chart.cur_y)
-	setting_check()
+	#setting_check()
 	key_check()
 	scroll()
 
@@ -76,35 +189,39 @@ func scroll():
 		stop_audio()
 		if Input.is_action_pressed("game_shift"):
 			Chart.cur_y += 50 * Chart.mouse_scroll_speed * 4
+		elif Input.is_action_pressed("game_ctrl"):
+			Chart.cur_x += 50 * Chart.mouse_scroll_speed
+		elif Input.is_action_pressed("game_alt"):
+			Chart.cur_zoom += 0.05
 		else:
 			Chart.cur_y += 50 * Chart.mouse_scroll_speed
 	if Input.is_action_just_pressed("game_scroll_down"):
 		stop_audio()
 		if Input.is_action_pressed("game_shift"):
 			Chart.cur_y -= 50 * Chart.mouse_scroll_speed * 4
+		elif Input.is_action_pressed("game_ctrl"):
+			Chart.cur_x -= 50 * Chart.mouse_scroll_speed
+		elif Input.is_action_pressed("game_alt"):
+			Chart.cur_zoom -= 0.05
 		else:
 			Chart.cur_y -= 50 * Chart.mouse_scroll_speed
 	if Chart.cur_y > 0 + (-800 * Chart.cur_section):
 		if Chart.cur_section != 0:
-			for i in get_children():
-				remove_child(i)
 			Chart.cur_section -= 1
-			draw_mass_and_line()
+			draw_all()
 	if Chart.cur_y < -800 + (-800 * Chart.cur_section):
-		for i in get_children():
-			remove_child(i)
 		Chart.cur_section += 1
-		draw_mass_and_line()
+		draw_all()
 
-func setting_check():
-	if container.get_node("Charting/Flow/Metronome/Margin/Flow/CheckBox").button_pressed:
-		Chart.metronome = true
-	else:
-		Chart.metronome = false
+#func setting_check():
+	#if container.get_node("Charting/Flow/Metronome/Margin/Flow/CheckBox").button_pressed:
+	#	Chart.metronome = true
+	#else:
+	#	Chart.metronome = false
 	
-	Chart.metronome_bpm = container.get_node("Charting/Flow/BPM/Margin/Flow/SpinBox").value
-	Chart.multi = container.get_node("Charting/Flow/Playback Rate/Margin/Flow/SpinBox").value
-	Chart.mouse_scroll_speed = container.get_node("Charting/Flow/Mouse Scroll Speed/Margin/Flow/SpinBox").value
+	#Chart.metronome_bpm = container.get_node("Charting/Flow/BPM/Margin/Flow/SpinBox").value
+	#Chart.multi = container.get_node("Charting/Flow/Playback Rate/Margin/Flow/SpinBox").value
+	#Chart.mouse_scroll_speed = container.get_node("Charting/Flow/Mouse Scroll Speed/Margin/Flow/SpinBox").value
 
 func key_check():
 	if Input.is_action_just_pressed("game_space"):
