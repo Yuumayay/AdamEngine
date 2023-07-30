@@ -29,6 +29,7 @@ View="*res://Script/Autoload/GameplayView.gd"
 Setting="*res://Script/Autoload/SettingManager.gd"
 FPS="*res://Scenes/Autoload/FPS.tscn"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
+Modchart="*res://Script/Autoload/ModchartManager.gd"
 
 [display]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=19 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -13,8 +13,16 @@
 [ext_resource type="Texture2D" uid="uid://3q80pn7hfifo" path="res://Assets/Images/Icons/bf.png" id="9_y4rhq"]
 [ext_resource type="Script" path="res://Script/Info.gd" id="11_0kbrg"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="11_mwtkh"]
+[ext_resource type="Script" path="res://Script/TimeBar.gd" id="12_fwr13"]
 [ext_resource type="Script" path="res://Script/VersionText.gd" id="13_3bbrj"]
 [ext_resource type="Script" path="res://Script/Camera.gd" id="13_k8e81"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5t4ff"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sqkw1"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
 
 [node name="Gameplay" type="Node2D"]
 script = ExtResource("1_ble4j")
@@ -60,7 +68,7 @@ script = ExtResource("7_a67nu")
 [node name="HealthBar" type="ProgressBar" parent="UI/HealthBarBG"]
 layout_mode = 0
 offset_left = 5.0
-offset_top = 10.0
+offset_top = 9.0
 offset_right = 596.0
 offset_bottom = 32.0
 value = 50.0
@@ -72,19 +80,61 @@ position = Vector2(300, 20)
 scale = Vector2(1, 2)
 
 [node name="iconP2" type="Sprite2D" parent="UI/HealthBarBG/icons"]
-position = Vector2(-40, 0)
+position = Vector2(-50, 0)
 texture = ExtResource("8_nygbt")
 hframes = 2
 script = ExtResource("9_hks2i")
 what_music = "Inst"
 
 [node name="iconP1" type="Sprite2D" parent="UI/HealthBarBG/icons"]
-position = Vector2(40, 0)
+position = Vector2(50, 0)
 texture = ExtResource("9_y4rhq")
 flip_h = true
 hframes = 2
 script = ExtResource("9_hks2i")
 what_music = "Inst"
+
+[node name="ColorRect" type="ColorRect" parent="UI"]
+offset_left = 448.0
+offset_top = 678.0
+offset_right = 831.0
+offset_bottom = 709.0
+color = Color(0, 0, 0, 1)
+
+[node name="TimeBar" type="ProgressBar" parent="UI/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.5
+offset_top = -11.5
+offset_right = 185.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_5t4ff")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sqkw1")
+value = 50.0
+show_percentage = false
+script = ExtResource("12_fwr13")
+
+[node name="Label" type="Label" parent="UI/ColorRect/TimeBar"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 30
+text = "0:00"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Info" type="CanvasLayer" parent="."]
 script = ExtResource("11_0kbrg")
@@ -121,18 +171,33 @@ Combo: 0
 Max Combo: 0"
 
 [node name="Label3" type="Label" parent="Info"]
-offset_left = 7.0
-offset_top = 690.0
-offset_right = 292.0
-offset_bottom = 715.0
-theme_override_colors/font_color = Color(0.796078, 0.784314, 1, 1)
+offset_left = 900.0
+offset_top = 691.0
+offset_right = 1273.0
+offset_bottom = 716.0
+theme_override_colors/font_color = Color(0.815686, 0.776471, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("11_mwtkh")
 theme_override_font_sizes/font_size = 25
 text = "Adam Engine"
+horizontal_alignment = 2
 script = ExtResource("13_3bbrj")
+
+[node name="Label4" type="Label" parent="Info"]
+offset_left = 20.0
+offset_top = 688.0
+offset_right = 208.0
+offset_bottom = 709.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 20
+text = "Asdasdasd - Hard"
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(638, 363)
 script = ExtResource("13_k8e81")
+
+[node name="ModchartScript" type="Node" parent="."]

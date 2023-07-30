@@ -31,7 +31,7 @@ func _process(_delta):
 				"Restart":
 					Audio.a_resume("Inst")
 					Audio.a_resume("Voices")
-					canvas.get_parent().restart()
+					canvas.get_parent().moveSong(Game.cur_song)
 				"Back":
 					Audio.a_stop("Inst")
 					Audio.a_stop("Voices")

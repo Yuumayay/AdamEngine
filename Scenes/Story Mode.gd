@@ -13,6 +13,7 @@ var select: int = 0
 var child_count: int = 0
 var diffselect = 1
 var diff_count = 2
+var selected: bool = false
 
 var tracks: Dictionary = {}
 
@@ -22,6 +23,7 @@ func _ready():
 		var week = File.f_read("res://Assets/Weeks/" + i, ".json")
 		var new_item: Node2D = $Template.duplicate()
 		var weekName = week.weekName
+		var storyName = week.storyName
 		var fileName = i.get_basename()
 		
 		tracks[fileName] = []
@@ -30,6 +32,7 @@ func _ready():
 		
 		new_item.name = fileName
 		new_item.ind = ind
+		new_item.storyName = storyName
 		
 		var sprite: Sprite2D = new_item.get_node("Sprite")
 		
@@ -91,6 +94,8 @@ func _process(_delta):
 			$arrow1.play("arrow")
 		if Input.is_action_just_released("game_ui_right"):
 			$arrow2.play("arrow")
+		if Input.is_action_just_pressed("ui_accept"):
+			accept()
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_cancel()
 			Trans.t_trans("Main Menu")
@@ -102,7 +107,7 @@ func update_position():
 	for i in list.get_children():
 		i.position.x = 640
 		i.position.y = lerp(i.position.y, -select * 125.0 + (525.0 + i.ind * 125.0), 0.25)
-		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.ind) / 5.0, 0.25)
+		if !selected: i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.ind) / 5.0, 0.25)
 
 func update_tracks():
 	var i = list.get_child(select)
@@ -113,7 +118,9 @@ func update_tracks():
 		tracks_label.text += tracks[i.name][index] + "\n"
 		index += 1
 		if index >= 5:
-			tracks_label.add_theme_font_size_override("font_size", 150 / index)
+			tracks_label.add_theme_font_size_override("font_size", 150.0 / index)
+	
+	$WeekName.text = i.storyName
 
 func update_difficulty():
 	$Difficulty.scale = Vector2(1, 1)
@@ -122,3 +129,18 @@ func update_difficulty():
 	$Difficulty.texture = difficulty[diffselect]
 	if $Difficulty.texture.get_width() >= 200:
 		$Difficulty.scale = Vector2(200.0 / $Difficulty.texture.get_width(), 200.0 / $Difficulty.texture.get_width())
+
+func accept():
+	Audio.a_accept()
+	selected = true
+	Game.can_input = false
+	Game.songList = tracks[list.get_child(select).name]
+	Game.cur_song_index = 0
+	Game.cur_song = Game.songList[Game.cur_song_index]
+	Game.cur_diff = Game.difficulty[diffselect]
+	Game.is_story = true
+	for i in list.get_children():
+		if i == list.get_child(select):
+			i.accepted(true)
+		else:
+			i.accepted(false)

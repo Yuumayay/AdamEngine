@@ -79,6 +79,55 @@ func p_chart(path: String, diff: String):
 			printerr("paths chart: invalid path")
 			return null
 
+func p_modchart(path: String, diff: String):
+	var p := "res://Assets/Data/Song Charts/"
+	if diff == "normal":
+		if FileAccess.file_exists(p + path + "/modchart.gd"):
+			return p + path + "/modchart.gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower() + "/modchart.gd"):
+			return p + path.to_lower() + "/modchart.gd"
+			
+		elif FileAccess.file_exists(p + path.replace(" ", "-") + "/modchart.gd"):
+			return p + path.replace(" ", "-") + "/modchart.gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/modchart.gd"):
+			return p + path.to_lower().replace(" ", "-") + "/modchart.gd"
+			
+		elif FileAccess.file_exists(p + path.replace("-", " ") + "/modchart.gd"):
+			return p + path.replace("-", " ") + "/modchart.gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/modchart.gd"):
+			return p + path.to_lower().replace("-", " ") + "/modchart.gd"
+			
+		else:
+			Audio.a_play("Error")
+			printerr("paths chart: invalid path")
+			return null
+	else:
+		if FileAccess.file_exists(p + path + "/modchart-" + diff + ".gd"):
+			return p + path + "/modchart-" + diff + ".gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower() + "/modchart-" + diff + ".gd"):
+			return p + path.to_lower() + "/modchart-" + diff + ".gd"
+			
+		elif FileAccess.file_exists(p + path.replace(" ", "-") + "/modchart-" + diff + ".gd"):
+			return p + path.replace(" ", "-") + "/modchart-" + diff + ".gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/modchart-" + diff + ".gd"):
+			return p + path.to_lower().replace(" ", "-") + "/modchart-" + diff + ".gd"
+			
+		elif FileAccess.file_exists(p + path.replace("-", " ") + "/modchart-" + diff + ".gd"):
+			return p + path.replace("-", " ") + "/modchart-" + diff + ".gd"
+			
+		elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/modchart-" + diff + ".gd"):
+			return p + path.to_lower().replace("-", " ") + "/modchart-" + diff + ".gd"
+			
+		else:
+			Audio.a_play("Error")
+			printerr("paths chart: invalid path")
+			return null
+
 func p_chara(path: String):
 	return "res://Assets/Data/characters/" + path + ".json"
 

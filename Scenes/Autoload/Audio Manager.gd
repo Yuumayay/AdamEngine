@@ -8,10 +8,13 @@ var cur_beat: int
 var cur_beat_float: float
 var cur_sec: float
 var cur_section: int
+var songLength: float
 
 var beat_hit_bool: bool = false
+var beat_hit_event: bool = false
+var section_hit_event: bool = false
 
-var bpm_array: Array = [400, 800]
+var bpm_array: Array = [100, 200, 400]
 
 func a_play(key: String, pitch = 1.0, volume = 0.0, position = 0.0):
 	var target: AudioStreamPlayer = get_node_or_null(key)
@@ -53,7 +56,14 @@ func a_check(key: String):
 	else:
 		printerr("audio_check: node not found")
 
-func a_set(key: String, path: String, BPM = 100, loop = false, bars = 4):
+func a_get_length(key: String):
+	var target: AudioStreamPlayer = get_node_or_null(key)
+	if target:
+		return target.stream.get_length() * 1000.0
+	else:
+		printerr("audio_check: node not found")
+
+func a_set(key: String, path: String, BPM : float = 100, loop = false, bars = 4):
 	var target: AudioStreamPlayer = get_node(key)
 	if path == "":
 		target.stream = null
@@ -91,7 +101,8 @@ func a_get_beat(key: String, beat = 4):
 	if target:
 		var bars = target.stream.bar_beats
 		var BPM = target.stream.bpm
-		return floor(a_get_sec(key) * BPM / 60.0 / bars * beat)
+		var speed = target.pitch_scale
+		return floor(a_get_sec(key) * BPM / 60.0 / bars * beat / speed)
 	else:
 		printerr("audio_get_beat: node not found")
 		
@@ -114,29 +125,43 @@ func a_get_sec(key: String):
 		printerr("audio_get_sec: node not found")
 
 var value := 0
+var value2 := 0
 
 func _process(_delta):
 	if a_check("Inst"):
+		if songLength == 0:
+			songLength = a_get_length("Inst")
 		if Game.cur_state != Game.PAUSE and Game.cur_state != Game.NOT_PLAYING:
 			beat_hit_bool = false
+			beat_hit_event = false
+			section_hit_event = false
 			cur_beat = a_get_beat("Inst")
 			cur_beat_float = a_get_beat_float("Inst")
 			cur_sec = a_get_sec("Inst")
-			cur_section = a_get_beat("Inst") * 4 / 16
+			cur_section = a_get_beat("Inst", 1)
 			cur_ms = cur_beat_float * (60.0 / bpm * 1000)
 			#print(cur_ms)
 			if value != a_get_beat("Inst"):
 				emit_signal("beat_hit")
 				value = a_get_beat("Inst")
+				beat_hit_event = true
 				if bpm < bpm_array[0]:
 					beat_hit_bool = true
 				elif bpm < bpm_array[1]:
-					if value % 4 == 0:
+					beat_hit_bool = true
+				elif bpm < bpm_array[2]:
+					if value % 2 == 0:
 						beat_hit_bool = true
 				else:
-					if value % 8 == 0:
+					if value % 4 == 0:
 						beat_hit_bool = true
-			if Game.who_sing_section[cur_section]:
-				Game.mustHit = true
+			if value2 != a_get_beat("Inst", 1):
+				value2 = a_get_beat("Inst", 1)
+				section_hit_event = true
+			if cur_section <= Game.who_sing_section.size() - 1:
+				if Game.who_sing_section[cur_section]:
+					Game.mustHit = true
+				else:
+					Game.mustHit = false
 			else:
 				Game.mustHit = false

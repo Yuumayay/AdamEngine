@@ -33,22 +33,34 @@ func _ready():
 	character_set()
 	#note_set()
 	countdown()
-	
+	Modchart.loadModchart()
 	
 func _process(_delta):
-	if Game.cur_state != Game.SPAWN_END and Game.cur_state == Game.COUNTDOWN:
-		if !timer:
-			timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
-		Audio.cur_ms = timer.time_left * -1000
+	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, SPAWN_END, PAUSE}
 	if Game.cur_state == Game.NOT_PLAYING: return
+	
 	if Game.cur_state != Game.SPAWN_END:
+		if Game.cur_state == Game.COUNTDOWN:
+			if !timer:
+				timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
+			Audio.cur_ms = timer.time_left * -1000
+		
 		for i in range(20000):
-			if Game.cur_state == Game.SPAWN_END or !Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
+			if Game.cur_state == Game.SPAWN_END or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
 				break
 			note_spawn_load()
-	if Game.cur_state == Game.SPAWN_END:
+	else:  #Game.cur_state == Game.SPAWN_END
 		if !Audio.a_check("Inst"):
-			quit()
+			if Game.is_story:
+				Game.cur_song_index += 1
+				if Game.cur_song_index < Game.songList.size():
+					moveSong(Game.songList[Game.cur_song_index])
+				else:
+					Game.is_story = false
+					quitStory()
+			else:
+				quit()
+	
 	if Game.cur_state == Game.PLAYING or Game.cur_state == Game.SPAWN_END:
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_stop("Inst")
@@ -71,7 +83,7 @@ func note_spawn_load():
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
 		new_note.sus = Game.sus[note_count]
-		new_note.visible = true
+		#new_note.visible = true
 		if Game.dir[note_count] >= Game.key_count:
 			new_note.player = 1
 		note_group.add_child(new_note)
@@ -80,28 +92,28 @@ func note_spawn_load():
 		else:
 			note_count += 1
 
-func note_spawn():
-	var psec = Game.get_preload_sec()
+#func note_spawn():
+#	var psec = Game.get_preload_sec()
 	
-	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
-		note_group.get_node(str(note_count)).visible = true
-		if note_count == Game.ms.size() - 1:
-			Game.cur_state = Game.SPAWN_END
-		else:
-			note_count += 1
+#	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
+#		note_group.get_node(str(note_count)).visible = true
+#		if note_count == Game.ms.size() - 1:
+#			Game.cur_state = Game.SPAWN_END
+#		else:
+#			note_count += 1
 
 func strum_set():
 	for i in Game.key_count * 2:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
 		new_strum.dir = i
-		new_strum.position = Vector2(125, 600)
-		new_strum.scale = Vector2(0.7 * (4.0 / Game.key_count), 0.7 * (4.0 / Game.key_count))
+		new_strum.position = Vector2(150, 600)
+		new_strum.scale = Vector2(0.75 * (4.0 / Game.key_count), 0.75 * (4.0 / Game.key_count))
 		if i >= Game.key_count:
-			#if Setting.s_get("gameplay", "botplay"):
-				#new_strum.type = 2
-			#else:
-			new_strum.type = 1
-			new_strum.position.x += 300.0 * (0.7 * 4.0 / Game.key_count)
+			if Setting.s_get("gameplay", "botplay"):
+				new_strum.type = 2
+			else:
+				new_strum.type = 1
+			new_strum.position.x += 250.0 * (0.7 * 4.0 / Game.key_count)
 		else:
 			new_strum.type = 0
 		new_strum.position.x += 115.0 * (4.0 / Game.key_count) * i
@@ -114,20 +126,19 @@ func character_set():
 		character.type = i
 		$Characters.add_child(character)
 
-func note_set():
-	var ind := 0
-	for i in Game.dir:
-		#print("spawned")
-		var new_note = note_scn.instantiate()
-		new_note.ind = ind
-		new_note.dir = Game.dir[ind]
-		new_note.ms = Game.ms[ind]
-		new_note.sus = Game.sus[ind]
-		new_note.name = str(ind)
-		if Game.dir[ind] >= Game.key_count:
-			new_note.player = 1
-		note_group.add_child(new_note)
-		ind += 1
+#func note_set():
+#	var ind := 0
+#	for i in Game.dir:
+#		var new_note = note_scn.instantiate()
+#		new_note.ind = ind
+#		new_note.dir = Game.dir[ind]
+#		new_note.ms = Game.ms[ind]
+#		new_note.sus = Game.sus[ind]
+#		new_note.name = str(ind)
+#		if Game.dir[ind] >= Game.key_count:
+#			new_note.player = 1
+#		note_group.add_child(new_note)
+#		ind += 1
 
 func keybind(key):
 	if key <= 18:
@@ -171,69 +182,59 @@ func countdown():
 	start()
 	
 func start():
-	Audio.a_play("Inst")
-	Audio.a_play("Voices")
+	Audio.a_play("Inst", Game.cur_multi)
+	Audio.a_play("Voices", Game.cur_multi)
 	Game.cur_state = Game.PLAYING
+
+func reset_property():
+	Game.total_hit = 0
+	Game.score = 0
+	Game.health = 1.0
+	Game.health_percent = 50.0
+	Game.accuracy = 0.0
+	Game.total_hit = 0.0
+	Game.hit = 0
+	Game.combo = 0
+	Game.max_combo = 0
+	Game.fc_state = "N/A"
+	Game.rating_total = [0,0,0,0,0,0]
+	Audio.songLength = 0
+
+func reset_dict_and_array():
+	Game.notes_data.notes.clear()
+	Game.ms.clear()
+	Game.sus.clear()
+	Game.dir.clear()
+	Game.type.clear()
+	Game.song_data.clear()
+	Game.note_property.clear()
+	Game.notes.clear()
+	Game.cur_input.clear()
+	Game.cur_input_sub.clear()
+	Game.dad_input.clear()
+	Game.song_data.clear()
+	Game.who_sing.clear()
+	Game.who_sing_section.clear()
+	View.strum_pos.clear()
 
 func quit():
 	Game.cur_state = Game.NOT_PLAYING
-	Game.notes_data.notes.clear()
-	Game.ms.clear()
-	Game.sus.clear()
-	Game.dir.clear()
-	Game.type.clear()
-	Game.song_data.clear()
-	Game.note_property.clear()
-	Game.notes.clear()
-	Game.cur_input.clear()
-	Game.cur_input_sub.clear()
-	Game.dad_input.clear()
-	Game.song_data.clear()
-	Game.who_sing.clear()
-	Game.who_sing_section.clear()
-	Game.bf_miss.clear()
-	View.strum_pos.clear()
+	reset_dict_and_array()
 	Audio.a_title()
 	await Trans.t_trans("Freeplay")
-	Game.total_hit = 0
-	Game.score = 0
-	Game.health = 1.0
-	Game.health_percent = 50.0
-	Game.accuracy = 0.0
-	Game.total_hit = 0.0
-	Game.hit = 0
-	Game.combo = 0
-	Game.max_combo = 0
-	Game.fc_state = "N/A"
-	Game.rating_total = [0,0,0,0,0,0]
+	reset_property()
 
-func restart():
+func quitStory():
 	Game.cur_state = Game.NOT_PLAYING
-	Game.notes_data.notes.clear()
-	Game.ms.clear()
-	Game.sus.clear()
-	Game.dir.clear()
-	Game.type.clear()
-	Game.song_data.clear()
-	Game.note_property.clear()
-	Game.notes.clear()
-	Game.cur_input.clear()
-	Game.cur_input_sub.clear()
-	Game.dad_input.clear()
-	Game.song_data.clear()
-	Game.who_sing.clear()
-	Game.who_sing_section.clear()
-	View.strum_pos.clear()
+	reset_dict_and_array()
+	Audio.a_title()
+	await Trans.t_trans("Story Mode")
+	reset_property()
+
+func moveSong(what):
+	Game.cur_state = Game.NOT_PLAYING
+	reset_dict_and_array()
+	Game.cur_song = what
 	Trans.t_trans("Gameplay")
 	await get_tree().create_timer(0.25).timeout
-	Game.total_hit = 0
-	Game.score = 0
-	Game.health = 1.0
-	Game.health_percent = 50.0
-	Game.accuracy = 0.0
-	Game.total_hit = 0.0
-	Game.hit = 0
-	Game.combo = 0
-	Game.max_combo = 0
-	Game.fc_state = "N/A"
-	Game.rating_total = [0,0,0,0,0,0]
+	reset_property()

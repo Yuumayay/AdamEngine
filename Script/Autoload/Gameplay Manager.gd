@@ -45,6 +45,8 @@ var song_data: Dictionary
 const rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
 const health_gain: Array = [0.1, 0.08, 0.05, 0, -0.05]
 const score_gain: Array = [400, 350, 200, 100, 0, -10]
+const difficulty: Array = ["easy", "normal", "hard"]
+const sus_tolerance: float = 200.0
 
 ## GAMEPLAY PROPERTY ##
 var score: int
@@ -59,6 +61,10 @@ var fc_state: String = "N/A"
 
 var rating_total: Array = [0, 0, 0, 0, 0, 0]
 
+var is_story: bool
+var songList: Array
+var cur_song_index: int
+
 var p1_position: Vector2
 var p2_position: Vector2
 
@@ -68,8 +74,9 @@ var defaultZoom: float
 var isPixel: bool
 
 ## SONG JSON ##
-var cur_song: String = "flaming-glove"
-var cur_diff: String = "hard"
+var cur_song: String = "gkbr"
+var cur_diff: String = "normal"
+
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
@@ -77,6 +84,20 @@ var player2: String = "dad"
 ## CHARACTER JSON ##
 var p1_json: Dictionary
 var p2_json: Dictionary
+
+var iconBF: String:
+	set(v):
+		iconBF = v
+		var healthBarBG = $/root/Gameplay/UI/HealthBarBG
+		if healthBarBG:
+			healthBarBG.iconUpdate()
+var iconDAD: String:
+	set(v):
+		iconDAD = v
+		var healthBarBG2 = $/root/Gameplay/UI/HealthBarBG
+		if healthBarBG2:
+			healthBarBG2.iconUpdate()
+
 var character_load_fail: bool
 
 func add_score(value):
@@ -121,8 +142,8 @@ func setup(data):
 	var song: Dictionary = data.song
 	song_name.append(song.song)
 	notes.append(song.notes)
-	cur_speed = song.speed
-	Audio.bpm = song.bpm
+	cur_speed = song.speed / cur_multi
+	Audio.bpm = song.bpm * cur_multi
 	key_count = 4
 	
 	stage = File.f_read("res://Assets/Data/Stages/" + cur_stage + ".json", ".json")
@@ -333,10 +354,32 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 	sprite_data.play(play_animation_name)
 	
 	return sprite_data
-	
+
+func getColor(t: Texture2D, r1: int, r2: int) -> Color:
+	var colorArray: Array = []
+	var colorArray2: Array = []
+	var colorCount: Array = []
+	for i in range(r1, r2):
+		for ind in range(r1, r2):
+			var pixelColor: Color = t.get_image().get_pixel(i, ind)
+			if pixelColor.a == 1 and pixelColor != Color(0, 0, 0, 1):
+				if not colorArray.has(pixelColor):
+					colorArray2.append(pixelColor)
+				colorArray.append(pixelColor)
+			else:
+				continue
+	if colorArray != []:
+		var index := 0
+		for i in colorArray2:
+			colorCount.append([colorArray.count(i), index])
+			index += 1
+		colorCount.sort()
+		return colorArray2[colorCount[0][1]]
+	return Color(0, 0, 0, 1)
+
 func get_preload_sec():
 	# 先読み時間をゲームスピードを考慮して計算
-	return Game.PRELOAD_SEC / (Game.cur_speed * Game.cur_multi) * 2.0
+	return (Game.PRELOAD_SEC / Game.cur_speed) / 0.75
 
 func _input(event):
 	if cur_state == NOT_PLAYING or cur_state == PAUSE: return

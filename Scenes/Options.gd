@@ -109,6 +109,7 @@ func _process(_delta):
 				Audio.a_scroll()
 		if Input.is_action_just_pressed("ui_cancel"):
 			if layer == 0:
+				File.f_save("user://", "ae_options_data", ".json", Setting.setting)
 				Audio.a_stop("Option Menu")
 				Audio.a_title()
 				Audio.a_cancel()

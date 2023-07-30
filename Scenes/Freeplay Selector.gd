@@ -52,6 +52,8 @@ func _ready():
 			ind += 1
 	child_count = get_child_count() - 1
 	
+	get_parent().get_node("Multi").text = str(Game.cur_multi)
+	
 	for i in get_child_count():
 		if Paths.p_chart(get_child(i).name, "hard"):
 			var songfile = File.f_read(Paths.p_chart(get_child(i).name, "hard"), ".json")
@@ -74,17 +76,24 @@ func _process(_delta):
 			else:
 				select += 1
 		if Input.is_action_just_pressed("game_ui_left"):
-			if diffselect == 0:
-				diffselect = diff_count
+			if Input.is_action_pressed("game_shift"):
+				Game.cur_multi -= 0.05
+				get_parent().get_node("Multi").text = str(Game.cur_multi)
 			else:
-				diffselect -= 1
+				if diffselect == 0:
+					diffselect = diff_count
+				else:
+					diffselect -= 1
 		if Input.is_action_just_pressed("game_ui_right"):
-			if diffselect == diff_count:
-				diffselect = 0
+			if Input.is_action_pressed("game_shift"):
+				Game.cur_multi += 0.05
+				get_parent().get_node("Multi").text = str(Game.cur_multi)
 			else:
-				diffselect += 1
+				if diffselect == diff_count:
+					diffselect = 0
+				else:
+					diffselect += 1
 		if Input.is_action_just_pressed("ui_accept"):
-			Game.can_input = false
 			accept()
 		if Input.is_action_just_pressed("ui_cancel"):
 			Game.can_input = false
@@ -111,6 +120,7 @@ func accept():
 	Game.cur_song = get_child(select).name
 	if !Paths.p_chart(Game.cur_song, Game.cur_diff):
 		return
+	Game.can_input = false
 	selected = true
 	Audio.a_accept()
 	for i in get_children():

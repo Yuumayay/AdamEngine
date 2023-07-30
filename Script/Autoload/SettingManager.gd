@@ -39,17 +39,21 @@ var setting: Dictionary = {
 		"gameplay": {
 			"downscroll": {
 				"type": "bool",
-				"cur": false,
+				"cur": false
 			},
 			"middlescroll": {
 				"type": "bool",
-				"cur": false,
+				"cur": false
 			},
 			"hit sound": {
 				"type": "array",
 				"cur": 0,
 				"array": ["None", "Osu hit", "AE hit 1", "AE hit 2", "AE hit 3", "AE hit 4", "KE clap", "KE snap", "Keystroke"],
 				"metadata": ["none", "osu", "aehit1", "aehit2", "aehit3", "aehit4", "clap", "snap", "key"]
+			},
+			"botplay": {
+				"type": "bool",
+				"cur": false
 			}
 		},
 		"graphics": {
@@ -99,15 +103,15 @@ func s_set_array(category: String, key: String, value):
 	var ind = setting.category[category][key].cur
 	var array = setting.category[category][key].array
 	var metadata = setting.category[category][key].metadata
-	var set = ind + value
-	if array.size() <= set:
-		set = 0
-	if set == -1:
-		set = array.size() - 1
-	setting.category[category][key].cur = set
+	var set_value = ind + value
+	if array.size() <= set_value:
+		set_value = 0
+	if set_value == -1:
+		set_value = array.size() - 1
+	setting.category[category][key].cur = set_value
 	if key.contains("hit sound"):
 		Audio.a_stop("Scroll")
-		Audio.a_play(metadata[set])
+		Audio.a_play(metadata[set_value])
 
-func _process(delta):
+func _process(_delta):
 	Engine.max_fps = s_get("graphics", "max fps")

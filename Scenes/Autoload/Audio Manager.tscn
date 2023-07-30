@@ -140,7 +140,6 @@ volume_db = 5.0
 
 [node name="key" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("29_gbdfq")
-volume_db = 5.0
 
 [node name="none" type="AudioStreamPlayer" parent="."]
 volume_db = 5.0
