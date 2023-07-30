@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgy0cg5q0r7mv"]
+
+[ext_resource type="Script" path="res://Script/alphabet.gd" id="1_hbvio"]
+
+[node name="Alphabet" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_hbvio")

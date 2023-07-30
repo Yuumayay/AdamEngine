@@ -173,7 +173,9 @@ var modcharts: Dictionary = {
 	}
 }
 
-var key_count: Array = [[4], [4], [4]]
+var can_input: bool = true
+
+#var key_count: Array = [[4], [4], [4]]
 
 var cur_section: int
 
@@ -194,7 +196,11 @@ var bf_count: int = 1
 var dad_count: int = 1
 var gf_count: int = 1
 
-## SETTING ##
+var bf_data: Dictionary = {"icon_name": ["bf"], "key_count": [4], "note_skin": ["default"], "modchart": [[]]}
+var dad_data: Dictionary = {"icon_name": ["dad"], "key_count": [4], "note_skin": ["default"], "modchart": [[]]}
+var gf_data: Dictionary = {"icon_name": ["gf"], "key_count": [4], "note_skin": ["default"], "modchart": [[]]}
+
+## SETTINGS ##
 var metronome: bool = false
 var hit_sound: int = 0
 

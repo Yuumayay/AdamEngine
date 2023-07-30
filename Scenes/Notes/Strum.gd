@@ -8,8 +8,10 @@ enum {AUTO_DAD, PLAYER, AUTO_PLAYER}
 @export var type: int
 
 var rating = preload("res://Scenes/Rating.tscn")
+var hit: String
 
 func _ready():
+	hit = Setting.setting.category["gameplay"]["hit sound"]["metadata"][Setting.s_get("gameplay", "hit sound")]
 	if Game.note_anim[dir - type * Game.key_count].contains("2"):
 		animation = Game.note_anim[dir - type * Game.key_count].replace("2", "") + " static"
 	else:
@@ -36,21 +38,28 @@ func _process(_delta):
 	elif type == AUTO_PLAYER:
 		playerbot_strum()
 
+func hide_note(i):
+	# 消去フラグをオンにして、ノートを非表示
+	i.free_f = true
+	i.visible = false
+		
 
 func bot_strum():
 	for i in Game.notes_data.notes:
 		if !i or i.free_f or dir != i.dir:
 			continue
+		
+		# strumを通りすぎたとき (現在の曲のmsがノーツのmsを超えた）
 		if Audio.cur_ms >= i.ms:
-			if i.sus == 0:
+			if i.sus == 0: # 単押しだったら
+				Audio.a_volume_set("Voices", 0)
 				Game.dad_input[dir] = 2
-				Audio.a_play("Hit")
-				i.free_f = true
-				i.visible = false
-			else:
+				hide_note(i)
+			else: # 長押しだったら
+				# ノーツだけを透明にし、長押しラインのポイント0の位置をstrumに合わさるように変える
 				if i.self_modulate.a != 0:
+					Audio.a_volume_set("Voices", 0)
 					Game.dad_input[dir] = 2
-					Audio.a_play("Hit")
 					i.self_modulate.a = 0
 					break
 				Game.dad_input[dir] = 1
@@ -58,8 +67,7 @@ func bot_strum():
 				line.set_point_position(0, Vector2(0, (View.strum_pos[dir].y - i.position.y) / i.scale.y))
 				if absf(line.get_point_position(0).y - line.get_point_position(1).y) <= 50 * Game.cur_multi:
 					Game.dad_input[dir] = 0
-					i.free_f = true
-					i.visible = false
+					hide_note(i)
 
 func playerbot_strum():
 	for i in Game.notes_data.notes:
@@ -68,15 +76,14 @@ func playerbot_strum():
 		if Audio.cur_ms >= i.ms:
 			if i.sus == 0:
 				Game.cur_input[dir - type * Game.key_count] = 2
-				Audio.a_play("Hit")
-				i.free_f = true
-				i.visible = false
+				Audio.a_play(hit)
+				hide_note(i)
 				i.hit_ms = 0.0
 				judge(i.hit_ms, i.type)
 			else:
 				if i.self_modulate.a != 0:
 					Game.cur_input[dir - type * Game.key_count] = 2
-					Audio.a_play("Hit")
+					Audio.a_play(hit)
 					i.self_modulate.a = 0
 					i.hit_ms = 0.0
 					judge(i.hit_ms, i.type)
@@ -84,10 +91,9 @@ func playerbot_strum():
 				Game.cur_input[dir - type * Game.key_count] = 1
 				var line: Line2D = i.get_node("Line")
 				line.set_point_position(0, Vector2(0, (View.strum_pos[dir].y - i.position.y) / i.scale.y))
-				if absf(line.get_point_position(0).y - line.get_point_position(1).y) <= 50 * Game.cur_multi:
+				if line.get_point_position(1).y - line.get_point_position(0).y <= Game.get_preload_sec() * 50:
 					Game.cur_input[dir - type * Game.key_count] = 0
-					i.free_f = true
-					i.visible = false
+					hide_note(i)
 
 func player_strum():
 	for i in Game.notes_data.notes:
@@ -98,9 +104,9 @@ func player_strum():
 			if i.sus == 0:
 				if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
-					Audio.a_play("Hit")
-					i.free_f = true
-					i.visible = false
+					Audio.a_volume_set("Voices", 0)
+					Audio.a_play(hit)
+					hide_note(i)
 					i.hit_ms = msdiff
 					judge(i.hit_ms, i.type)
 					break
@@ -114,16 +120,15 @@ func player_strum():
 						var line: Line2D = i.get_node("Line")
 						if msdiff >= 0:
 							line.set_point_position(0, Vector2(0, (View.strum_pos[dir].y - i.position.y) / i.scale.y))
-						if line.get_point_position(0).y + 100 * i.up_or_down <= line.get_point_position(1).y:
-							i.free_f = true
-							i.visible = false
+						if line.get_point_position(1).y - line.get_point_position(0).y <= 50:
+							hide_note(i)
 					else:
 						i.free_f = true
 						i.modulate.a = 0.5
 				else:
 					if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 						animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
-						Audio.a_play("Hit")
+						Audio.a_play(hit)
 						i.self_modulate.a = 0
 						i.hit_ms = msdiff
 						judge(i.hit_ms, i.type)

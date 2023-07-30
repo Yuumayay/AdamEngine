@@ -17,6 +17,7 @@ func _ready():
 		var songs = week_data.songs
 		for i in songs:
 			var new_song: RichTextLabel = get_parent().get_node("Template").duplicate()
+			#var alphabet: Node = new_song.get_node("Alphabet")
 			var songname = i[0]
 			var icon: Texture2D
 			if FileAccess.file_exists("res://Assets/Images/Icons/" + i[1] + ".png"):
@@ -83,6 +84,7 @@ func _process(_delta):
 			else:
 				diffselect += 1
 		if Input.is_action_just_pressed("ui_accept"):
+			Game.can_input = false
 			accept()
 		if Input.is_action_just_pressed("ui_cancel"):
 			Game.can_input = false

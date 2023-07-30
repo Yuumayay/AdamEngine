@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://b4bl2bwbpjmq8" path="res://Assets/Images/Notes/Default/held/down hold0000.png" id="3_7wh5w"]
 
 [node name="Note" type="AnimatedSprite2D"]
-visible = false
 sprite_frames = ExtResource("1_eehdy")
 animation = &"shaggydeath"
 script = ExtResource("2_ynu17")

@@ -18,9 +18,12 @@ func _ready():
 func draw_all():
 	var total_x := 0
 	var space := 50
-	var bf_pos: Array
-	var dad_pos: Array
-	var gf_pos: Array
+	var bf_pos: Array = []
+	var dad_pos: Array = []
+	var gf_pos: Array = []
+	var bf_key = Chart.bf_data["key_count"]
+	var dad_key = Chart.dad_data["key_count"]
+	var gf_key = Chart.gf_data["key_count"]
 	
 	# remove all child
 	for i in get_children():
@@ -34,22 +37,22 @@ func draw_all():
 	for i in Chart.bf_count:
 		total_x += space
 		bf_pos.append(total_x)
-		draw_mass(total_x, 250, Chart.key_count[0][i], 32, 1, 0, Chart.cur_section, 1, i)
-		total_x += (50 * Chart.key_count[0][i])
+		draw_mass(total_x, 250, bf_key[i], 32, 1, 0, Chart.cur_section, 1, i)
+		total_x += (50 * bf_key[i])
 	
 	# dad mass
 	for i in Chart.dad_count:
 		total_x += space
 		dad_pos.append(total_x)
-		draw_mass(total_x, 250, Chart.key_count[1][i], 32, 1, 0, Chart.cur_section, 2, i)
-		total_x += (50 * Chart.key_count[1][i])
+		draw_mass(total_x, 250, dad_key[i], 32, 1, 0, Chart.cur_section, 2, i)
+		total_x += (50 * dad_key[i])
 	
 	# gf mass
 	for i in Chart.gf_count:
 		total_x += space
 		gf_pos.append(total_x)
-		draw_mass(total_x, 250, Chart.key_count[2][i], 32, 1, 0, Chart.cur_section, 3, i)
-		total_x += (50 * Chart.key_count[2][i])
+		draw_mass(total_x, 250, gf_key[i], 32, 1, 0, Chart.cur_section, 3, i)
+		total_x += (50 * gf_key[i])
 	
 	# beat line
 	draw_beat_line(8, Chart.cur_section * 4)
@@ -59,15 +62,15 @@ func draw_all():
 	
 	# bf icon
 	for i in Chart.bf_count:
-		draw_icon(bf_pos[i] + (50.0 * Chart.key_count[0][i] / 2.0), "bf", "PLAYER", i)
+		draw_icon(bf_pos[i] + (50.0 * bf_key[i] / 2.0), Chart.bf_data["icon_name"][i], "PLAYER", i)
 	
 	# dad icon
 	for i in Chart.dad_count:
-		draw_icon(dad_pos[i] + (50.0 * Chart.key_count[1][i] / 2.0), "dad", "OPPONENT", i)
+		draw_icon(dad_pos[i] + (50.0 * dad_key[i] / 2.0), Chart.dad_data["icon_name"][i], "OPPONENT", i)
 	
 	# gf icon
 	for i in Chart.gf_count:
-		draw_icon(gf_pos[i] + (50.0 * Chart.key_count[2][i] / 2.0), "gf", "GF", i)
+		draw_icon(gf_pos[i] + (50.0 * gf_key[i] / 2.0), Chart.gf_data["icon_name"][i], "GF", i)
 
 func draw_mass(og_x, og_y, column, row, alpha, type, section, player, p_ind):
 	var index = 0
@@ -117,6 +120,12 @@ func draw_icon(x, icon_name, p_type, p_ind):
 	new_icon.p_type = p_type
 	if p_ind is int:
 		new_icon.p_ind = p_ind
+	if p_type == "PLAYER":
+		new_icon.key_count = Chart.bf_data["key_count"][p_ind]
+	elif p_type == "OPPONENT":
+		new_icon.key_count = Chart.dad_data["key_count"][p_ind]
+	elif p_type == "GF":
+		new_icon.key_count = Chart.gf_data["key_count"][p_ind]
 	new_icon.init()
 	
 	add_child.call_deferred(new_icon)
@@ -124,46 +133,97 @@ func draw_icon(x, icon_name, p_type, p_ind):
 func add_character(type):
 	if type == "PLAYER":
 		Chart.bf_count += 1
-		Chart.key_count[0].append(4)
+		Chart.bf_data["key_count"].append(4)
+		Chart.bf_data["icon_name"].append("bf")
 		draw_all()
 	elif type == "OPPONENT":
 		Chart.dad_count += 1
-		Chart.key_count[1].append(4)
+		Chart.dad_data["key_count"].append(4)
+		Chart.dad_data["icon_name"].append("dad")
 		draw_all()
 	elif type == "GF":
 		Chart.gf_count += 1
-		Chart.key_count[2].append(4)
+		Chart.gf_data["key_count"].append(4)
+		Chart.gf_data["icon_name"].append("gf")
+		draw_all()
+
+func erase_character(type, ind):
+	if type == "PLAYER":
+		Chart.bf_count -= 1
+		Chart.bf_data["key_count"].erase(Chart.bf_data["key_count"][ind])
+		Chart.bf_data["icon_name"].erase(Chart.bf_data["icon_name"][ind])
+		draw_all()
+	elif type == "OPPONENT":
+		Chart.dad_count -= 1
+		Chart.dad_data["key_count"].erase(Chart.dad_data["key_count"][ind])
+		Chart.dad_data["icon_name"].erase(Chart.dad_data["icon_name"][ind])
+		draw_all()
+	elif type == "GF":
+		Chart.gf_count -= 1
+		Chart.gf_data["key_count"].erase(Chart.gf_data["key_count"][ind])
+		Chart.gf_data["icon_name"].erase(Chart.gf_data["icon_name"][ind])
+		draw_all()
+
+func clone_character(type, icon_name, key_count):
+	if type == "PLAYER":
+		Chart.bf_count += 1
+		Chart.bf_data["key_count"].append(key_count)
+		Chart.bf_data["icon_name"].append(icon_name)
+		draw_all()
+	elif type == "OPPONENT":
+		Chart.dad_count += 1
+		Chart.dad_data["key_count"].append(key_count)
+		Chart.dad_data["icon_name"].append(icon_name)
+		draw_all()
+	elif type == "GF":
+		Chart.gf_count += 1
+		Chart.gf_data["key_count"].append(key_count)
+		Chart.gf_data["icon_name"].append(icon_name)
+		draw_all()
+
+func set_character(type, ind, value):
+	if type == "PLAYER":
+		Chart.bf_data["icon_name"][ind] = value
+		draw_all()
+	elif type == "OPPONENT":
+		Chart.dad_data["icon_name"][ind] = value
+		draw_all()
+	elif type == "GF":
+		Chart.gf_data["icon_name"][ind] = value
 		draw_all()
 
 func set_key_count(type, ind, value):
 	if type == "PLAYER":
-		if Chart.key_count[0][ind] > value:
+		if Chart.bf_data["key_count"][ind] > value:
 			var index := 0
 			for i in Chart.placed_notes.notes:
 				print(i)
 				if i[0] >= value:
 					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
 				index += 1
-		Chart.key_count[0][ind] = value
+		Chart.bf_data["key_count"][ind] = value
 		draw_all()
 	elif type == "OPPONENT":
-		if Chart.key_count[1][ind] > value:
+		if Chart.dad_data["key_count"][ind] > value:
 			var index := 0
 			for i in Chart.placed_notes.notes:
 				if i[0] >= value:
 					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
 				index += 1
-		Chart.key_count[1][ind] = value
+		Chart.dad_data["key_count"][ind] = value
 		draw_all()
 	elif type == "GF":
-		if Chart.key_count[2][ind] > value:
+		if Chart.gf_data["key_count"][ind] > value:
 			var index := 0
 			for i in Chart.placed_notes.notes:
 				if i[0] >= value:
 					Chart.placed_notes.notes[index].erase()
 				index += 1
-		Chart.key_count[2][ind] = value
+		Chart.gf_data["key_count"][ind] = value
 		draw_all()
+
+func set_note_skin(type, ind, value):
+	pass
 
 func _process(_delta):
 	cam.position.x = 640 + Chart.cur_x
@@ -173,15 +233,15 @@ func _process(_delta):
 	key_check()
 	scroll()
 
-var ind: int = 0
+var ind2: int = 0
 
 func scroll():
 	if Chart.playing:
 		Chart.cur_y = Audio.a_get_beat_float("Inst", Chart.bpm) * -200 * Chart.multi
-		if ind != Audio.a_get_beat("Inst", Chart.metronome_bpm):
-			ind = Audio.a_get_beat("Inst", Chart.metronome_bpm)
+		if ind2 != Audio.a_get_beat("Inst", Chart.metronome_bpm):
+			ind2 = Audio.a_get_beat("Inst", Chart.metronome_bpm)
 			if Chart.metronome:
-				if ind % 4 == 0:
+				if ind2 % 4 == 0:
 					Audio.a_play("Tick")
 				else:
 					Audio.a_play("Tock")

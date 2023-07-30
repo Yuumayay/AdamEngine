@@ -13,7 +13,7 @@ extends AnimatedSprite2D
 @export var damage: float = 0.1
 @export var hitsound: String = "hit2"
 @export var misssound: String = "miss"
-@export var up_or_down: int = -1
+@export var up_or_down: int = 1
 @onready var line: Line2D = $Line
 var init_y: float = 0.
 var elapsed_ms: float = 0.
@@ -53,22 +53,24 @@ func _ready():
 		animation = Game.note_anim[dir - player * Game.key_count]
 	else:
 		animation = typename[type]
-	line.set_point_position(1, Vector2(0, sus * up_or_down))
+	line.set_point_position(1, Vector2(0, sus * up_or_down * -1))
 	line.texture = held[dir % 4]
 	line.modulate.a = 0.5
 	if dir == 0:
 		pass
 	
-	speed = View.note_spawn_y[0] / (Game.PRELOAD_SEC / Game.cur_speed) * Game.cur_multi * up_or_down
-	#print(speed)
+	var psec = Game.get_preload_sec()
+	#speed = (View.strum_pos[dir].y - View.note_spawn_y[0]) / (Game.PRELOAD_SEC / Game.cur_speed) * Game.cur_multi * up_or_down
+	speed = (View.strum_pos[dir].y - View.note_spawn_y[0]) / (psec)
+	#position.y = View.strum_pos[dir].y + View.note_spawn_y[0] * ((ms - Audio.cur_ms) / (psec / Game.cur_speed * 1000))
 	
 	Game.notes_data.notes.append(self)
 	
 func _process(delta):
-	if Game.cur_state == Game.NOT_PLAYING: return
-	if visible == true:
-		position.y = View.strum_pos[dir].y + (Audio.cur_ms - ms) 
-	#position.y += speed * delta
+	if Game.cur_state == Game.NOT_PLAYING or Game.cur_state == Game.PAUSE: return
+	if visible:
+		#position.y = View.strum_pos[dir].y + (Audio.cur_ms - ms) 
+		position.y += speed * delta
 	if free_f:
 		remain_time -= delta
 		if remain_time <= 0:
@@ -76,6 +78,7 @@ func _process(delta):
 				Audio.a_play("Miss" + str(randi_range(1, 3)), 1.0, -5.0)
 				Game.add_rating(Game.MISS)
 				Game.bf_miss[dir - Game.key_count] = 1
+				Audio.a_volume_set("Voices", -80)
 				if do_hit:
 					Game.add_health(-999)
 					Audio.a_play("Loss Matt")

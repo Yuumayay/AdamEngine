@@ -27,74 +27,38 @@ var keybind_default: Dictionary = {
 
 var keybind_default_sub: Dictionary = {}
 
-var OG_SETTINGS: Dictionary = {
-	"options": {
-		"category": {
-			"keybinds": {
-				"binds": {
-					"type": "bind",
-					"bind": input,
-					"desc": "Enter to go keybind menu."
-				}
+var setting: Dictionary = {
+	"category": {
+		"keybind": {
+			"bind": {
+				"type": "bind",
+				"key": 4,
+				"cur": keybind_default["4k"]
+			}
+		},
+		"gameplay": {
+			"downscroll": {
+				"type": "bool",
+				"cur": false,
 			},
-			"gameplay": {
-				"downscroll": {
-					"type": "bool",
-					"default": true,
-					"current": true,
-					"desc": "Scroll direction. if checked, scroll direction is down."
-				},
-				"updownscroll": {
-					"type": "bool",
-					"default": false,
-					"current": false,
-					"desc": "Placeholder"
-				},
-				"botplay": {
-					"type": "bool",
-					"default": false,
-					"current": false,
-					"desc": ""
-				},
-				"practice mode": {
-					"type": "bool",
-					"default": false,
-					"current": false,
-					"desc": ""
-				},
-				"awful miss": {
-					"type": "bool",
-					"default": false,
-					"current": false,
-					"desc": ""
-				},
-				"drain type": {
-					"type": "array",
-					"array": ["adam", "psych", "kade 1.2"],
-					"array_data": ["adam", "psych", "old-kade"],
-					"default": 0,
-					"current": 0,
-					"desc": "Placeholder"
-				}
+			"middlescroll": {
+				"type": "bool",
+				"cur": false,
 			},
-			"graphics": {
-				"fps": {
-					"type": "value",
-					"value_range": [60, 240],
-					"default": 240,
-					"current": 240,
-					"desc": "The number of times the screen is updated per second."
-				}
-			},
-			"sounds": {
-				"hit sound": {
-					"type": "array",
-					"array": ["no sound", "sound a", "sound b", "sound c", "sound d"],
-					"array_data": ["none", "hit", "hit2", "hit3", "hit4"],
-					"default": 2,
-					"current": 2,
-					"desc": "Change the sound when hitting the notes."
-				}
+			"hit sound": {
+				"type": "array",
+				"cur": 0,
+				"array": ["None", "Osu hit", "AE hit 1", "AE hit 2", "AE hit 3", "AE hit 4", "KE clap", "KE snap", "Keystroke"],
+				"metadata": ["none", "osu", "aehit1", "aehit2", "aehit3", "aehit4", "clap", "snap", "key"]
+			}
+		},
+		"graphics": {
+			"max fps": {
+				"type": "int_range",
+				"cur": 60,
+				"range": [30, 240],
+				"changesec": 0,
+				"step": 1
 			}
 		}
 	}
@@ -126,4 +90,24 @@ func _ready():
 	keybind_default_sub["18k"] = [l, d, u, r, l, d, u, r, l, r, l, d, u, r, l, d, u, r]
 
 func s_get(category: String, key: String):
-	return OG_SETTINGS.options.category[category][key].current
+	return setting.category[category][key].cur
+
+func s_set(category: String, key: String, value):
+	setting.category[category][key].cur = value
+
+func s_set_array(category: String, key: String, value):
+	var ind = setting.category[category][key].cur
+	var array = setting.category[category][key].array
+	var metadata = setting.category[category][key].metadata
+	var set = ind + value
+	if array.size() <= set:
+		set = 0
+	if set == -1:
+		set = array.size() - 1
+	setting.category[category][key].cur = set
+	if key.contains("hit sound"):
+		Audio.a_stop("Scroll")
+		Audio.a_play(metadata[set])
+
+func _process(delta):
+	Engine.max_fps = s_get("graphics", "max fps")

@@ -24,7 +24,6 @@ offset_right = 252.0
 offset_bottom = 91.0
 theme_override_fonts/normal_font = ExtResource("3_n65er")
 bbcode_enabled = true
-text = "TEST"
 scroll_active = false
 autowrap_mode = 0
 script = ExtResource("4_x5sm4")
@@ -38,7 +37,6 @@ bumpin_scale = Vector2(0.95, 0.95)
 
 [node name="Error" type="Label" parent="Template/Icon"]
 visible = false
-anchors_preset = -1
 offset_left = 43.0
 offset_top = -39.0
 offset_right = 83.0

@@ -28,9 +28,17 @@ func _ready():
 		if player_type == EVENT:
 			note.animation = "event"
 		else:
-			note.animation = View.keys[str(Chart.key_count[player_type - 1][player_ind]) + "k"][dir]
+			anim_set()
 		note.visible = true
 		line.visible = true
+
+func anim_set():
+	if player_type == BF:
+		note.animation = View.keys[str(Chart.bf_data["key_count"][player_ind]) + "k"][dir]
+	elif player_type == DAD:
+		note.animation = View.keys[str(Chart.dad_data["key_count"][player_ind]) + "k"][dir]
+	elif player_type == GF:
+		note.animation = View.keys[str(Chart.gf_data["key_count"][player_ind]) + "k"][dir]
 
 func _process(_delta):
 	place()
@@ -38,7 +46,7 @@ func _process(_delta):
 	
 func place():
 	if abs(global_position.x + 24 - get_global_mouse_position().x) <= 24 and abs(global_position.y + 24 - get_global_mouse_position().y) <= 24:
-		if Input.is_action_just_pressed("game_click"):
+		if Input.is_action_just_pressed("game_click") and Chart.can_input:
 			if note.visible:
 				print("removed")
 				note.visible = false
@@ -53,7 +61,7 @@ func place():
 				if player_type == EVENT:
 					note.animation = "event"
 				else:
-					note.animation = View.keys[str(Chart.key_count[player_type - 1][player_ind]) + "k"][dir]
+					anim_set()
 				note.visible = true
 				line.visible = true
 				

@@ -1,0 +1,34 @@
+{
+    "category": {
+        "keybind": {
+            "bind": {
+                "type": "bind",
+                "key": 4
+            }
+        },
+        "gameplay": {
+            "downscroll": {
+                "type": "bool",
+                "cur": false
+            },
+            "middlescroll": {
+                "type": "bool",
+                "cur": false
+            },
+            "hit sound": {
+                "type": "array",
+                "cur": "none",
+                "array": ["None", "Osu hit", "AE hit", "KE clap", "KE snap"],
+                "metadata": ["none", "osu", "aehit", "clap", "snap"]
+            }
+        },
+        "graphics": {
+            "max fps": {
+                "type": "int range",
+                "cur": 60,
+                "range": [30, 240],
+                "changesec": 0
+            }
+        }
+    }
+}

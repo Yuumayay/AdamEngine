@@ -68,8 +68,8 @@ var defaultZoom: float
 var isPixel: bool
 
 ## SONG JSON ##
-var cur_song: String = "test"
-var cur_diff: String = "normal"
+var cur_song: String = "flaming-glove"
+var cur_diff: String = "hard"
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
@@ -106,7 +106,12 @@ func add_rating(value):
 		
 	hit += 1
 	accuracy = total_hit / hit
-
+	
+func sort_ascending(a, b):
+	if a[0] < b[0]:
+		return true
+	return false
+	
 # json load
 func setup(data):
 	data = JSON.stringify(data)
@@ -116,6 +121,7 @@ func setup(data):
 	var song: Dictionary = data.song
 	song_name.append(song.song)
 	notes.append(song.notes)
+	cur_speed = song.speed
 	Audio.bpm = song.bpm
 	key_count = 4
 	
@@ -148,8 +154,10 @@ func setup(data):
 			key_count = 9
 	if song.has("keyCount"):
 		key_count = song.keyCount
-	#key_count = 100
+		
 	for i in notes[0]:
+		var sectionNotes : Array= i.sectionNotes
+		sectionNotes.sort_custom(sort_ascending) # notesがたまに整列してないため時間で並び替え
 		who_sing_section.append(i.mustHitSection)
 		for ind in i.sectionNotes:
 			if note_property.has(ind):
@@ -326,6 +334,9 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 	
 	return sprite_data
 	
+func get_preload_sec():
+	# 先読み時間をゲームスピードを考慮して計算
+	return Game.PRELOAD_SEC / (Game.cur_speed * Game.cur_multi) * 2.0
 
 func _input(event):
 	if cur_state == NOT_PLAYING or cur_state == PAUSE: return

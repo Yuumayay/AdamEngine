@@ -45,3 +45,14 @@ func f_read(path: String, type: String):
 		data = content
 	file.close()
 	return data
+
+func _ready():
+	if FileAccess.file_exists("user://ae_options_data.json"):
+		Setting.setting = f_read("user://ae_options_data.json", ".json")
+	else:
+		f_save("user://", "ae_options_data", ".json", Setting.setting)
+
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		print("end")
+		f_save("user://", "ae_options_data", ".json", Setting.setting)

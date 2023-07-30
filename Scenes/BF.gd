@@ -145,8 +145,8 @@ func player_process(delta):
 		animRemain -= delta
 	for i in range(Game.key_count):
 		if Game.cur_input[i] == 2 or Game.cur_input_sub[i] == 2:
-			if Setting.s_get("gameplay", "botplay"):
-				Game.cur_input[i] = 0
+			#if Setting.s_get("gameplay", "botplay"):
+				#Game.cur_input[i] = 0
 			animDirection(i)
 		if Game.bf_miss[i] == 1:
 			Game.bf_miss[i] = 0

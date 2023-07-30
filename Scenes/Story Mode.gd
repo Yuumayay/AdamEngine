@@ -3,8 +3,16 @@ extends Node2D
 @onready var list = $Weeks
 @onready var tracks_label: Label = $SongList
 
+var arrow = "res://Assets/Images/Story Mode/ui_arrow.xml"
+
+var difficulty: Array = [preload("res://Assets/Images/Story Mode/Difficulties/easy.png"),
+preload("res://Assets/Images/Story Mode/Difficulties/normal.png"),
+preload("res://Assets/Images/Story Mode/Difficulties/hard.png"),]
+
 var select: int = 0
 var child_count: int = 0
+var diffselect = 1
+var diff_count = 2
 
 var tracks: Dictionary = {}
 
@@ -34,8 +42,20 @@ func _ready():
 		list.add_child(new_item)
 		ind += 1
 	
+	for i in range(2):
+		var new_arrow: AnimatedSprite2D = Game.load_XMLSprite(arrow)
+		if i == 0:
+			new_arrow.position = Vector2(900, 512)
+			new_arrow.name = "arrow1"
+		if i == 1:
+			new_arrow.position = Vector2(1220, 512)
+			new_arrow.flip_h = true
+			new_arrow.name = "arrow2"
+		add_child(new_arrow)
+	
 	child_count = list.get_child_count() - 1
 	update_tracks()
+	update_difficulty()
 
 func _process(_delta):
 	if Game.can_input:
@@ -53,12 +73,32 @@ func _process(_delta):
 			else:
 				select += 1
 			update_tracks()
+		if Input.is_action_just_pressed("game_ui_left"):
+			$arrow1.play("arrow push")
+			if diffselect == 0:
+				diffselect = diff_count
+			else:
+				diffselect -= 1
+			update_difficulty()
+		if Input.is_action_just_pressed("game_ui_right"):
+			$arrow2.play("arrow push")
+			if diffselect == diff_count:
+				diffselect = 0
+			else:
+				diffselect += 1
+			update_difficulty()
+		if Input.is_action_just_released("game_ui_left"):
+			$arrow1.play("arrow")
+		if Input.is_action_just_released("game_ui_right"):
+			$arrow2.play("arrow")
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_cancel()
 			Trans.t_trans("Main Menu")
 	update_position()
 
 func update_position():
+	$Difficulty.position.y = lerp($Difficulty.position.y, 512.0, 0.25)
+	$Difficulty.modulate.a = lerp($Difficulty.modulate.a, 1.0, 0.25)
 	for i in list.get_children():
 		i.position.x = 640
 		i.position.y = lerp(i.position.y, -select * 125.0 + (525.0 + i.ind * 125.0), 0.25)
@@ -74,3 +114,11 @@ func update_tracks():
 		index += 1
 		if index >= 5:
 			tracks_label.add_theme_font_size_override("font_size", 150 / index)
+
+func update_difficulty():
+	$Difficulty.scale = Vector2(1, 1)
+	$Difficulty.position.y = 462
+	$Difficulty.modulate.a = 0
+	$Difficulty.texture = difficulty[diffselect]
+	if $Difficulty.texture.get_width() >= 200:
+		$Difficulty.scale = Vector2(200.0 / $Difficulty.texture.get_width(), 200.0 / $Difficulty.texture.get_width())

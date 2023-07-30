@@ -3,6 +3,7 @@ extends Sprite2D
 @export var icon_name: String
 @export var p_type: String
 @export var p_ind: int
+@export var key_count: int
 
 func init():
 	var label = Label.new()
@@ -28,6 +29,8 @@ func init():
 	var menubutton = MenuButton.new()
 	menubutton.size = Vector2(150, 150)
 	menubutton.position = Vector2(-75, -75)
+	menubutton.button_down.connect(menubutton_pressed)
+	menubutton.mouse_exited.connect(menubutton_exited)
 	
 	var popup = menubutton.get_popup()
 	
@@ -82,7 +85,7 @@ func init():
 		subpopup2.add_item("16k")
 		subpopup2.add_item("17k")
 		subpopup2.add_item("18k")
-		subpopup.id_pressed.connect(item_pressed)
+		subpopup.id_pressed.connect(modchart_pressed)
 		subpopup2.id_pressed.connect(keycount_pressed)
 	else:
 		popup.add_item("Clear section event")
@@ -98,7 +101,23 @@ func item_pressed(id):
 	if p_type != "EVENT":
 		if id == 0:
 			get_parent().add_character(p_type)
-			
+		elif id == 2:
+			get_parent().clone_character(p_type, icon_name, key_count)
+		elif id == 4:
+			get_parent().set_character(p_type, p_ind, "face")
+		elif id == 8:
+			get_parent().set_note_skin(p_type, p_ind, "face")
+		elif id == 18:
+			get_parent().erase_character(p_type, p_ind)
+
+func modchart_pressed(id):
+	get_parent().set_modchart(p_type, p_ind, id + 1)
 
 func keycount_pressed(id):
 	get_parent().set_key_count(p_type, p_ind, id + 1)
+
+func menubutton_pressed():
+	Chart.can_input = false
+
+func menubutton_exited():
+	Chart.can_input = true

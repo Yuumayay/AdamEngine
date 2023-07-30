@@ -53,14 +53,16 @@ func a_check(key: String):
 	else:
 		printerr("audio_check: node not found")
 
-func a_set(key: String, path: String, loop = false):
+func a_set(key: String, path: String, BPM = 100, loop = false, bars = 4):
 	var target: AudioStreamPlayer = get_node(key)
 	if path == "":
 		target.stream = null
 	else:
 		if FileAccess.file_exists(path):
 			var soundfile: AudioStreamOggVorbis = load(path)
+			soundfile.bpm = BPM
 			soundfile.loop = loop
+			soundfile.bar_beats = bars
 			target.stream = soundfile
 		else:
 			printerr("audio_set: sound not found")
@@ -84,21 +86,21 @@ func a_cancel():
 func a_scroll():
 	get_node("Scroll").play()
 
-func a_get_beat(key: String, BPM: float, beat = 1):
+func a_get_beat(key: String, beat = 4):
 	var target: AudioStreamPlayer = get_node_or_null(key)
 	if target:
-		#var bars = target.stream.bar_beats
-		var bpm2 = BPM
-		return floor(a_get_sec(key) * bpm2 / 60.0 * beat)
+		var bars = target.stream.bar_beats
+		var BPM = target.stream.bpm
+		return floor(a_get_sec(key) * BPM / 60.0 / bars * beat)
 	else:
 		printerr("audio_get_beat: node not found")
 		
-func a_get_beat_float(key: String, BPM: float, beat = 1):
+func a_get_beat_float(key: String, beat = 4):
 	var target: AudioStreamPlayer = get_node_or_null(key)
 	if target:
-		#var bars = target.stream.bar_beats
-		var bpm2 = BPM
-		return a_get_sec(key) * bpm2 / 60.0 * beat
+		var bars = target.stream.bar_beats
+		var BPM = target.stream.bpm
+		return a_get_sec(key) * BPM / 60.0 / bars * beat
 	else:
 		printerr("audio_get_beat_float: node not found")
 
@@ -117,18 +119,17 @@ func _process(_delta):
 	if a_check("Inst"):
 		if Game.cur_state != Game.PAUSE and Game.cur_state != Game.NOT_PLAYING:
 			beat_hit_bool = false
-			cur_beat = a_get_beat("Inst", bpm)
-			cur_beat_float = a_get_beat_float("Inst", bpm)
+			cur_beat = a_get_beat("Inst")
+			cur_beat_float = a_get_beat_float("Inst")
 			cur_sec = a_get_sec("Inst")
-			cur_section = a_get_beat("Inst", bpm) * 4 / 16
+			cur_section = a_get_beat("Inst") * 4 / 16
 			cur_ms = cur_beat_float * (60.0 / bpm * 1000)
 			#print(cur_ms)
-			if value != a_get_beat("Inst", bpm, 1):
+			if value != a_get_beat("Inst"):
 				emit_signal("beat_hit")
-				value = a_get_beat("Inst", bpm, 1)
+				value = a_get_beat("Inst")
 				if bpm < bpm_array[0]:
-					if value % 2 == 0:
-						beat_hit_bool = true
+					beat_hit_bool = true
 				elif bpm < bpm_array[1]:
 					if value % 4 == 0:
 						beat_hit_bool = true

@@ -23,10 +23,10 @@ func _ready():
 	$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
 	if Paths.p_song(Game.cur_song.to_lower(), "Voices"):
-		Audio.a_set("Voices", Paths.p_song(Game.cur_song.to_lower(), "Voices"))
+		Audio.a_set("Voices", Paths.p_song(Game.cur_song.to_lower(), "Voices"), Audio.bpm)
 	else:
-		Audio.a_set("Voices", "")
-	Audio.a_set("Inst", Paths.p_song(Game.cur_song.to_lower(), "Inst"))
+		Audio.a_set("Voices", "", Audio.bpm)
+	Audio.a_set("Inst", Paths.p_song(Game.cur_song.to_lower(), "Inst"), Audio.bpm)
 	
 	keybind(Game.key_count)
 	strum_set()
@@ -59,11 +59,13 @@ func _process(_delta):
 			Game.cur_state = Game.PAUSE
 			Audio.a_pause("Inst")
 			Audio.a_pause("Voices")
-			
+
+
+
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():
-	if Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
-		#print("spawned")
+	var psec = Game.get_preload_sec()
+	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
 		var new_note = note_scn.instantiate()
 		new_note.ind = note_count
 		new_note.dir = Game.dir[note_count]
@@ -79,7 +81,9 @@ func note_spawn_load():
 			note_count += 1
 
 func note_spawn():
-	if Game.ms[note_count] - Game.PRELOAD_SEC * 1000 <= Audio.cur_ms:
+	var psec = Game.get_preload_sec()
+	
+	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
 		note_group.get_node(str(note_count)).visible = true
 		if note_count == Game.ms.size() - 1:
 			Game.cur_state = Game.SPAWN_END
@@ -93,10 +97,10 @@ func strum_set():
 		new_strum.position = Vector2(125, 600)
 		new_strum.scale = Vector2(0.7 * (4.0 / Game.key_count), 0.7 * (4.0 / Game.key_count))
 		if i >= Game.key_count:
-			if Setting.s_get("gameplay", "botplay"):
-				new_strum.type = 2
-			else:
-				new_strum.type = 1
+			#if Setting.s_get("gameplay", "botplay"):
+				#new_strum.type = 2
+			#else:
+			new_strum.type = 1
 			new_strum.position.x += 300.0 * (0.7 * 4.0 / Game.key_count)
 		else:
 			new_strum.type = 0

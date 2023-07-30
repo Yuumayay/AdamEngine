@@ -23,7 +23,17 @@ var music_offset = File.f_read(Paths.p_offset("Music/Offset.json"), ".json")
 var menu_music_path = "res://Assets/Music/" + music_offset.MenuMusic[0]
 var menu_music_bpm = music_offset.MenuMusic[1]
 
+var debug_music_path = "res://Assets/Music/" + music_offset.DebugMusic[0]
+var debug_music_bpm = music_offset.DebugMusic[1]
+
+var pause_music_path = "res://Assets/Music/" + music_offset.PauseMusic[0]
+var pause_music_bpm = music_offset.PauseMusic[1]
+
+var option_music_path = "res://Assets/Music/" + music_offset.OptionMusic[0]
+var option_music_bpm = music_offset.OptionMusic[1]
+
 func _ready():
+	print()
 	#print(intro_text)
 	
 	#discord_sdk.app_id = 1133432665505280140
@@ -35,7 +45,10 @@ func _ready():
 	if Audio.a_check("Freaky Menu"):
 		introend()
 	else:
-		Audio.a_set("Freaky Menu", menu_music_path, true)
+		Audio.a_set("Freaky Menu", menu_music_path, menu_music_bpm, true)
+		Audio.a_set("Debug Menu", debug_music_path, debug_music_bpm, true)
+		Audio.a_set("Pause Menu", pause_music_path, pause_music_bpm, true)
+		Audio.a_set("Option Menu", option_music_path, option_music_bpm, true)
 		Audio.a_title()
 	
 	if intro_text.size() == 2:
@@ -56,7 +69,7 @@ func introend():
 	
 
 func _process(_delta):
-	var beat = Audio.a_get_beat("Freaky Menu", menu_music_bpm, 2)
+	var beat = Audio.a_get_beat("Freaky Menu", 8)
 	
 	if Input.is_action_just_pressed("ui_accept") and Game.can_input:
 		if not intro_end:
