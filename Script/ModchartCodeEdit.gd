@@ -33,6 +33,5 @@ func _ready():
 	syntax_highlighter.set_function_color("#9b3cf3")
 	syntax_highlighter.set_member_variable_color("#afeeee")
 
-
 func _on_text_changed():
 	Audio.a_play("Type")

@@ -94,6 +94,7 @@ func bot_strum():
 				Audio.a_volume_set("Voices", 0)
 				Game.dad_input[dir] = 2
 				hide_note(i)
+				dad_hit()
 			else: # 長押しだったら
 				# ノーツだけを透明にし、長押しラインのポイント0の位置をstrumに合わさるように変える
 				if i.self_modulate.a != 0:
@@ -101,6 +102,7 @@ func bot_strum():
 					Audio.a_volume_set("Voices", 0)
 					Game.dad_input[dir] = 2
 					i.self_modulate.a = 0
+					dad_hit()
 					break
 				Game.dad_input[dir] = 1
 				i.update_linelen()
@@ -146,15 +148,15 @@ func player_strum():
 		if msdiff < -1*Game.get_preload_sec()*1000:
 			continue
 		
-		if Audio.cur_ms >= i.ms - Game.rating_offset[Game.MISS]:
+		if Audio.cur_ms >= i.ms - Game.rating_offset[Game.MISS] * Game.cur_multi:
 			if i.sus == 0:
 				if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 					hide_note(i)
-					i.hit_ms = msdiff
+					i.hit_ms = msdiff * Game.cur_multi
 					judge(i.hit_ms, i.type)
 					break
-				if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS]:
+				if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS] * Game.cur_multi:
 					i.free_f = true
 					i.modulate.a = 0.5
 			else:
@@ -169,7 +171,7 @@ func player_strum():
 							hide_note(i)
 							
 					else: #長押し状態からキーが離された。
-						if calc_sus_time(i) - Game.sus_tolerance <= 0:
+						if calc_sus_time(i) - Game.sus_tolerance * Game.cur_multi <= 0:
 							# プレイヤーは猶予時間内までに離されたら特別にOK
 							hide_note(i)
 						else: #早く離しすぎ
@@ -179,10 +181,10 @@ func player_strum():
 					if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
 						animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 						i.self_modulate.a = 0
-						i.hit_ms = msdiff
+						i.hit_ms = msdiff * Game.cur_multi
 						judge(i.hit_ms, i.type)
 						break
-					if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS]:
+					if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS] * Game.cur_multi:
 						i.free_f = true
 						i.modulate.a = 0.5
 
@@ -201,31 +203,33 @@ func judge(hit_ms, notetype):
 		Game.add_rating(Game.MISS)
 		Game.add_health(-999)
 		Game.add_score(Game.score_gain[Game.MISS])
-	elif ms <= Game.rating_offset[Game.PERF + 1] * Game.cur_multi:
+	elif ms <= Game.rating_offset[Game.PERF + 1]:
 		$splash.modulate.a = 1
+		$splash.stop()
 		$splash.play("note splash " + Game.note_anim[dir - Game.key_count])
 		new_rating.frame = Game.PERF
 		Game.add_rating(Game.PERF)
 		Game.add_health(Game.health_gain[Game.PERF])
 		Game.add_score(Game.score_gain[Game.PERF])
-	elif ms <= Game.rating_offset[Game.SICK + 1] * Game.cur_multi:
+	elif ms <= Game.rating_offset[Game.SICK + 1]:
 		$splash.modulate.a = 1
+		$splash.stop()
 		$splash.play("note splash " + Game.note_anim[dir - Game.key_count])
 		new_rating.frame = Game.SICK
 		Game.add_rating(Game.SICK)
 		Game.add_health(Game.health_gain[Game.SICK])
 		Game.add_score(Game.score_gain[Game.SICK])
-	elif ms <= Game.rating_offset[Game.GOOD + 1] * Game.cur_multi:
+	elif ms <= Game.rating_offset[Game.GOOD + 1]:
 		new_rating.frame = Game.GOOD
 		Game.add_rating(Game.GOOD)
 		Game.add_health(Game.health_gain[Game.GOOD])
 		Game.add_score(Game.score_gain[Game.GOOD])
-	elif ms <= Game.rating_offset[Game.BAD + 1] * Game.cur_multi:
+	elif ms <= Game.rating_offset[Game.BAD + 1]:
 		new_rating.frame = Game.BAD
 		Game.add_rating(Game.BAD)
 		Game.add_health(Game.health_gain[Game.BAD])
 		Game.add_score(Game.score_gain[Game.BAD])
-	elif ms <= Game.rating_offset[Game.SHIT + 1] * Game.cur_multi:
+	elif ms <= Game.rating_offset[Game.SHIT + 1]:
 		new_rating.frame = Game.SHIT
 		Game.add_rating(Game.SHIT)
 		Game.add_health(Game.health_gain[Game.SHIT])
@@ -238,3 +242,8 @@ func judge(hit_ms, notetype):
 	mstext.ms = hit_ms
 	
 	$/root.add_child(layer)
+
+func dad_hit():
+	if Modchart.modcharts.has("healthDrain"):
+		if Game.health - Modchart.modcharts.healthDrain[0] >= Modchart.modcharts.healthDrain[1]:
+			Game.add_health(-Modchart.modcharts.healthDrain[0])

@@ -2,13 +2,13 @@ extends Node
 
 const SUPPORTED_FORMATS: Array = [".json", ".txt"]
 
-func f_save(savepath: String, filename: String, type: String, content):
+func f_save(savepath: String, type: String, content):
 	if SUPPORTED_FORMATS.has(type):
-		print("savepath: ", savepath, ", filename: ", filename, ", type: ", type, ", content: ", content)
+		print("savepath: ", savepath, ", type: ", type, ", content: ", content)
 	else:
 		printerr("this format is not supported")
 	var file
-	var filepath = savepath + filename + type
+	var filepath = savepath + type
 	file = FileAccess.open(filepath, FileAccess.WRITE)
 	
 	#if type == ".lua":
@@ -50,9 +50,9 @@ func _ready():
 	if FileAccess.file_exists("user://ae_options_data.json"):
 		Setting.setting = f_read("user://ae_options_data.json", ".json")
 	else:
-		f_save("user://", "ae_options_data", ".json", Setting.setting)
+		f_save("user://ae_options_data", ".json", Setting.setting)
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("end")
-		f_save("user://", "ae_options_data", ".json", Setting.setting)
+		f_save("user://ae_options_data", ".json", Setting.setting)

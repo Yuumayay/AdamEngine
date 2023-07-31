@@ -1,19 +1,40 @@
 extends Node2D
 
-@onready var template_rect: ColorRect = get_parent().get_node("Rect")
+@onready var parent = get_parent()
+@onready var template_rect: ColorRect = parent.get_node("Rect")
 #@onready var container: TabContainer = get_parent().get_node("Container")
-@onready var beat: Line2D = get_parent().get_node("Beat")
-@onready var cam = get_parent().get_node("Camera")
+@onready var beat: Line2D = parent.get_node("Beat")
+@onready var cam = parent.get_node("Camera")
+@onready var menu = parent.get_node("Menu")
+@onready var songname = menu.get_node("SongName")
+@onready var bpm = menu.get_node("BPM")
+@onready var speed = menu.get_node("Speed")
+@onready var bfname = menu.get_node("bf")
+@onready var dadname = menu.get_node("dad")
+@onready var reloadaudio = menu.get_node("ReloadAudio")
+@onready var savejson = menu.get_node("SaveJSON")
+@onready var savejsonwindow = menu.get_node("SaveJSONWindow")
+
+var empty_section = {"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}
 
 func _ready():
-	if FileAccess.file_exists(Paths.p_song(Game.cur_song.to_lower(), "Voices")):
-		Audio.a_set("Voices", Paths.p_song(Chart.cur_song.to_lower(), "Voices"))
-	Audio.a_set("Inst", Paths.p_song(Chart.cur_song.to_lower(), "Inst"))
+	if FileAccess.file_exists(Paths.p_song(Chart.cur_song.to_lower(), "Voices")):
+		Audio.a_set("Voices", Paths.p_song(Chart.cur_song.to_lower(), "Voices"), Chart.bpm)
+	Audio.a_set("Inst", Paths.p_song(Chart.cur_song.to_lower(), "Inst"), Chart.bpm)
 	
+	draw_menu()
 	draw_all()
 	for i in range(80):
 		Audio.a_volume_set("Debug Menu", -i)
 		await get_tree().create_timer(0.001).timeout
+	reloadaudio.pressed.connect(reloadAudio)
+	savejson.pressed.connect(func():
+		savejsonwindow.show()
+		Chart.can_input = false
+		)
+
+func draw_menu():
+	pass
 
 func draw_all():
 	var total_x := 0
@@ -28,6 +49,11 @@ func draw_all():
 	# remove all child
 	for i in get_children():
 		remove_child(i)
+	
+	# append empty section
+	if Chart.cur_section >= Chart.chartData.notes.size() - 1:
+		for i in Chart.cur_section - (Chart.chartData.notes.size() - 1):
+			Chart.chartData.notes.append(empty_section)
 	
 	# event mass
 	draw_mass(50, 250, 1, 32, 1, 0, Chart.cur_section, 0, 0)
@@ -58,7 +84,7 @@ func draw_all():
 	draw_beat_line(8, Chart.cur_section * 4)
 	
 	# event icon
-	draw_icon(75, "botfriend", "EVENT", null)
+	draw_icon(75, "face", "EVENT", null)
 	
 	# bf icon
 	for i in Chart.bf_count:
@@ -72,7 +98,7 @@ func draw_all():
 	for i in Chart.gf_count:
 		draw_icon(gf_pos[i] + (50.0 * gf_key[i] / 2.0), Chart.gf_data["icon_name"][i], "GF", i)
 
-func draw_mass(og_x, og_y, column, row, alpha, type, section, player, p_ind):
+func draw_mass(og_x, og_y, column, row, _alpha, type, _section, player, p_ind):
 	var index = 0
 	var x = og_x
 	var y = og_y
@@ -194,31 +220,31 @@ func set_character(type, ind, value):
 
 func set_key_count(type, ind, value):
 	if type == "PLAYER":
-		if Chart.bf_data["key_count"][ind] > value:
-			var index := 0
-			for i in Chart.placed_notes.notes:
-				print(i)
-				if i[0] >= value:
-					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
-				index += 1
+		#if Chart.bf_data["key_count"][ind] > value:
+		#	var index := 0
+		#	for i in Chart.placed_notes.notes:
+		#		print(i)
+		#		if i[0] >= value:
+		#			Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
+		#		index += 1
 		Chart.bf_data["key_count"][ind] = value
 		draw_all()
 	elif type == "OPPONENT":
-		if Chart.dad_data["key_count"][ind] > value:
-			var index := 0
-			for i in Chart.placed_notes.notes:
-				if i[0] >= value:
-					Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
-				index += 1
+		#if Chart.dad_data["key_count"][ind] > value:
+		#	var index := 0
+		#	for i in Chart.placed_notes.notes:
+		#		if i[0] >= value:
+		#			Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
+		#		index += 1
 		Chart.dad_data["key_count"][ind] = value
 		draw_all()
 	elif type == "GF":
-		if Chart.gf_data["key_count"][ind] > value:
-			var index := 0
-			for i in Chart.placed_notes.notes:
-				if i[0] >= value:
-					Chart.placed_notes.notes[index].erase()
-				index += 1
+		#if Chart.gf_data["key_count"][ind] > value:
+		#	var index := 0
+		#	for i in Chart.placed_notes.notes:
+		#		if i[0] >= value:
+		#			Chart.placed_notes.notes[index].erase()
+		#		index += 1
 		Chart.gf_data["key_count"][ind] = value
 		draw_all()
 
@@ -232,14 +258,15 @@ func _process(_delta):
 	#setting_check()
 	key_check()
 	scroll()
+	setting_check_beta()
 
 var ind2: int = 0
 
 func scroll():
 	if Chart.playing:
-		Chart.cur_y = Audio.a_get_beat_float("Inst", Chart.bpm) * -200 * Chart.multi
-		if ind2 != Audio.a_get_beat("Inst", Chart.metronome_bpm):
-			ind2 = Audio.a_get_beat("Inst", Chart.metronome_bpm)
+		Chart.cur_y = Audio.a_get_beat_float("Inst") * -200 * Chart.multi
+		if ind2 != Audio.a_get_beat("Inst"):
+			ind2 = Audio.a_get_beat("Inst")
 			if Chart.metronome:
 				if ind2 % 4 == 0:
 					Audio.a_play("Tick")
@@ -272,6 +299,60 @@ func scroll():
 	if Chart.cur_y < -800 + (-800 * Chart.cur_section):
 		Chart.cur_section += 1
 		draw_all()
+
+var lastBPM := 150.0
+
+func setting_check_beta():
+	if lastBPM != bpm.value:
+		lastBPM = bpm.value
+		Chart.bpm = bpm.value
+		if FileAccess.file_exists(Paths.p_song(Chart.cur_song, "Voices")):
+			Audio.a_set("Voices", Paths.p_song(Chart.cur_song, "Voices"), Chart.bpm)
+		Audio.a_set("Inst", Paths.p_song(Chart.cur_song, "Inst"), Chart.bpm)
+	Chart.songSpeed = speed.value
+	Chart.bf_data.icon_name[0] = bfname.text
+	Chart.dad_data.icon_name[0] = dadname.text
+
+func reloadAudio():
+	if !FileAccess.file_exists(Paths.p_song(songname.text, "Inst")):
+		Audio.a_play("Error")
+		printerr("Inst.ogg not found")
+		return
+	if FileAccess.file_exists(Paths.p_song(songname.text, "Voices")):
+		Audio.a_set("Voices", Paths.p_song(songname.text, "Voices"), Chart.bpm)
+	Audio.a_set("Inst", Paths.p_song(songname.text, "Inst"), Chart.bpm)
+	Chart.cur_song = songname.text
+
+func generateJson() -> Dictionary:
+	var json: Dictionary = {"song": {
+			"song": Chart.cur_song,
+			"bpm": Chart.bpm,
+			"player1": Chart.bf_data["icon_name"][0],
+			"player2": Chart.dad_data["icon_name"][0],
+			"gfVersion": "gf", # TODO 変更可能なgf
+			"speed": Chart.songSpeed,
+			"notes": [],
+			"engine": "Adam Engine - Beta 1"
+		}
+	}
+	var count := 0
+	var count2 := 0
+	var jsonNotes = json["song"]["notes"]
+	for section in Chart.chartData.notes:
+		jsonNotes.append(empty_section)
+		for note in section.sectionNotes:
+			if note.player_type == 0: # EVENT
+				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type, note.player_type, note.player_ind])
+			elif note.player_type == 1: # BF
+				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.bf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+			elif note.player_type == 2: # DAD
+				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.dad_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+			elif note.player_type == 3: # GF
+				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.gf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+			count2 += 1
+		count += 1
+	return json
+	
 
 #func setting_check():
 	#if container.get_node("Charting/Flow/Metronome/Margin/Flow/CheckBox").button_pressed:
@@ -309,3 +390,12 @@ func stop_audio():
 	Chart.playing = false
 	Audio.a_stop("Inst")
 	Audio.a_stop("Voices")
+
+
+func _on_file_dialog_file_selected(path):
+	Chart.can_input = true
+	var extension = path.get_extension()
+	var basename = path.get_basename()
+	if extension == "json":
+		print(basename, ".", extension)
+		File.f_save(basename, "." + extension, generateJson())

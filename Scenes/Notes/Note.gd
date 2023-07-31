@@ -98,7 +98,7 @@ func update_linelen():
 
 var last_audio_ms = 0.0
 func _process(delta):
-	if Game.cur_state == Game.NOT_PLAYING or Game.cur_state == Game.PAUSE: return
+	if Game.cur_state == Game.NOT_PLAYING or Game.cur_state == Game.PAUSE or Game.cur_state == Game.GAMEOVER: return
 	
 	#print(delta, " ", (Audio.cur_ms - last_audio_ms)/1000.0 )
 	if absf(delta - (Audio.cur_ms - last_audio_ms)/1000.0) > 0.002:

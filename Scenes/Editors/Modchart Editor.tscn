@@ -51,6 +51,7 @@ symbol_lookup_on_click = true
 line_folding = true
 gutters_draw_line_numbers = true
 gutters_draw_fold_gutter = true
+code_completion_enabled = true
 indent_size = 8
 indent_automatic = true
 auto_brace_completion_enabled = true

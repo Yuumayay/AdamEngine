@@ -1,7 +1,8 @@
 extends Node
 
-var placed_notes: Dictionary = {"notes": []}
-var notes_property: Dictionary = {"notes": []}
+var chartData: Dictionary = {"notes": [{"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}]}
+
+# {"notes": [{"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}]}
 
 var modcharts: Dictionary = {
 	"category": {
@@ -173,6 +174,140 @@ var modcharts: Dictionary = {
 	}
 }
 
+var menu_dict: Dictionary = {
+	"Charting": {
+		"Metronome": {
+			"type": "bool",
+			"cur": false
+		},
+		"Autoscroll": {
+			"type": "bool",
+			"cur": true
+		},
+		"m": {
+			"type": "margin",
+			"cur": 0
+		},
+		"BPM": {
+			"type": "range",
+			"cur": 150.0,
+			"range": [0.1, 99999.0],
+			"step": 0.1
+		},
+		"Offset": {
+			"type": "range",
+			"cur": 0.0,
+			"range": [-1000.0, 1000.0],
+			"step": 0.1,
+			"suffix": "ms"
+		},
+		"m2": {
+			"type": "margin",
+			"cur": 10
+		},
+		"Inst Wave": {
+			"type": "bool",
+			"cur": false
+		},
+		"Voices Wave": {
+			"type": "bool",
+			"cur": false
+		},
+		"m3": {
+			"type": "margin",
+			"cur": 0
+		},
+		"Ignore Warning": {
+			"type": "bool",
+			"cur": false
+		},
+		"Auto Save": {
+			"type": "bool",
+			"cur": true
+		},
+		"m4": {
+			"type": "margin",
+			"cur": 0
+		},
+		"Playback Rate": {
+			"type": "range",
+			"cur": 1.0,
+			"range": [0.1, 3.0],
+			"step": 0.1,
+			"suffix": "x"
+		},
+		"Mouse Scroll Speed": {
+			"type": "range",
+			"cur": 1.0,
+			"range": [0.1, 3.0],
+			"step": 0.1,
+			"suffix": "x"
+		},
+		"m5": {
+			"type": "margin",
+			"cur": 0
+		},
+		"Show Strums": {
+			"type": "bool",
+			"cur": false
+		},
+		"m6": {
+			"type": "margin",
+			"cur": 0
+		},
+		"Inst Volume": {
+			"type": "range",
+			"cur": 60.0,
+			"range": [0.0, 100.0],
+			"step": 0.1,
+			"suffix": "%"
+		},
+		"Voices Volume": {
+			"type": "range",
+			"cur": 100.0,
+			"range": [0.0, 100.0],
+			"step": 0.1,
+			"suffix": "%"
+		}
+	},
+	"Events": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	},
+	"Modchart": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	},
+	"Note": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	},
+	"Options": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	},
+	"Section": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	},
+	"Song": {
+		"Placeholder": {
+			"type": "bool",
+			"cur": false
+		}
+	}
+}
+
 var can_input: bool = true
 
 #var key_count: Array = [[4], [4], [4]]
@@ -186,7 +321,8 @@ var mouse_scroll_speed: float = 1
 
 var playing: bool = false
 
-var cur_song = "test"
+var cur_song := "test"
+var songSpeed := 1.0
 
 var cur_x: float
 var cur_y: float

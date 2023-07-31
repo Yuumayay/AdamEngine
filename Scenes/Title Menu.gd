@@ -19,19 +19,6 @@ var intro_texts: PackedStringArray = intro_text_data.split("\n")
 var random: int = randi_range(0, intro_texts.size() - 1)
 var intro_text: PackedStringArray = intro_texts[random].split("--")
 
-var music_offset = File.f_read(Paths.p_offset("Music/Offset.json"), ".json")
-var menu_music_path = "res://Assets/Music/" + music_offset.MenuMusic[0]
-var menu_music_bpm = music_offset.MenuMusic[1]
-
-var debug_music_path = "res://Assets/Music/" + music_offset.DebugMusic[0]
-var debug_music_bpm = music_offset.DebugMusic[1]
-
-var pause_music_path = "res://Assets/Music/" + music_offset.PauseMusic[0]
-var pause_music_bpm = music_offset.PauseMusic[1]
-
-var option_music_path = "res://Assets/Music/" + music_offset.OptionMusic[0]
-var option_music_bpm = music_offset.OptionMusic[1]
-
 func _ready():
 	print()
 	#print(intro_text)
@@ -45,10 +32,6 @@ func _ready():
 	if Audio.a_check("Freaky Menu"):
 		introend()
 	else:
-		Audio.a_set("Freaky Menu", menu_music_path, menu_music_bpm, true)
-		Audio.a_set("Debug Menu", debug_music_path, debug_music_bpm, true)
-		Audio.a_set("Pause Menu", pause_music_path, pause_music_bpm, true)
-		Audio.a_set("Option Menu", option_music_path, option_music_bpm, true)
 		Audio.a_title()
 	
 	if intro_text.size() == 2:

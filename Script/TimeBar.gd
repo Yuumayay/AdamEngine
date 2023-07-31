@@ -8,7 +8,7 @@ func _ready():
 func _process(delta):
 	atime += delta * Game.cur_multi
 	
-	if Game.cur_state == Game.PLAYING or Game.cur_state == Game.SPAWN_END:
+	if Game.cur_state == Game.PLAYING:
 		value = Audio.cur_ms
 		max_value = Audio.songLength
 	

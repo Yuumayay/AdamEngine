@@ -3,13 +3,23 @@ extends Node
 var is_modchart: bool = false
 var mNode: Node
 var gameplay: Node2D
+var modLayer: CanvasLayer
+var lyricslabel: Label
+var ui: CanvasLayer
+var info: CanvasLayer
 
 var has_onUpdate: bool = false
 var has_onBeatHit: bool = false
 var has_onSectionHit: bool = false
 
+var modcharts: Dictionary = {}
+
 func loadModchart():
 	gameplay = $/root/Gameplay
+	modLayer = gameplay.get_node("ModchartCanvas")
+	lyricslabel = modLayer.get_node("LyricsLabel")
+	ui = gameplay.get_node("UI")
+	info = gameplay.get_node("Info")
 	if Paths.p_modchart(Game.cur_song, Game.cur_diff): #もしmodchartファイルが存在するなら
 		# modchart.gdのonCreate関数を実行
 		var scr: Script = load(Paths.p_modchart(Game.cur_song, Game.cur_diff))
@@ -44,28 +54,12 @@ func _process(delta):
 				mNode.call("onSectionHit")
 
 func drawBlackBG():
-	var modLayer = get_node_or_null("/root/Gameplay/ModchartCanvas")
-	if not modLayer:
-		var cLayer = CanvasLayer.new()
-		cLayer.name = "ModchartCanvas"
-		cLayer.layer = 0
-		gameplay.add_child(cLayer)
-		modLayer = cLayer
-	
 	var blackBG = ColorRect.new()
 	blackBG.set_anchors_preset(Control.PRESET_FULL_RECT)
 	blackBG.color = Color(0, 0, 0)
 	modLayer.add_child(blackBG)
 
 func drawTextureBG(t: Texture2D, tag: String):
-	var modLayer = get_node_or_null("/root/Gameplay/ModchartCanvas")
-	if not modLayer:
-		var cLayer = CanvasLayer.new()
-		cLayer.name = "ModchartCanvas"
-		cLayer.layer = 0
-		gameplay.add_child(cLayer)
-		modLayer = cLayer
-	
 	var textureBG = TextureRect.new()
 	textureBG.set_anchors_preset(Control.PRESET_FULL_RECT)
 	textureBG.texture = t
@@ -73,16 +67,55 @@ func drawTextureBG(t: Texture2D, tag: String):
 	modLayer.add_child(textureBG)
 
 func setTextureBG(t: Texture2D, tag: String):
-	var modLayer = get_node_or_null("/root/Gameplay/ModchartCanvas")
 	var textureBG = get_node_or_null("/root/Gameplay/ModchartCanvas/" + tag)
 	
-	if not modLayer:
-		Audio.a_play("Error")
-		printerr("modchartLayer does not exist")
-		return
 	if not textureBG:
 		Audio.a_play("Error")
 		printerr("TextureBG \"" + tag + "\" does not exist")
 		return
 	
 	textureBG.texture = t
+
+func drawLyrics(value: String, sec = -1, color = Color(1, 1, 1)):
+	lyricslabel.text = value
+	lyricslabel.add_theme_color_override("font_color", color)
+	
+	if sec == -1:
+		return
+	else:
+		await get_tree().create_timer(sec).timeout
+	
+	lyricslabel.text = ""
+
+func eraseDraw(tag: String):
+	var target = modLayer.get_node_or_null(tag)
+	
+	if not target:
+		Audio.a_play("Error")
+		printerr("\"" + tag + "\" does not exist")
+		return
+	
+	target.queue_free()
+
+func camZoomDad(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	gameplay.get_node("Camera").camMove(Game.dadPos + offset, zoom, sec, cspeed, zspeed)
+
+func camZoomBF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	gameplay.get_node("Camera").camMove(Game.bfPos + offset, zoom, sec, cspeed, zspeed)
+
+func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	gameplay.get_node("Camera").camMove(Game.gfPos + offset, zoom, sec, cspeed, zspeed)
+
+func camReset():
+	gameplay.get_node("Camera").state = 0
+
+func hideUI():
+	ui.hide()
+	info.hide()
+
+func showUI():
+	ui.show()
+	info.show()
+
+func setHealthDrain(value = 0.05, health_min = 0.0):
+	modcharts["healthDrain"] = [value, health_min]

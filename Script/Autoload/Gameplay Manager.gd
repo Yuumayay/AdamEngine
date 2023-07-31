@@ -1,5 +1,7 @@
 extends Node
 
+signal game_ready
+
 const PRELOAD_SEC = 2
 
 var can_input: bool = true
@@ -9,8 +11,10 @@ var key_count: int = 4
 var cur_multi: float = 1.0
 var cur_speed: float = 1.0
 
-enum {NOT_PLAYING, COUNTDOWN, PLAYING, SPAWN_END, PAUSE}
+enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 var cur_state: int = 0
+
+var spawn_end: bool = false
 
 var song_name: Array
 var notes: Array
@@ -29,6 +33,7 @@ var cur_input: Array
 var cur_input_str: String
 var cur_input_sub: Array
 var dad_input: Array
+var gf_input: Array
 var bf_miss: Array
 
 enum {PERF, SICK, GOOD, BAD, SHIT, MISS}
@@ -65,8 +70,10 @@ var is_story: bool
 var songList: Array
 var cur_song_index: int
 
-var p1_position: Vector2
-var p2_position: Vector2
+## CHARACTER POSITION ##
+var bfPos: Vector2
+var dadPos: Vector2
+var gfPos: Vector2
 
 ## STAGE JSON ##
 var stage: Dictionary
@@ -74,16 +81,18 @@ var defaultZoom: float
 var isPixel: bool
 
 ## SONG JSON ##
-var cur_song: String = "gkbr"
+var cur_song: String = "ugh"
 var cur_diff: String = "normal"
 
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
+var player3: String = "dad"
 
 ## CHARACTER JSON ##
 var p1_json: Dictionary
 var p2_json: Dictionary
+var gf_json: Dictionary
 
 var iconBF: String:
 	set(v):
@@ -146,12 +155,17 @@ func setup(data):
 	Audio.bpm = song.bpm * cur_multi
 	key_count = 4
 	
+	if song.has("stage"):
+		cur_stage = song.stage
+	else:
+		cur_stage = "tank"
 	stage = File.f_read("res://Assets/Data/Stages/" + cur_stage + ".json", ".json")
 	defaultZoom = stage.defaultZoom
 	isPixel = stage.isPixelStage
 	
 	player1 = song.player1
 	player2 = song.player2
+	player3 = "gf"
 	
 	if FileAccess.file_exists(Paths.p_chara(player1)):
 		p1_json = File.f_read(Paths.p_chara(player1), ".json")
@@ -164,6 +178,12 @@ func setup(data):
 		character_load_fail = false
 	else:
 		p2_json = File.f_read(Paths.p_chara("dad"), ".json")
+		character_load_fail = true
+	if FileAccess.file_exists(Paths.p_chara(player3)):
+		gf_json = File.f_read(Paths.p_chara(player3), ".json")
+		character_load_fail = false
+	else:
+		gf_json = File.f_read(Paths.p_chara("gf"), ".json")
 		character_load_fail = true
 	
 	if song.has("mania"):
@@ -198,6 +218,7 @@ func setup(data):
 				dir.append(ind[1])
 			
 			sus.append(ind[2])
+	emit_signal("game_ready")
 
 func what_engine(data):
 	data = JSON.stringify(data)
@@ -277,11 +298,13 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 					anim_n = 0
 					for i in json.animations:
 						var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
-						if animation_name == orginal_fnf_name:
+						if orginal_fnf_name == animation_name:
 							animation_name = i.anim.to_lower()
 							no_anim = false
 							break
 						anim_n += 1
+				if animation_name.contains("idle"):
+					animation_name = "idle"
 				
 				var frame_rect:Rect2 = Rect2(
 					Vector2(

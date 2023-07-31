@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bn6j7ish2vl78"]
+[gd_scene load_steps=8 format=3 uid="uid://bn6j7ish2vl78"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_cidsc"]
 [ext_resource type="Script" path="res://Scenes/Editors/Chart Editor.gd" id="1_peyb4"]
@@ -6,6 +6,9 @@
 [ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="4_1wxbu"]
 [ext_resource type="Script" path="res://Script/Beat.gd" id="6_qd5oj"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="7_88gig"]
+
+[sub_resource type="Theme" id="Theme_k5lk6"]
+default_font = ExtResource("7_88gig")
 
 [node name="Chart Editor" type="Node2D"]
 
@@ -71,9 +74,10 @@ text = "4"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+[node name="Menu" type="CanvasLayer" parent="."]
 
-[node name="Container" type="TabContainer" parent="CanvasLayer2"]
+[node name="Container" type="TabContainer" parent="Menu"]
+visible = false
 offset_left = 926.0
 offset_top = 10.0
 offset_right = 1381.0
@@ -82,122 +86,122 @@ scale = Vector2(0.75, 0.75)
 focus_mode = 1
 drag_to_rearrange_enabled = true
 
-[node name="Charting" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Charting" type="MarginContainer" parent="Menu/Container"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="FlowContainer" parent="CanvasLayer2/Container/Charting"]
+[node name="Flow" type="FlowContainer" parent="Menu/Container/Charting"]
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 
-[node name="Metronome" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Metronome" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Metronome"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Metronome"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Metronome/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Metronome/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Metronome/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Metronome/Margin/Flow"]
 layout_mode = 2
 focus_mode = 0
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Metronome/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Metronome/Margin/Flow"]
 layout_mode = 2
 text = "Metronome"
 vertical_alignment = 1
 
-[node name="Autoscroll" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Autoscroll" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Autoscroll"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Autoscroll"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Autoscroll/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Autoscroll/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Autoscroll/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Autoscroll/Margin/Flow"]
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Autoscroll/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Autoscroll/Margin/Flow"]
 layout_mode = 2
 text = "Autoscroll"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Space2" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space2" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space2"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 
-[node name="BPM" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="BPM" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/BPM"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/BPM"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/BPM/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/BPM/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/BPM/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 text = "Metronome BPM"
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/BPM/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.1
 value = 150.0
 alignment = 1
 
-[node name="Offset" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Offset" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Offset"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Offset"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Offset/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Offset/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Offset/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Offset/Margin/Flow"]
 layout_mode = 2
 text = "Metronome Offset"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/Offset/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/Offset/Margin/Flow"]
 layout_mode = 2
 min_value = -1000.0
 max_value = 1000.0
@@ -205,152 +209,152 @@ step = 25.0
 alignment = 1
 suffix = "ms"
 
-[node name="Space" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Inst Wave" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Inst Wave" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Inst Wave"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Inst Wave"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Inst Wave/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Inst Wave/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Inst Wave/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Inst Wave/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Inst Wave/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Inst Wave/Margin/Flow"]
 layout_mode = 2
 text = "Inst Waveform"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Voices Wave" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Voices Wave" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Voices Wave"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Voices Wave"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Voices Wave/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Voices Wave/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Voices Wave/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Voices Wave/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Voices Wave/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Voices Wave/Margin/Flow"]
 layout_mode = 2
 text = "Voices Waveform"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Space3" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space3" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space3"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space3"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 
-[node name="Ignore Warning" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Ignore Warning" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Ignore Warning"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Ignore Warning"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Ignore Warning/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Ignore Warning/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Ignore Warning/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Ignore Warning/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Ignore Warning/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Ignore Warning/Margin/Flow"]
 layout_mode = 2
 text = "Ignore Progress Warning"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Auto Save" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Auto Save" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Auto Save"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Auto Save"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Auto Save/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Auto Save/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Auto Save/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Auto Save/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Auto Save/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Auto Save/Margin/Flow"]
 layout_mode = 2
 text = "Auto Save"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Space5" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space5" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space5"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space5"]
 layout_mode = 2
 theme_override_constants/margin_left = 400
 
-[node name="Playback Rate" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Playback Rate" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Playback Rate"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Playback Rate"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Playback Rate/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Playback Rate/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Playback Rate/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Playback Rate/Margin/Flow"]
 layout_mode = 2
 text = "Playback Rate"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/Playback Rate/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/Playback Rate/Margin/Flow"]
 layout_mode = 2
 min_value = 0.1
 max_value = 3.0
@@ -359,27 +363,27 @@ value = 1.0
 alignment = 1
 suffix = "x"
 
-[node name="Mouse Scroll Speed" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Mouse Scroll Speed" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Mouse Scroll Speed"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Mouse Scroll Speed"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Mouse Scroll Speed/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Mouse Scroll Speed/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
 layout_mode = 2
 text = "Mouse Scroll Speed"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/Mouse Scroll Speed/Margin/Flow"]
 layout_mode = 2
 min_value = 0.1
 max_value = 3.0
@@ -388,130 +392,130 @@ value = 1.0
 alignment = 1
 suffix = "x"
 
-[node name="Space6" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space6" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space6"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space6"]
 layout_mode = 2
 theme_override_constants/margin_left = 400
 
-[node name="Show Strums" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Show Strums" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Show Strums"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Show Strums"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Show Strums/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Show Strums/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Show Strums/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Show Strums/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Show Strums/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Show Strums/Margin/Flow"]
 layout_mode = 2
 text = "Show Strums
 "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Space7" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space7" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space7"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space7"]
 layout_mode = 2
 theme_override_constants/margin_left = 400
 
-[node name="Inst Volume" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Inst Volume" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Inst Volume"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Inst Volume"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Inst Volume/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Inst Volume/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Inst Volume/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Inst Volume/Margin/Flow"]
 layout_mode = 2
 text = "Inst Volume"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/Inst Volume/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/Inst Volume/Margin/Flow"]
 layout_mode = 2
 value = 60.0
 alignment = 1
 suffix = "%"
 
-[node name="Voices Volume" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Voices Volume" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Voices Volume"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Voices Volume"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Voices Volume/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Voices Volume/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Voices Volume/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Voices Volume/Margin/Flow"]
 layout_mode = 2
 text = "Voices Volume"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Charting/Flow/Voices Volume/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Charting/Flow/Voices Volume/Margin/Flow"]
 layout_mode = 2
 value = 100.0
 alignment = 1
 suffix = "%"
 
-[node name="Space4" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space4" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space4"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space4"]
 layout_mode = 2
 theme_override_constants/margin_left = 400
 
-[node name="Play Hitsound" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Play Hitsound" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Play Hitsound"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Play Hitsound/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Play Hitsound/Margin/Flow"]
 layout_mode = 2
 text = "BF Hitsound Type"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Charting/Flow/Play Hitsound/Margin/Flow"]
 layout_mode = 2
 item_count = 2
 selected = 0
@@ -520,27 +524,27 @@ popup/item_0/id = 0
 popup/item_1/text = "Type A"
 popup/item_1/id = 1
 
-[node name="Play Hitsound2" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Play Hitsound2" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Play Hitsound2"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound2/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Charting/Flow/Play Hitsound2/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
 layout_mode = 2
 text = "Dad Hitsound Type"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Charting/Flow/Play Hitsound2/Margin/Flow"]
 layout_mode = 2
 item_count = 2
 selected = 0
@@ -549,438 +553,438 @@ popup/item_0/id = 0
 popup/item_1/text = "Type A"
 popup/item_1/id = 1
 
-[node name="Space8" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Space8" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Space8"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Space8"]
 layout_mode = 2
 theme_override_constants/margin_left = 400
 
-[node name="Place & Erase Sound" type="PanelContainer" parent="CanvasLayer2/Container/Charting/Flow"]
+[node name="Place & Erase Sound" type="PanelContainer" parent="Menu/Container/Charting/Flow"]
 layout_mode = 2
 focus_mode = 1
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Charting/Flow/Place & Erase Sound"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Charting/Flow/Place & Erase Sound"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Charting/Flow/Place & Erase Sound/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Charting/Flow/Place & Erase Sound/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer2/Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
+[node name="CheckBox" type="CheckBox" parent="Menu/Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Charting/Flow/Place & Erase Sound/Margin/Flow"]
 layout_mode = 2
 text = "Place & Erase Sound"
 vertical_alignment = 1
 
-[node name="Events" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Events" type="MarginContainer" parent="Menu/Container"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Events"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Events"]
 layout_mode = 2
 
-[node name="Events" type="PanelContainer" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Events" type="PanelContainer" parent="Menu/Container/Events/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Events/Flow/Events"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Events/Flow/Events"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Events/Flow/Events/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Events/Flow/Events/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Events/Flow/Events/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Events/Flow/Events/Margin/Flow"]
 layout_mode = 2
 text = "Events"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Events/Flow/Events/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Events/Flow/Events/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "None"
 popup/item_0/id = 0
 
-[node name="Label" type="Label" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Label" type="Label" parent="Menu/Container/Events/Flow"]
 layout_mode = 2
 text = "No Events."
 
-[node name="Space" type="PanelContainer" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Space" type="PanelContainer" parent="Menu/Container/Events/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Events/Flow/Space"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Events/Flow/Space"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Value 1" type="PanelContainer" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Value 1" type="PanelContainer" parent="Menu/Container/Events/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Events/Flow/Value 1"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Events/Flow/Value 1"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Events/Flow/Value 1/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Events/Flow/Value 1/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Events/Flow/Value 1/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Events/Flow/Value 1/Margin/Flow"]
 layout_mode = 2
 text = "Value 1"
 vertical_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="CanvasLayer2/Container/Events/Flow/Value 1/Margin/Flow"]
+[node name="LineEdit" type="LineEdit" parent="Menu/Container/Events/Flow/Value 1/Margin/Flow"]
 layout_mode = 2
 
-[node name="Space2" type="PanelContainer" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Space2" type="PanelContainer" parent="Menu/Container/Events/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Events/Flow/Space2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Events/Flow/Space2"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Value 2" type="PanelContainer" parent="CanvasLayer2/Container/Events/Flow"]
+[node name="Value 2" type="PanelContainer" parent="Menu/Container/Events/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Events/Flow/Value 2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Events/Flow/Value 2"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Events/Flow/Value 2/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Events/Flow/Value 2/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Events/Flow/Value 2/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Events/Flow/Value 2/Margin/Flow"]
 layout_mode = 2
 text = "Value 2"
 vertical_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="CanvasLayer2/Container/Events/Flow/Value 2/Margin/Flow"]
+[node name="LineEdit" type="LineEdit" parent="Menu/Container/Events/Flow/Value 2/Margin/Flow"]
 layout_mode = 2
 
-[node name="Note" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Note" type="MarginContainer" parent="Menu/Container"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Note"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Note"]
 layout_mode = 2
 
-[node name="Note Length" type="PanelContainer" parent="CanvasLayer2/Container/Note/Flow"]
+[node name="Note Length" type="PanelContainer" parent="Menu/Container/Note/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Note/Flow/Note Length"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Note/Flow/Note Length"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Note/Flow/Note Length/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Note/Flow/Note Length/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Note/Flow/Note Length/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Note/Flow/Note Length/Margin/Flow"]
 layout_mode = 2
 text = "Note length"
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Note/Flow/Note Length/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Note/Flow/Note Length/Margin/Flow"]
 layout_mode = 2
 max_value = 30000.0
 step = 50.0
 alignment = 1
 
-[node name="Space" type="PanelContainer" parent="CanvasLayer2/Container/Note/Flow"]
+[node name="Space" type="PanelContainer" parent="Menu/Container/Note/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Note/Flow/Space"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Note/Flow/Space"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Strum Time" type="PanelContainer" parent="CanvasLayer2/Container/Note/Flow"]
+[node name="Strum Time" type="PanelContainer" parent="Menu/Container/Note/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Note/Flow/Strum Time"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Note/Flow/Strum Time"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Note/Flow/Strum Time/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Note/Flow/Strum Time/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Note/Flow/Strum Time/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Note/Flow/Strum Time/Margin/Flow"]
 layout_mode = 2
 text = "Strum time (ms)"
 vertical_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="CanvasLayer2/Container/Note/Flow/Strum Time/Margin/Flow"]
+[node name="LineEdit" type="LineEdit" parent="Menu/Container/Note/Flow/Strum Time/Margin/Flow"]
 layout_mode = 2
 
-[node name="Space2" type="PanelContainer" parent="CanvasLayer2/Container/Note/Flow"]
+[node name="Space2" type="PanelContainer" parent="Menu/Container/Note/Flow"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Note/Flow/Space2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Note/Flow/Space2"]
 layout_mode = 2
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Note Type" type="PanelContainer" parent="CanvasLayer2/Container/Note/Flow"]
+[node name="Note Type" type="PanelContainer" parent="Menu/Container/Note/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Note/Flow/Note Type"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Note/Flow/Note Type"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Note/Flow/Note Type/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Note/Flow/Note Type/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Note/Flow/Note Type/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Note/Flow/Note Type/Margin/Flow"]
 layout_mode = 2
 text = "Note type"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Note/Flow/Note Type/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Note/Flow/Note Type/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "None"
 popup/item_0/id = 0
 
-[node name="Options" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Options" type="MarginContainer" parent="Menu/Container"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="FlowContainer" parent="CanvasLayer2/Container/Options"]
+[node name="Flow" type="FlowContainer" parent="Menu/Container/Options"]
 layout_mode = 2
 
-[node name="Player" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Player" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Player"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Player"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Player/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Player/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Player/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Player/Margin/Flow"]
 layout_mode = 2
 text = "Player
 "
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Player/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Player/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "bf"
 popup/item_0/id = 0
 
-[node name="Girlfriend" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Girlfriend" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Girlfriend"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Girlfriend"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Girlfriend/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Girlfriend/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Girlfriend/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Girlfriend/Margin/Flow"]
 layout_mode = 2
 text = "Girlfriend"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Girlfriend/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Girlfriend/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "gf"
 popup/item_0/id = 0
 
-[node name="Opponent" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Opponent" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Opponent"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Opponent"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Opponent/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Opponent/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Opponent/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Opponent/Margin/Flow"]
 layout_mode = 2
 text = "Opponent"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Opponent/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Opponent/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "dad"
 popup/item_0/id = 0
 
-[node name="Stage" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Stage" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Stage"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Stage"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Stage/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Stage/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Stage/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Stage/Margin/Flow"]
 layout_mode = 2
 text = "Stage"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Stage/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Stage/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "stage"
 popup/item_0/id = 0
 
-[node name="Player Modchart" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Player Modchart" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Player Modchart"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Player Modchart"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Player Modchart/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Player Modchart/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Player Modchart/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Player Modchart/Margin/Flow"]
 layout_mode = 2
 text = "Player Modchart"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Player Modchart/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Player Modchart/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "none"
 popup/item_0/id = 0
 
-[node name="Dad Modchart" type="PanelContainer" parent="CanvasLayer2/Container/Options/Flow"]
+[node name="Dad Modchart" type="PanelContainer" parent="Menu/Container/Options/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Options/Flow/Dad Modchart"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Options/Flow/Dad Modchart"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="HFlowContainer" parent="CanvasLayer2/Container/Options/Flow/Dad Modchart/Margin"]
+[node name="Flow" type="HFlowContainer" parent="Menu/Container/Options/Flow/Dad Modchart/Margin"]
 layout_mode = 2
 alignment = 1
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Options/Flow/Dad Modchart/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Options/Flow/Dad Modchart/Margin/Flow"]
 layout_mode = 2
 text = "Dad Modchart"
 vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="CanvasLayer2/Container/Options/Flow/Dad Modchart/Margin/Flow"]
+[node name="OptionButton" type="OptionButton" parent="Menu/Container/Options/Flow/Dad Modchart/Margin/Flow"]
 layout_mode = 2
 item_count = 1
 selected = 0
 popup/item_0/text = "none"
 popup/item_0/id = 0
 
-[node name="Section" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Section" type="MarginContainer" parent="Menu/Container"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="FlowContainer" parent="CanvasLayer2/Container/Section"]
+[node name="Flow" type="FlowContainer" parent="Menu/Container/Section"]
 layout_mode = 2
 
-[node name="BPM" type="PanelContainer" parent="CanvasLayer2/Container/Section/Flow"]
+[node name="BPM" type="PanelContainer" parent="Menu/Container/Section/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Section/Flow/BPM"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Section/Flow/BPM"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Section/Flow/BPM/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Section/Flow/BPM/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Section/Flow/BPM/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Section/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 text = "Song BPM:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Section/Flow/BPM/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Section/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.1
@@ -988,26 +992,26 @@ value = 150.0
 alignment = 1
 custom_arrow_step = 0.1
 
-[node name="BPM2" type="PanelContainer" parent="CanvasLayer2/Container/Section/Flow"]
+[node name="BPM2" type="PanelContainer" parent="Menu/Container/Section/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Section/Flow/BPM2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Section/Flow/BPM2"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Section/Flow/BPM2/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Section/Flow/BPM2/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Section/Flow/BPM2/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Section/Flow/BPM2/Margin/Flow"]
 layout_mode = 2
 text = "Song BPM:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Section/Flow/BPM2/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Section/Flow/BPM2/Margin/Flow"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.1
@@ -1015,35 +1019,35 @@ value = 150.0
 alignment = 1
 custom_arrow_step = 0.1
 
-[node name="Song" type="MarginContainer" parent="CanvasLayer2/Container"]
+[node name="Song" type="MarginContainer" parent="Menu/Container"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Flow" type="FlowContainer" parent="CanvasLayer2/Container/Song"]
+[node name="Flow" type="FlowContainer" parent="Menu/Container/Song"]
 layout_mode = 2
 
-[node name="BPM" type="PanelContainer" parent="CanvasLayer2/Container/Song/Flow"]
+[node name="BPM" type="PanelContainer" parent="Menu/Container/Song/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Song/Flow/BPM"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Song/Flow/BPM"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Song/Flow/BPM/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Song/Flow/BPM/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Song/Flow/BPM/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Song/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 text = "Song BPM:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Song/Flow/BPM/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Song/Flow/BPM/Margin/Flow"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.1
@@ -1051,32 +1055,190 @@ value = 150.0
 alignment = 1
 custom_arrow_step = 0.1
 
-[node name="BPM2" type="PanelContainer" parent="CanvasLayer2/Container/Song/Flow"]
+[node name="BPM2" type="PanelContainer" parent="Menu/Container/Song/Flow"]
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer2/Container/Song/Flow/BPM2"]
+[node name="Margin" type="MarginContainer" parent="Menu/Container/Song/Flow/BPM2"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="Flow" type="VFlowContainer" parent="CanvasLayer2/Container/Song/Flow/BPM2/Margin"]
+[node name="Flow" type="VFlowContainer" parent="Menu/Container/Song/Flow/BPM2/Margin"]
 layout_mode = 2
 
-[node name="Setting Name" type="Label" parent="CanvasLayer2/Container/Song/Flow/BPM2/Margin/Flow"]
+[node name="Setting Name" type="Label" parent="Menu/Container/Song/Flow/BPM2/Margin/Flow"]
 layout_mode = 2
 text = "Song BPM:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer2/Container/Song/Flow/BPM2/Margin/Flow"]
+[node name="SpinBox" type="SpinBox" parent="Menu/Container/Song/Flow/BPM2/Margin/Flow"]
 layout_mode = 2
 max_value = 99999.0
 step = 0.1
 value = 150.0
 alignment = 1
 custom_arrow_step = 0.1
+
+[node name="ColorRect" type="ColorRect" parent="Menu"]
+offset_left = 1025.0
+offset_top = -40.0
+offset_right = 1307.0
+offset_bottom = 375.0
+color = Color(0.380392, 0.380392, 0.380392, 1)
+
+[node name="SaveJSON" type="Button" parent="Menu"]
+offset_left = 942.0
+offset_top = 683.0
+offset_right = 1099.0
+offset_bottom = 714.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Save JSON"
+
+[node name="LoadJSON" type="Button" parent="Menu"]
+offset_left = 1113.0
+offset_top = 683.0
+offset_right = 1270.0
+offset_bottom = 714.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Load JSON"
+
+[node name="ReloadAudio" type="Button" parent="Menu"]
+offset_left = 774.0
+offset_top = 683.0
+offset_right = 931.0
+offset_bottom = 714.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Reload Audio"
+
+[node name="SongName" type="LineEdit" parent="Menu"]
+offset_left = 1043.0
+offset_top = 37.0
+offset_right = 1259.0
+offset_bottom = 68.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Test"
+placeholder_text = "Song Name"
+alignment = 1
+
+[node name="bf" type="LineEdit" parent="Menu"]
+offset_left = 1038.0
+offset_top = 260.0
+offset_right = 1265.0
+offset_bottom = 291.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "bf"
+placeholder_text = "bf"
+alignment = 1
+
+[node name="dad" type="LineEdit" parent="Menu"]
+offset_left = 1038.0
+offset_top = 327.0
+offset_right = 1265.0
+offset_bottom = 358.0
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "dad"
+placeholder_text = "dad"
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu"]
+offset_left = 1040.0
+offset_top = 12.0
+offset_right = 1152.0
+offset_bottom = 35.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Song name:"
+
+[node name="Label2" type="Label" parent="Menu"]
+offset_left = 1040.0
+offset_top = 74.0
+offset_right = 1152.0
+offset_bottom = 97.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Song BPM:"
+
+[node name="Label3" type="Label" parent="Menu"]
+offset_left = 1039.0
+offset_top = 138.0
+offset_right = 1151.0
+offset_bottom = 161.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Song speed:"
+
+[node name="Label4" type="Label" parent="Menu"]
+offset_left = 1040.0
+offset_top = 232.0
+offset_right = 1156.0
+offset_bottom = 255.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "BF name:"
+
+[node name="Label5" type="Label" parent="Menu"]
+offset_left = 1037.0
+offset_top = 301.0
+offset_right = 1153.0
+offset_bottom = 324.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "Dad name:"
+
+[node name="BetaText" type="Label" parent="Menu"]
+offset_left = 871.0
+offset_top = 382.0
+offset_right = 1273.0
+offset_bottom = 681.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("7_88gig")
+text = "A = Prev section
+D = Next section
+Space = Play & Stop
+Mouse wheel = Scroll
+Scroll + Shift = 4x speed
+Scroll + Ctrl = Scroll X
+Scroll + Alt = Zoom
+Click + Drag = Change note sustain
+
+Chart Editor BETA"
+horizontal_alignment = 2
+
+[node name="BPM" type="SpinBox" parent="Menu"]
+offset_left = 1041.0
+offset_top = 98.0
+offset_right = 1272.0
+offset_bottom = 132.0
+theme = SubResource("Theme_k5lk6")
+max_value = 9999.0
+step = 0.1
+value = 150.0
+alignment = 1
+
+[node name="Speed" type="SpinBox" parent="Menu"]
+offset_left = 1041.0
+offset_top = 162.0
+offset_right = 1272.0
+offset_bottom = 196.0
+theme = SubResource("Theme_k5lk6")
+max_value = 10.0
+step = 0.1
+value = 1.0
+alignment = 1
+
+[node name="SaveJSONWindow" type="FileDialog" parent="Menu"]
+title = "Save a file"
+position = Vector2i(50, 50)
+size = Vector2i(640, 640)
+access = 2
+filters = PackedStringArray(".json")
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(640, 360)
+
+[connection signal="file_selected" from="Menu/SaveJSONWindow" to="Mass" method="_on_file_dialog_file_selected"]

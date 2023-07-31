@@ -18,7 +18,7 @@ var p2_normal: int
 var p2_lose: int
 
 func _ready():
-	await get_tree().create_timer(0.05).timeout
+	await Game.game_ready
 	p1.texture = Paths.p_icon(Game.p1_json.healthicon)
 	p2.texture = Paths.p_icon(Game.p2_json.healthicon)
 	

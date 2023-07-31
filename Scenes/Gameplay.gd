@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var strum_group: CanvasLayer = get_node("Strums")
 @onready var note_group: CanvasLayer = get_node("Notes")
+@onready var gameover: CanvasLayer = $Gameover
 
 var note_count: int
 var cam_zoom: float = 1
@@ -36,20 +37,22 @@ func _ready():
 	Modchart.loadModchart()
 	
 func _process(_delta):
-	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, SPAWN_END, PAUSE}
+	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 	if Game.cur_state == Game.NOT_PLAYING: return
 	
-	if Game.cur_state != Game.SPAWN_END:
+	gameoverCheck()
+	
+	if !Game.spawn_end:
 		if Game.cur_state == Game.COUNTDOWN:
 			if !timer:
 				timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
 			Audio.cur_ms = timer.time_left * -1000
 		
 		for i in range(20000):
-			if Game.cur_state == Game.SPAWN_END or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
+			if Game.spawn_end or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
 				break
 			note_spawn_load()
-	else:  #Game.cur_state == Game.SPAWN_END
+	else:  #Game.spawn_end
 		if !Audio.a_check("Inst"):
 			if Game.is_story:
 				Game.cur_song_index += 1
@@ -61,7 +64,7 @@ func _process(_delta):
 			else:
 				quit()
 	
-	if Game.cur_state == Game.PLAYING or Game.cur_state == Game.SPAWN_END:
+	if Game.cur_state == Game.PLAYING: #プレイ中だったら
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_stop("Inst")
 			Audio.a_stop("Voices")
@@ -71,8 +74,25 @@ func _process(_delta):
 			Game.cur_state = Game.PAUSE
 			Audio.a_pause("Inst")
 			Audio.a_pause("Voices")
+	elif Game.cur_state == Game.GAMEOVER: #ゲームオーバーだったら
+		if Input.is_action_just_pressed("ui_cancel"):
+			if Audio.a_check("Gameover"):
+				Audio.a_stop("Gameover")
+			elif Audio.a_check("GameoverStart"):
+				Audio.a_stop("GameoverStart")
+			elif Audio.a_check("GameoverEnd"):
+				Audio.a_stop("GameoverEnd")
+			quit()
+		if Input.is_action_just_pressed("ui_accept"):
+			gameover.accepted()
 
-
+func gameoverCheck():
+	if Game.cur_state != Game.GAMEOVER:
+		if Game.health <= 0:
+			gameover.gameover()
+		if Input.is_action_just_pressed("game_reset"):
+			if Game.cur_state != Game.PLAYING: return
+			gameover.gameover()
 
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():
@@ -88,7 +108,7 @@ func note_spawn_load():
 			new_note.player = 1
 		note_group.add_child(new_note)
 		if note_count == Game.ms.size() - 1:
-			Game.cur_state = Game.SPAWN_END
+			Game.spawn_end = true
 		else:
 			note_count += 1
 
@@ -98,7 +118,7 @@ func note_spawn_load():
 #	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
 #		note_group.get_node(str(note_count)).visible = true
 #		if note_count == Game.ms.size() - 1:
-#			Game.cur_state = Game.SPAWN_END
+#			Game.spawn_end = true
 #		else:
 #			note_count += 1
 
@@ -121,7 +141,7 @@ func strum_set():
 		strum_group.add_child(new_strum)
 
 func character_set():
-	for i in range(2):
+	for i in range(3):
 		var character = load("res://Scenes/BF.tscn").instantiate()
 		character.type = i
 		$Characters.add_child(character)
@@ -160,6 +180,7 @@ func keybind(key):
 		Game.cur_input.append(0)
 		Game.cur_input_sub.append(0)
 		Game.dad_input.append(0)
+		Game.gf_input.append(0)
 		Game.bf_miss.append(0)
 
 func countdown():
@@ -201,6 +222,7 @@ func reset_property():
 	Audio.songLength = 0
 
 func reset_dict_and_array():
+	Game.spawn_end = false
 	Game.notes_data.notes.clear()
 	Game.ms.clear()
 	Game.sus.clear()
@@ -212,6 +234,8 @@ func reset_dict_and_array():
 	Game.cur_input.clear()
 	Game.cur_input_sub.clear()
 	Game.dad_input.clear()
+	Game.gf_input.clear()
+	Game.bf_miss.clear()
 	Game.song_data.clear()
 	Game.who_sing.clear()
 	Game.who_sing_section.clear()

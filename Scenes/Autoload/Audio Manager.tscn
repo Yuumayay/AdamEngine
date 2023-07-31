@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://b736w0428g7i6"]
+[gd_scene load_steps=38 format=3 uid="uid://b736w0428g7i6"]
 
 [ext_resource type="Script" path="res://Scenes/Autoload/Audio Manager.gd" id="1_i1gpa"]
 [ext_resource type="AudioStream" uid="uid://mi5qxw8ah3m5" path="res://Assets/Music/freakyMenu.ogg" id="2_pawgv"]
@@ -7,7 +7,10 @@
 [ext_resource type="AudioStream" uid="uid://c3cimsn8tv0" path="res://Assets/Music/pauseAsd.ogg" id="4_8q7wd"]
 [ext_resource type="AudioStream" uid="uid://c6tcf4o2apntx" path="res://Assets/Sounds/FNF/UI/cancelMenu.ogg" id="4_qnaxj"]
 [ext_resource type="AudioStream" uid="uid://c3crp71qg7dfv" path="res://Assets/Sounds/FNF/UI/scrollMenu.ogg" id="5_4r8wr"]
+[ext_resource type="AudioStream" uid="uid://cp2hcvfdpbau6" path="res://Assets/Music/fnf_loss_sfx.ogg" id="5_wmoxj"]
 [ext_resource type="AudioStream" uid="uid://0v510pm2h56c" path="res://Assets/Sounds/FNF/UI/Error.ogg" id="6_e6tnv"]
+[ext_resource type="AudioStream" uid="uid://b8yvu83o3xush" path="res://Assets/Music/gameOver.ogg" id="6_uf8oc"]
+[ext_resource type="AudioStream" uid="uid://b52sg1i448n1v" path="res://Assets/Music/gameOverEnd.ogg" id="7_frl80"]
 [ext_resource type="AudioStream" uid="uid://ct1rmf02f85m0" path="res://Assets/Sounds/FNF/Countdown/intro3.ogg" id="8_7tpoe"]
 [ext_resource type="AudioStream" uid="uid://blhfaconp8nt4" path="res://Assets/Sounds/FNF/Countdown/intro2.ogg" id="9_o5tlg"]
 [ext_resource type="AudioStream" uid="uid://b8nhu8indwuk" path="res://Assets/Sounds/FNF/Countdown/intro1.ogg" id="10_4o6x8"]
@@ -49,6 +52,18 @@ stream = ExtResource("4_8q7wd")
 
 [node name="Option Menu" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_8q7wd")
+volume_db = 7.858
+
+[node name="GameoverStart" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_wmoxj")
+volume_db = 7.858
+
+[node name="Gameover" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_uf8oc")
+volume_db = 7.858
+
+[node name="GameoverEnd" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_frl80")
 volume_db = 7.858
 
 [node name="Accept" type="AudioStreamPlayer" parent="."]

@@ -8,6 +8,8 @@ enum {PLAYER, DAD, GF}
 var note_anim: Array = ["singleft", "singdown", "singup", "singright"]
 var miss_anim: Array = ["singleftmiss", "singdownmiss", "singupmiss", "singrightmiss"]
 var idle_anim = "idle"
+var gf_anim = ["danceleft", "danceright"]
+var gf_idle = "gf dancing beat"
 
 enum {IDLE = -1, NOTE, MISS}
 var state: int = -1
@@ -16,7 +18,7 @@ var dir_2: int = 1
 var animLength = 4.0
 var animRemain: float = 0.0
 
-var json :Dictionary
+var json: Dictionary
 var offset_dic = {}
 
 var load_fail: bool = false
@@ -24,52 +26,109 @@ var load_fail: bool = false
 func _ready():
 	var spr : AnimatedSprite2D
 	
-	if type == PLAYER:
+	if type == PLAYER: # BF側
+		# jsonにbfのjsonをいれる
 		json = Game.p1_json
 		
-		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"):
+		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"): # キャラクターのxmlが存在していたら
+			# sprにjson.imageをいれる
 			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, false, 24, 1)
-		else:
+			
+		else: # キャラクターのxmlが存在しない
+			# エラー回避のためbfを入れる
 			spr = Game.load_XMLSprite("res://Assets/Images/characters/BOYFRIEND.xml", idle_anim, false, 24, 1)
 			load_fail = true
+		
 		spr.name = "bf"
-		position = Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1])# + Vector2(json["position"][0], json["position"][1])
-		position += Vector2(400, 400)
-		Game.p1_position = position
-	elif type == DAD:
+		
+		# 超絶分かりにくいfnfのpositionの仕様に仕方なく対応
+		position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		
+		# bfの座標をbfPosにいれる
+		Game.bfPos = position
+		
+		# bfはflip_xの逆をflip_hに適用(分かりにくいfnfの仕様)
+		spr.flip_h = !json.flip_x
+		
+	elif type == DAD: # DAD側
+		# jsonにdadのjsonをいれる
 		json = Game.p2_json
 		
-		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"):
+		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"): # キャラクターのxmlが存在していたら
+			# sprにjson.imageをいれる
 			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", idle_anim, false, 24, 2)
-		else:
+			
+		else: # キャラクターのxmlが存在しない
+			# エラー回避のためdadを入れる
 			spr = Game.load_XMLSprite("res://Assets/Images/characters/DADDY_DEAREST.xml", idle_anim, false, 24, 2)
 			load_fail = true
+		
 		spr.name = "dad"
-		position = Vector2(Game.stage.opponent[0], Game.stage.opponent[1])# + Vector2(json["position"][0], json["position"][1])
-		#psychの謎仕様として、characterのjsonのoffsetは読まない
-		position += Vector2(400, 400)
-		Game.p2_position = position
+		
+		# 超絶分かりにくいfnfのpositionの仕様に仕方なく対応
+		position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		
+		# dadの座標をdadPosにいれる
+		Game.dadPos = position
+		
+		# dadはそのままflip_xをflip_hに適用
+		spr.flip_h = json.flip_x
+		
+	elif type == GF: # GF側
+		# jsonにgfのjsonをいれる
+		json = Game.gf_json
+		
+		if FileAccess.file_exists("res://Assets/Images/" + json.image + ".xml"): # キャラクターのxmlが存在していたら
+			# sprにjson.imageをいれる
+			spr = Game.load_XMLSprite("res://Assets/Images/" + json.image + ".xml", gf_idle, false, 24, 2)
+			
+		else: # キャラクターのxmlが存在しない
+			# エラー回避のためdadを入れる
+			spr = Game.load_XMLSprite("res://Assets/Images/characters/GF_assets.xml", gf_idle, false, 24, 2)
+			load_fail = true
+		
+		spr.name = "gf"
+		
+		# 超絶分かりにくいfnfのpositionの仕様に仕方なく対応
+		position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		
+		# dadの座標をdadPosにいれる
+		Game.gfPos = position
+		
+		# gfもそのままflip_xをflip_hに適用
+		spr.flip_h = json.flip_x
+	
 	animLength = json.sing_duration
 	bf.replace_by(spr)
 	bf = spr
-	print(position)
-	bf.play(idle_anim)
-	
+	var atlastexture
+	if type != GF:
+		bf.play(idle_anim)
+		atlastexture = bf.sprite_frames.get_frame_texture(idle_anim, 0)
+	else:
+		bf.z_index = -1
+		bf.play(gf_idle)
+		atlastexture = bf.sprite_frames.get_frame_texture(gf_idle, 0)
 	if load_fail or Game.character_load_fail:
 		loadFail()
 	
-	var atlastexture = bf.sprite_frames.get_frame_texture(idle_anim, 0)
+	
 	if atlastexture:
 		var s = atlastexture.get_size()
 		print("sp", atlastexture, s)
 		
-		bf.offset = -Vector2(s.x / 2, s.y / 2)
+		bf.offset += Vector2(s.x / 2.0, s.y / 2.0)
+		if type == PLAYER:
+			Game.bfPos += bf.offset
+		elif type == DAD:
+			Game.dadPos += bf.offset
 	
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
-		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] * 0.5)
+		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
 	#ResourceSaver.save(bf.sprite_frames, "res://Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
-	
+	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
+
 func setOffset(animname : String):
 	if offset_dic.has(animname):
 		bf.position = offset_dic[animname]
@@ -134,8 +193,10 @@ func _process(delta):
 			bf.play()
 	if type == PLAYER:
 		player_process(delta)
-	if type == DAD:
+	elif type == DAD:
 		dad_process(delta)
+	elif type == GF:
+		gf_process(delta)
 
 func player_process(delta):
 	if Game.cur_input[dir_2] == 1:
@@ -182,6 +243,34 @@ func dad_process(delta):
 				bf.stop()
 				bf.play(idle_anim, 1.0, true)
 				setOffset(idle_anim)
+
+var beat := 0
+
+func gf_process(delta):
+	if Game.gf_input[dir_2] == 1:
+		if bf.frame >= 3:
+			bf.frame = 0
+	else:
+		animRemain -= delta
+	for i in range(Game.key_count):
+		if Game.gf_input[i] == 2:
+			Game.gf_input[i] = 0
+			animDirection(i)
+	if animRemain <= 0:
+		if state != IDLE:
+			state = IDLE
+			bf.play(gf_idle, 1.0, true)
+			setOffset(gf_idle)
+		else:
+			if Audio.beat_hit_event:
+				bf.stop()
+				bf.play(gf_idle, 1.0, true)
+				setOffset(gf_idle)
+				bf.frame = beat % 2 * 15
+				if beat == 0:
+					beat = 1
+				else:
+					beat = 0
 
 func loadFail():
 	print("fail")

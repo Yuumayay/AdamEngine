@@ -1,6 +1,14 @@
 extends Node
 
+
+
+############################## シグナル ##############################
+
 signal beat_hit
+
+
+
+############################## 変数 ##############################
 
 var bpm: float
 var cur_ms: float
@@ -9,12 +17,17 @@ var cur_beat_float: float
 var cur_sec: float
 var cur_section: int
 var songLength: float
+var beatLength: float
 
 var beat_hit_bool: bool = false
 var beat_hit_event: bool = false
 var section_hit_event: bool = false
 
 var bpm_array: Array = [100, 200, 400]
+
+
+
+############################## 関数 ##############################
 
 func a_play(key: String, pitch = 1.0, volume = 0.0, position = 0.0):
 	var target: AudioStreamPlayer = get_node_or_null(key)
@@ -124,11 +137,52 @@ func a_get_sec(key: String):
 	else:
 		printerr("audio_get_sec: node not found")
 
+
+
+############################## オーディオの読み込みと初期化 ##############################
+
+func _ready():
+	var music_offset = File.f_read(Paths.p_offset("Music/Offset.json"), ".json")
+	var menu_music_path = "res://Assets/Music/" + music_offset.MenuMusic[0]
+	var menu_music_bpm = music_offset.MenuMusic[1]
+	
+	var debug_music_path = "res://Assets/Music/" + music_offset.DebugMusic[0]
+	var debug_music_bpm = music_offset.DebugMusic[1]
+	
+	var pause_music_path = "res://Assets/Music/" + music_offset.PauseMusic[0]
+	var pause_music_bpm = music_offset.PauseMusic[1]
+	
+	var option_music_path = "res://Assets/Music/" + music_offset.OptionMusic[0]
+	var option_music_bpm = music_offset.OptionMusic[1]
+
+	var gameoverstart_music_path = "res://Assets/Music/" + music_offset.GameoverStart[0]
+	var gameoverstart_music_bpm = music_offset.GameoverStart[1]
+
+	var gameover_music_path = "res://Assets/Music/" + music_offset.Gameover[0]
+	var gameover_music_bpm = music_offset.Gameover[1]
+
+	var gameoverend_music_path = "res://Assets/Music/" + music_offset.GameoverEnd[0]
+	var gameoverend_music_bpm = music_offset.GameoverEnd[1]
+	
+	Audio.a_set("Freaky Menu", menu_music_path, menu_music_bpm, true)
+	Audio.a_set("Debug Menu", debug_music_path, debug_music_bpm, true)
+	Audio.a_set("Pause Menu", pause_music_path, pause_music_bpm, true)
+	Audio.a_set("Option Menu", option_music_path, option_music_bpm, true)
+	Audio.a_set("GameoverStart", gameoverstart_music_path, gameoverstart_music_bpm, false)
+	Audio.a_set("Gameover", gameover_music_path, gameover_music_bpm, true)
+	Audio.a_set("GameoverEnd", gameoverend_music_path, gameoverend_music_bpm, false)
+
+
+
+############################## 曲の情報更新 ##############################
+
 var value := 0
 var value2 := 0
 
 func _process(_delta):
 	if a_check("Inst"):
+		if beatLength == 0:
+			beatLength = 60.0 / bpm
 		if songLength == 0:
 			songLength = a_get_length("Inst")
 		if Game.cur_state != Game.PAUSE and Game.cur_state != Game.NOT_PLAYING:

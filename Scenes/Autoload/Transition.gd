@@ -8,14 +8,14 @@ var cur_scene = "Title Menu"
 func t_trans(change_to) -> void:
 	Game.trans = true
 	Game.can_input = false
-	sprite.position.y = -1080
+	sprite.position.y = -2160
 	
 	var next_scene = load("res://Scenes/" + change_to + ".tscn").instantiate()
 	
 	visible = true
 	
 	var t = create_tween()
-	t.tween_property(sprite, "position", Vector2(sprite.position.x, -250), 0.25)
+	t.tween_property(sprite, "position", Vector2(sprite.position.x, -500), 0.25)
 	t.play()
 	
 	await get_tree().create_timer(0.25).timeout
@@ -26,7 +26,7 @@ func t_trans(change_to) -> void:
 	cur_scene = change_to
 	
 	var t2 = create_tween()
-	t2.tween_property(sprite, "position", Vector2(sprite.position.x, 720), 0.25)
+	t2.tween_property(sprite, "position", Vector2(sprite.position.x, 1440), 0.25)
 	t2.play()
 	
 	await get_tree().create_timer(0.25).timeout

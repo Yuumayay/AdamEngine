@@ -18,19 +18,21 @@ enum {EVENT, BF, DAD, GF}
 var hit: bool = false
 
 func _ready():
-	if Chart.placed_notes.notes.has([dir, ms, player_type, player_ind]):
-		var sustain = Chart.placed_notes.notes.find([dir, ms, player_type, player_ind])
-		print("find")
-		if Chart.notes_property.notes[sustain][1] != 0:
-			line.set_point_position(1, Vector2(0, Chart.notes_property.notes[sustain][1] + 25))
-			sus = Chart.notes_property.notes[sustain][1]
-			note_type = Chart.notes_property.notes[sustain][2]
-		if player_type == EVENT:
-			note.animation = "event"
-		else:
-			anim_set()
-		note.visible = true
-		line.visible = true
+	for i in Chart.chartData.notes[Chart.cur_section]["sectionNotes"]:
+		if i.ms == 60.0 / Chart.bpm * ms * 1000 and i.dir == dir and i.player_type == player_type and i.player_ind == player_ind:
+			var sustain = i.sus
+			var note_type = i.note_type
+			print("find")
+			if sustain != 0:
+				line.set_point_position(1, Vector2(0, sustain + 25))
+				sus = sustain
+				note_type = i.note_type
+			if player_type == EVENT:
+				note.animation = "event"
+			else:
+				anim_set()
+			note.visible = true
+			line.visible = true
 
 func anim_set():
 	if player_type == BF:
@@ -52,8 +54,7 @@ func place():
 				note.visible = false
 				line.visible = false
 				Audio.a_play("Erase")
-				Chart.placed_notes.notes.erase([dir, ms, player_type, player_ind])
-				Chart.notes_property.notes.erase([player_ind, sus, note_type])
+				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].erase({"ms" = 60.0 / Chart.bpm * ms * 1000, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
 			else:
 				var distance
 				
@@ -76,17 +77,15 @@ func place():
 						sus = distance
 						line.set_point_position(1, Vector2(0, distance + 25))
 					await get_tree().create_timer(0).timeout
-				Chart.placed_notes.notes.append([dir, ms, player_type, player_ind])
-				Chart.notes_property.notes.append([player_ind, sus, note_type])
-			print(Chart.placed_notes.notes)
-			print(Chart.notes_property.notes)
+				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].append({"ms" = 60.0 / Chart.bpm * ms * 1000, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
+			print(Chart.chartData.notes)
 	
 func scroll():
 	position.y = ms * 50 + Chart.cur_y + 300
 	if Chart.playing:
 		if global_position.y <= 301 and note.visible and not hit:
 			hit = true
-			Audio.a_play("Hit")
+			Audio.a_play("osu")
 			note.modulate.a = 0.5
 	else:
 		if global_position.y <= 301 and note.visible:

@@ -21,7 +21,12 @@ func _ready():
 	info2.text += "Misses: 0\n\n"
 	info2.text += "Combo: 0\n"
 	info2.text += "Max Combo: 0\n"
-	info4.text = Game.cur_song + " - " + Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1)
+	
+	var lower = Game.cur_song.to_lower()
+	if Game.cur_song.to_lower() == lower:
+		info4.text = Game.cur_song[0].to_upper() + Game.cur_song.substr(1) + " - " + Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1)
+	else:
+		info4.text = Game.cur_song[0] + " - " + Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1)
 
 func _process(_delta):
 	if last_hit != Game.hit:
@@ -42,8 +47,6 @@ func _process(_delta):
 		info2.text += "Max Combo: " + str(Game.max_combo) + "\n"
 		
 		info3.text = View.version_text
-		
-		info4.text = Game.cur_song + " - " + Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1)
 
 func fc_state_check():
 	var fc_state: String

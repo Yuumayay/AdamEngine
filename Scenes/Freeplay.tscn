@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_n65er"]
 [ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
-[ext_resource type="Texture2D" uid="uid://cmerlb6jj63jj" path="res://Assets/Images/Icons/voiid-bf.png" id="5_6b31r"]
+[ext_resource type="Texture2D" path="res://Assets/Images/Icons/voiid-bf.png" id="5_6b31r"]
 [ext_resource type="Script" path="res://Scenes/Freeplay Selector.gd" id="6_ohx30"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="6_rqsen"]
 
