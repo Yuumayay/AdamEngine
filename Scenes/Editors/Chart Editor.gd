@@ -13,7 +13,7 @@ extends Node2D
 @onready var dadname = menu.get_node("dad")
 @onready var reloadaudio = menu.get_node("ReloadAudio")
 @onready var savejson = menu.get_node("SaveJSON")
-@onready var savejsonwindow = menu.get_node("SaveJSONWindow")
+@onready var savejsonwindow: FileDialog = menu.get_node("SaveJSONWindow")
 
 var empty_section = {"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}
 
@@ -28,6 +28,7 @@ func _ready():
 		Audio.a_volume_set("Debug Menu", -i)
 		await get_tree().create_timer(0.001).timeout
 	reloadaudio.pressed.connect(reloadAudio)
+	savejsonwindow.set_filters(PackedStringArray(["*.json ; FNF chart data files"]))
 	savejson.pressed.connect(func():
 		savejsonwindow.show()
 		Chart.can_input = false
@@ -53,7 +54,7 @@ func draw_all():
 	# append empty section
 	if Chart.cur_section >= Chart.chartData.notes.size() - 1:
 		for i in Chart.cur_section - (Chart.chartData.notes.size() - 1):
-			Chart.chartData.notes.append(empty_section)
+			Chart.chartData.notes.append(empty_section.duplicate(true))
 	
 	# event mass
 	draw_mass(50, 250, 1, 32, 1, 0, Chart.cur_section, 0, 0)
@@ -335,22 +336,24 @@ func generateJson() -> Dictionary:
 			"engine": "Adam Engine - Beta 1"
 		}
 	}
-	var count := 0
-	var count2 := 0
+	var section_n := 0
+	var sectionNotes_n := 0
 	var jsonNotes = json["song"]["notes"]
 	for section in Chart.chartData.notes:
-		jsonNotes.append(empty_section)
+		jsonNotes.append(empty_section.duplicate(true))
 		for note in section.sectionNotes:
 			if note.player_type == 0: # EVENT
-				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type, note.player_type, note.player_ind])
+				jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type, note.player_type, note.player_ind])
 			elif note.player_type == 1: # BF
-				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.bf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+				jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.bf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
 			elif note.player_type == 2: # DAD
-				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.dad_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+				jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.dad_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
 			elif note.player_type == 3: # GF
-				jsonNotes[count]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.gf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
-			count2 += 1
-		count += 1
+				jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir + ((note.player_type - 1) * Chart.gf_data["key_count"][note.player_ind]), note.sus, note.note_type, note.player_type, note.player_ind])
+			sectionNotes_n += 1
+		section_n += 1
+		
+	print(json)
 	return json
 	
 

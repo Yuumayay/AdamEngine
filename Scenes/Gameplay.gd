@@ -35,7 +35,10 @@ func _ready():
 	#note_set()
 	countdown()
 	Modchart.loadModchart()
-	
+	modchartCheck()
+
+var beatCount := 5
+
 func _process(_delta):
 	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 	if Game.cur_state == Game.NOT_PLAYING: return
@@ -44,16 +47,22 @@ func _process(_delta):
 	
 	if !Game.spawn_end:
 		if Game.cur_state == Game.COUNTDOWN:
+			Audio.beat_hit_bool = false
+			Audio.beat_hit_event = false
 			if !timer:
 				timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
 			Audio.cur_ms = timer.time_left * -1000
+			if Audio.cur_ms >= (60.0 / Audio.bpm) * beatCount * -1000:
+				beatCount -= 1
+				Audio.beat_hit_bool = true
+				Audio.beat_hit_event = true
 		
 		for i in range(20000):
 			if Game.spawn_end or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
 				break
 			note_spawn_load()
 	else:  #Game.spawn_end
-		if !Audio.a_check("Inst"):
+		if !Audio.a_check("Inst") and Game.cur_state != Game.PAUSE and Game.cur_state != Game.GAMEOVER:
 			if Game.is_story:
 				Game.cur_song_index += 1
 				if Game.cur_song_index < Game.songList.size():
@@ -62,6 +71,29 @@ func _process(_delta):
 					Game.is_story = false
 					quitStory()
 			else:
+				var json: Dictionary = File.f_read("user://ae_score_data.json", ".json")
+				var songpath = Game.cur_song.to_lower() + "-" + Game.cur_diff
+				var scorejson: Dictionary = {
+					songpath: {
+						"score": 0,
+						"fc_state": 0,
+						"accuracy": 0
+					}
+				}
+				if not json.song.has(songpath):
+					json.song.append(scorejson)
+				for i in json.song:
+					if i.has(songpath):
+						if i[songpath].score < Game.score:
+							i[songpath].score = Game.score
+							i[songpath].fc_state = Game.fc_state
+							i[songpath].accuracy = floor(Game.accuracy * 10000.0) / 100.0
+							File.f_save("user://ae_score_data", ".json", json)
+						else:
+							print("not high score")
+						break
+				print(json)
+				
 				quit()
 	
 	if Game.cur_state == Game.PLAYING: #プレイ中だったら
@@ -89,10 +121,24 @@ func _process(_delta):
 func gameoverCheck():
 	if Game.cur_state != Game.GAMEOVER:
 		if Game.health <= 0:
-			gameover.gameover()
+			Game.fc_state = "Failed"
+			if not Setting.s_get("gameplay", "practice"):
+				gameover.gameover()
 		if Input.is_action_just_pressed("game_reset"):
 			if Game.cur_state != Game.PLAYING: return
 			gameover.gameover()
+
+func modchartCheck():
+	if Modchart.modcharts.has("middleScroll"):
+		var strumCount := 0
+		for i in strum_group.get_children():
+			if strumCount < Game.key_count:
+				i.position = Vector2(-9999, 550)
+				View.strum_pos[strumCount] = Vector2(-9999, 550)
+			else:
+				i.position.x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
+				View.strum_pos[strumCount].x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
+			strumCount += 1
 
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():

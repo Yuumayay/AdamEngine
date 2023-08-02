@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cti80rhuvkjyv"]
+[gd_scene load_steps=6 format=3 uid="uid://cti80rhuvkjyv"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_a8amy"]
 [ext_resource type="Script" path="res://Scenes/Credits.gd" id="1_vl0tp"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_jf7dg"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_ar5sf"]
 [ext_resource type="Script" path="res://Script/Credit Template.gd" id="5_dkbdt"]
-[ext_resource type="Texture2D" path="res://Assets/Images/Icons/voiid-bf.png" id="5_wydii"]
 
 [node name="Credits" type="Node2D"]
 script = ExtResource("1_vl0tp")
@@ -29,7 +28,6 @@ autowrap_mode = 0
 script = ExtResource("5_dkbdt")
 
 [node name="Icon" type="Sprite2D" parent="Template"]
-texture = ExtResource("5_wydii")
 offset = Vector2(70, 45)
 hframes = 3
 script = ExtResource("2_jf7dg")

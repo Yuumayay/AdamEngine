@@ -22,17 +22,7 @@ func _ready():
 		new_item.color = itemcolor
 		new_item.name = itemname
 		
-		var icon: Texture
-		var path := "res://Assets/Images/Other Icons/Credit/"
-		if FileAccess.file_exists(path + itemname.to_lower() + ".png"):
-			icon = load(path + itemname.to_lower() + ".png")
-		elif FileAccess.file_exists(path + "icon-" + itemname.to_lower() + ".png"):
-			icon = load(path + "icon-" + itemname.to_lower() + ".png")
-		elif FileAccess.file_exists(path + itemname.to_lower() + "-icons.png"):
-			icon = load(path + itemname.to_lower() + "-icons.png")
-		else:
-			printerr("icon: icon not found")
-			icon = load("res://Assets/Images/Icons/icon-face.png")
+		var icon = Paths.p_icon_credits(itemname)
 		if icon.get_size() == Vector2(150, 150):
 			new_item.get_node("Icon").hframes = 1
 		elif icon.get_size() == Vector2(300, 150):

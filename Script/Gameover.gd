@@ -4,7 +4,7 @@ extends CanvasLayer
 var spr: AnimatedSprite2D
 
 enum {GAME, START, GAMEOVER, END}
-var gameoverState := 0
+var gameoverState := GAME
 
 var last_beat := 0
 
@@ -42,26 +42,31 @@ func gameover(): #ゲームオーバー
 	
 	spr.stop()
 	spr.play("bf dies")
-	spr.position = Game.bfPos
+	spr.position = $/root/Gameplay/Characters/bfpos.getPosOffset()
 	spr.visible = true
 	bg.visible = true
 	
 	await get_tree().create_timer(2.5).timeout
 	
-	Audio.a_play("Gameover")
+	if Game.cur_state == Game.GAMEOVER:
+		Audio.a_play("Gameover")
 	gameoverState = GAMEOVER
 
 
 func accepted(): #リトライ決定
-	gameoverState = END
-	if Audio.a_check("Gameover"):
-		Audio.a_stop("Gameover")
-	elif Audio.a_check("GameoverStart"):
-		Audio.a_stop("GameoverStart")
-	Audio.a_play("GameoverEnd")
-	spr.play("bf dead confirm")
-	
-	await get_tree().create_timer(2.5).timeout
-	
-	if Game.can_input: #リトライ決定してからドタキャンした場合の条件分岐
-		get_parent().moveSong(Game.cur_song)
+	if Game.cur_state == Game.GAMEOVER and gameoverState == GAMEOVER:
+		gameoverState = END
+		if Audio.a_check("Gameover"):
+			Audio.a_stop("Gameover")
+		elif Audio.a_check("GameoverStart"):
+			Audio.a_stop("GameoverStart")
+		Audio.a_play("GameoverEnd")
+		spr.play("bf dead confirm")
+		
+		spr.scale = Vector2(1.05, 1.05)
+		
+		
+		await get_tree().create_timer(2.5).timeout
+		
+		if Game.can_input: #リトライ決定してからドタキャンした場合の条件分岐
+			get_parent().moveSong(Game.cur_song)

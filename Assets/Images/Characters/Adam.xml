@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="Adam.png">
+<SubTexture name="Adam down0000" x="718" y="958" width="651" height="638" frameX="-277" frameY="-338" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Adam idle0000" x="676" y="0" width="733" height="729" frameX="-155" frameY="-135" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Adam left0000" x="0" y="958" width="718" height="645" frameX="-3" frameY="-241" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Adam right0000" x="1409" y="0" width="971" height="710" frameX="-29" frameY="-154" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Adam up0000" x="0" y="0" width="676" height="958" frameX="-213" frameY="-16" frameWidth="1000" frameHeight="1000" />
+</TextureAtlas>

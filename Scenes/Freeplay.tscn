@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnwsewr85wjs2"]
+[gd_scene load_steps=7 format=3 uid="uid://dnwsewr85wjs2"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_vcpxn"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_n65er"]
 [ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
-[ext_resource type="Texture2D" path="res://Assets/Images/Icons/voiid-bf.png" id="5_6b31r"]
 [ext_resource type="Script" path="res://Scenes/Freeplay Selector.gd" id="6_ohx30"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="6_rqsen"]
 
@@ -29,7 +28,6 @@ autowrap_mode = 0
 script = ExtResource("4_x5sm4")
 
 [node name="Icon" type="Sprite2D" parent="Template"]
-texture = ExtResource("5_6b31r")
 offset = Vector2(70, 45)
 hframes = 3
 script = ExtResource("2_1uuha")
@@ -54,33 +52,57 @@ vertical_alignment = 1
 [node name="Songs" type="Node2D" parent="."]
 script = ExtResource("6_ohx30")
 
-[node name="Difficulty" type="Label" parent="."]
-offset_left = 949.0
-offset_top = 8.0
-offset_right = 1273.0
-offset_bottom = 98.0
+[node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="InfoPanel" type="Panel" parent="Info"]
+layout_mode = 0
+offset_left = 669.0
+offset_top = -20.0
+offset_right = 1298.0
+offset_bottom = 203.0
+
+[node name="Difficulty" type="Label" parent="Info"]
+offset_left = 945.0
+offset_top = 65.0
+offset_right = 1269.0
+offset_bottom = 155.0
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "normal"
+horizontal_alignment = 2
 uppercase = true
 
-[node name="Multi" type="Label" parent="."]
-offset_left = 1051.0
-offset_top = 97.0
-offset_right = 1406.0
-offset_bottom = 187.0
-grow_horizontal = 0
+[node name="Multi" type="Label" parent="Info"]
+offset_left = 1048.0
+offset_top = 148.0
+offset_right = 1403.0
+offset_bottom = 238.0
 scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "1.00"
 horizontal_alignment = 2
 uppercase = true
 
-[node name="X" type="Label" parent="."]
-offset_left = 1235.0
-offset_top = 108.0
-offset_right = 1288.0
-offset_bottom = 198.0
+[node name="X" type="Label" parent="Info"]
+offset_left = 1232.0
+offset_top = 159.0
+offset_right = 1285.0
+offset_bottom = 249.0
 scale = Vector2(0.4, 0.4)
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "x"
+uppercase = true
+
+[node name="HighScore" type="Label" parent="Info"]
+offset_left = 542.0
+offset_top = 8.0
+offset_right = 1273.0
+offset_bottom = 38.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_rqsen")
+theme_override_font_sizes/font_size = 30
+text = "personal best: 0 (0.00%)"
+horizontal_alignment = 2
 uppercase = true

@@ -86,11 +86,13 @@ func hframe_check():
 
 func iconUpdate():
 	if Game.iconBF != "":
-		p1.texture = Paths.p_icon(Game.iconBF)
+		var tex: Texture2D = Paths.p_icon(Game.iconBF)
+		p1.texture = tex
 		if styleboxfill:
-			styleboxfill.bg_color = Game.getColor(Paths.p_icon(Game.iconBF), 70, 80)
+			styleboxfill.bg_color = Game.getColor(tex, 70, 80)
 	if Game.iconDAD != "":
-		p2.texture = Paths.p_icon(Game.iconDAD)
+		var tex: Texture2D = Paths.p_icon(Game.iconDAD)
+		p2.texture = tex
 		if styleboxbg:
-			styleboxbg.bg_color = Game.getColor(Paths.p_icon(Game.iconDAD), 70, 80)
+			styleboxbg.bg_color = Game.getColor(tex, 70, 80)
 	hframe_check()

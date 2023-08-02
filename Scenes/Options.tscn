@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://2nqcs4l4ibwt"]
+[gd_scene load_steps=8 format=3 uid="uid://2nqcs4l4ibwt"]
 
 [ext_resource type="Script" path="res://Scenes/Options.gd" id="1_40o4e"]
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_voa3y"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_r2lco"]
 [ext_resource type="Script" path="res://Script/OptionTemplate.gd" id="5_ivfsk"]
 [ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="6_cih1e"]
+[ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="7_odwoe"]
 
 [node name="Options" type="Node2D"]
 script = ExtResource("1_40o4e")
@@ -42,3 +43,8 @@ type = 1
 
 [node name="Current" parent="Template2" instance=ExtResource("6_cih1e")]
 scale = Vector2(1.25, 1.25)
+
+[node name="Note" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = ExtResource("7_odwoe")
+animation = &"shaggydeath"

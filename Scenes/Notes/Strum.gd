@@ -54,7 +54,7 @@ func calc_sus_time(note):
 	#return Audio.cur_ms - note.ms - note.sus + Game.sus_tolerance
 
 func strum_anim_player():
-	if Game.cur_input[dir - type * Game.key_count] == 0 and Game.cur_input_sub[dir - type * Game.key_count] == 0:
+	if Game.cur_input[dir - type * Game.key_count] == 0:
 		if Game.note_anim[dir - type * Game.key_count].contains("2"):
 			animation = Game.note_anim[dir - type * Game.key_count].replace("2", "") + " static"
 		else:
@@ -150,10 +150,10 @@ func player_strum():
 		
 		if Audio.cur_ms >= i.ms - Game.rating_offset[Game.MISS] * Game.cur_multi:
 			if i.sus == 0:
-				if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
+				if Game.cur_input[dir - type * Game.key_count] == 2:
 					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 					hide_note(i)
-					i.hit_ms = msdiff * Game.cur_multi
+					i.hit_ms = msdiff / Game.cur_multi
 					judge(i.hit_ms, i.type)
 					break
 				if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS] * Game.cur_multi:
@@ -161,7 +161,7 @@ func player_strum():
 					i.modulate.a = 0.5
 			else:
 				if i.self_modulate.a == 0:
-					if Game.cur_input[dir - type * Game.key_count] == 1 or Game.cur_input_sub[dir - type * Game.key_count] == 1:
+					if Game.cur_input[dir - type * Game.key_count] == 1:
 						i.self_modulate.a = 0
 						if msdiff >= 0:
 							i.update_linelen()
@@ -178,10 +178,10 @@ func player_strum():
 							i.free_f = true
 							i.modulate.a = 0.5
 				else:
-					if Game.cur_input[dir - type * Game.key_count] == 2 or Game.cur_input_sub[dir - type * Game.key_count] == 2:
+					if Game.cur_input[dir - type * Game.key_count] == 2:
 						animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
 						i.self_modulate.a = 0
-						i.hit_ms = msdiff * Game.cur_multi
+						i.hit_ms = msdiff / Game.cur_multi
 						judge(i.hit_ms, i.type)
 						break
 					if Audio.cur_ms - i.ms >= Game.rating_offset[Game.MISS] * Game.cur_multi:

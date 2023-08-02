@@ -12,6 +12,7 @@ var adam_conditions: Array = [["Perfect!!", "PFC"], ["Sick!", 1.0], ["Great", 0.
 
 func _ready():
 	info1.text = "Score: 0 | Misses: 0 | Rating: N/A"
+
 	info2.text = ""
 	info2.text += "Marvelous: 0\n"
 	info2.text += "Sick: 0\n"

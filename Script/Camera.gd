@@ -12,13 +12,17 @@ var zoomSpeed: float
 
 const baseSpeed := 0.05
 
+var bf
+var dad
+var gf
+
 func _process(_delta):
 	if state == NORMAL:
 		zoom = lerp(zoom, Vector2(Game.defaultZoom, Game.defaultZoom), baseSpeed * 2)
 		if Game.mustHit:
-			position = lerp(position, Game.bfPos + Vector2(-100, -100), baseSpeed)
+			position = lerp(position, bf.getPosOffset() + Vector2(-100, -100) * bf.getScale(), baseSpeed)
 		else:
-			position = lerp(position, Game.dadPos + Vector2(100, -100), baseSpeed)
+			position = lerp(position, dad.getPosOffset() + Vector2(100, -100) * dad.getScale(), baseSpeed)
 		if beat != Audio.cur_section:
 			beat = Audio.cur_section
 			zoom = Vector2(Game.defaultZoom + 0.025, Game.defaultZoom + 0.025)

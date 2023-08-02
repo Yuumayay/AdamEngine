@@ -70,11 +70,6 @@ var is_story: bool
 var songList: Array
 var cur_song_index: int
 
-## CHARACTER POSITION ##
-var bfPos: Vector2
-var dadPos: Vector2
-var gfPos: Vector2
-
 ## STAGE JSON ##
 var stage: Dictionary
 var defaultZoom: float
@@ -107,7 +102,9 @@ var iconDAD: String:
 		if healthBarBG2:
 			healthBarBG2.iconUpdate()
 
-var character_load_fail: bool
+var bf_load_fail: bool
+var dad_load_fail: bool
+var gf_load_fail: bool
 
 func add_score(value):
 	score += value
@@ -159,32 +156,44 @@ func setup(data):
 		cur_stage = song.stage
 	else:
 		cur_stage = "tank"
-	stage = File.f_read("res://Assets/Data/Stages/" + cur_stage + ".json", ".json")
-	defaultZoom = stage.defaultZoom
-	isPixel = stage.isPixelStage
+	if Paths.p_stage_data(cur_stage):
+		stage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
+		defaultZoom = stage.defaultZoom
+		isPixel = stage.isPixelStage
+	else:
+		stage = File.f_read(Paths.p_stage_data("stage"), ".json")
+		defaultZoom = 1.0
+		isPixel = false
 	
 	player1 = song.player1
 	player2 = song.player2
-	player3 = "gf"
-	
-	if FileAccess.file_exists(Paths.p_chara(player1)):
+	if song.has("player3"):
+		player3 = song.player3
+	elif song.has("gfVersion"):
+		player3 = song.gfVersion
+	else:
+		if player2 != "gf":
+			player3 = "gf"
+		else:
+			player3 = "none"
+	if Paths.p_chara(player1):
 		p1_json = File.f_read(Paths.p_chara(player1), ".json")
-		character_load_fail = false
+		bf_load_fail = false
 	else:
 		p1_json = File.f_read(Paths.p_chara("bf"), ".json")
-		character_load_fail = true
-	if FileAccess.file_exists(Paths.p_chara(player2)):
+		bf_load_fail = true
+	if Paths.p_chara(player2):
 		p2_json = File.f_read(Paths.p_chara(player2), ".json")
-		character_load_fail = false
+		dad_load_fail = false
 	else:
 		p2_json = File.f_read(Paths.p_chara("dad"), ".json")
-		character_load_fail = true
-	if FileAccess.file_exists(Paths.p_chara(player3)):
+		dad_load_fail = true
+	if Paths.p_chara(player3):
 		gf_json = File.f_read(Paths.p_chara(player3), ".json")
-		character_load_fail = false
+		gf_load_fail = false
 	else:
 		gf_json = File.f_read(Paths.p_chara("gf"), ".json")
-		character_load_fail = true
+		gf_load_fail = true
 	
 	if song.has("mania"):
 		if song.mania == 0:
@@ -226,6 +235,8 @@ func what_engine(data):
 	
 	if data.song.has("splashSkin") or data.song.has("uiType"):
 		print("its psych")
+	elif data.song.has("screwYou"):
+		print("its strident")
 	elif data.song.notes[0].has("startTime") or data.song.has("eventJson"):
 		print("its forever")
 	elif data.song.has("songId"):
@@ -242,13 +253,23 @@ func what_engine(data):
 		print("its leather")
 	elif data.song.has("autoIcons"):
 		print("its denpa")
-	elif data.song.has("screwYou"):
-		print("its strident")
 	elif data.song.has("validScore"):
 		print("its old kade")
 	else:
 		print("its vannila")
 
+
+var conv_anim_name_dict = {
+	"bf idle dance": "idle",
+	"gf dancing beat": "idle",
+	"dad idle dance": "idle",
+}
+func conv_anim_name(text : String):
+	# 特殊なアニメ名は辞書ベースで変換してあげる
+	if conv_anim_name_dict.has(text):
+		return conv_anim_name_dict[text]
+	return text
+	
 # XML load
 func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
 	if !FileAccess.file_exists(path):
@@ -280,8 +301,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 	
 	sprite_data.frames = frames
 	
-	var anim_n := 0
-	
+	var idle_f = false
 	while xml.read() == OK:
 		if xml.get_node_type() != XMLParser.NODE_TEXT:
 			var node_name:StringName = xml.get_node_name()
@@ -293,18 +313,35 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 				animation_name = animation_name.left(len(animation_name) - 4) #アニメ名の後ろ4つは連番
 				animation_name = animation_name.to_lower()
 				
-				var no_anim = true
-				if json:
-					anim_n = 0
-					for i in json.animations:
-						var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
-						if orginal_fnf_name == animation_name:
-							animation_name = i.anim.to_lower()
-							no_anim = false
-							break
-						anim_n += 1
-				if animation_name.contains("idle"):
-					animation_name = "idle"
+				var convname = conv_anim_name(animation_name) #特殊なBF、GFなどのアニメ名は辞書で正規化
+				if convname != animation_name:
+					animation_name = convname
+					
+				else: # 辞書にないパターン
+					var no_anim = true
+					if json: # jsonがあったらjsonのアニメ名を使う
+						for i in json.animations:
+							var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
+							if orginal_fnf_name == animation_name:
+								animation_name = i.anim.to_lower()
+								no_anim = false
+								break
+					if (!json) or no_anim: # jsonがないか、jsonに対応するアニメがない
+						if not idle_f and animation_name.contains("idle"): # 特殊変換処理
+							animation_name = "idle"
+							
+					if character != 0: #キャラクターだったら　アニメ名を正規化
+						for i in Game.note_anim:
+							if animation_name.contains(i):
+								if animation_name.contains("dance"):
+									animation_name = "dance" + i
+								elif animation_name.contains("miss"):
+									animation_name = "sing" + i + "miss"
+								else:
+									animation_name = "sing" + i
+				
+				if animation_name == "idle": #アイドルは１つのみ
+					idle_f = true
 				
 				var frame_rect:Rect2 = Rect2(
 					Vector2(
@@ -366,7 +403,6 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 					frames.add_animation(animation_name)
 					frames.set_animation_loop(animation_name, loop_f)
 					frames.set_animation_speed(animation_name, fps)
-					anim_n += 1
 				
 				frames.add_frame(animation_name, frame_data)
 				if play_animation_name == "":
@@ -382,9 +418,10 @@ func getColor(t: Texture2D, r1: int, r2: int) -> Color:
 	var colorArray: Array = []
 	var colorArray2: Array = []
 	var colorCount: Array = []
+	var image = t.get_image()
 	for i in range(r1, r2):
 		for ind in range(r1, r2):
-			var pixelColor: Color = t.get_image().get_pixel(i, ind)
+			var pixelColor: Color = image.get_pixel(i, ind)
 			if pixelColor.a == 1 and pixelColor != Color(0, 0, 0, 1):
 				if not colorArray.has(pixelColor):
 					colorArray2.append(pixelColor)
@@ -421,14 +458,21 @@ func _input(event):
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 				cur_input[input] = 1
-	if sub_input != -1 and cur_input_sub:
+				
+	if sub_input != -1 and cur_input_sub: #サブインプット（方向キー。）
 		if event.is_released():
-			cur_input_sub[sub_input] = 0
-			#print("lol")
+			cur_input_sub[sub_input] = 0 
+			cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
 		else:
 			if cur_input_sub[sub_input] == 0:
 				cur_input_sub[sub_input] = 2
+				cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
+				
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 				cur_input_sub[sub_input] = 1
-			#print(cur_input)
+				cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
+				
+			
+	
+	

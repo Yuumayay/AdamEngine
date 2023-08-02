@@ -14,6 +14,7 @@ var has_onSectionHit: bool = false
 
 var modcharts: Dictionary = {}
 
+# MODCHARTの初期化がされていないので、曲が終わったら初期化するようにする TODO
 func loadModchart():
 	gameplay = $/root/Gameplay
 	modLayer = gameplay.get_node("ModchartCanvas")
@@ -30,15 +31,15 @@ func loadModchart():
 			mNode.call("onCreate")
 			
 		if mNode.has_method("onUpdate"):
-			has_onUpdate = true
+			has_onUpdate = true # 初期化されていない
 			
 		if mNode.has_method("onBeatHit"):
-			has_onBeatHit = true
+			has_onBeatHit = true # 初期化されていない
 			
 		if mNode.has_method("onSectionHit"):
-			has_onSectionHit = true
+			has_onSectionHit = true # 初期化されていない
 			
-		is_modchart = true
+		is_modchart = true # 初期化されていない
 	else: #存在しないなら何もしない
 		print("no modchart")
 
@@ -52,6 +53,7 @@ func _process(delta):
 		if Audio.section_hit_event:
 			if has_onSectionHit:
 				mNode.call("onSectionHit")
+	
 
 func drawBlackBG():
 	var blackBG = ColorRect.new()
@@ -98,13 +100,16 @@ func eraseDraw(tag: String):
 	target.queue_free()
 
 func camZoomDad(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	gameplay.get_node("Camera").camMove(Game.dadPos + offset, zoom, sec, cspeed, zspeed)
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.dad.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
 
 func camZoomBF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	gameplay.get_node("Camera").camMove(Game.bfPos + offset, zoom, sec, cspeed, zspeed)
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.bf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
 
 func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	gameplay.get_node("Camera").camMove(Game.gfPos + offset, zoom, sec, cspeed, zspeed)
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.gf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
 
 func camReset():
 	gameplay.get_node("Camera").state = 0
@@ -119,3 +124,6 @@ func showUI():
 
 func setHealthDrain(value = 0.05, health_min = 0.0):
 	modcharts["healthDrain"] = [value, health_min]
+
+func setMiddleScroll(value = true, hide_enemy = true):
+	modcharts["middleScroll"] = [value, hide_enemy]

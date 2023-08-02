@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://b736w0428g7i6"]
+[gd_scene load_steps=43 format=3 uid="uid://b736w0428g7i6"]
 
 [ext_resource type="Script" path="res://Scenes/Autoload/Audio Manager.gd" id="1_i1gpa"]
 [ext_resource type="AudioStream" uid="uid://mi5qxw8ah3m5" path="res://Assets/Music/freakyMenu.ogg" id="2_pawgv"]
@@ -37,6 +37,11 @@
 [ext_resource type="AudioStream" uid="uid://dp5ym6xl61sd8" path="res://Assets/Sounds/FNF/Hitsound/hit3.ogg" id="25_jeav6"]
 [ext_resource type="AudioStream" uid="uid://cd3xdpn2n7wip" path="res://Assets/Sounds/FNF/Hitsound/hit4.ogg" id="26_opk2m"]
 [ext_resource type="AudioStream" uid="uid://bdvnetj0uolfc" path="res://Assets/Sounds/FNF/Hitsound/key.ogg" id="29_gbdfq"]
+[ext_resource type="AudioStream" uid="uid://lccw2t7kj0yq" path="res://Assets/Sounds/FNF/Hitsound/hit5.ogg" id="30_gtlko"]
+[ext_resource type="AudioStream" uid="uid://b7aawsqv5ppdk" path="res://Assets/Sounds/FNF/Hitsound/hit6.ogg" id="31_fb3b6"]
+[ext_resource type="AudioStream" uid="uid://l3rt10nbpmj8" path="res://Assets/Sounds/FNF/Hitsound/hit7.ogg" id="32_ei7k1"]
+[ext_resource type="AudioStream" uid="uid://dt845c324h50p" path="res://Assets/Sounds/FNF/Hitsound/hit8.ogg" id="33_85wio"]
+[ext_resource type="AudioStream" uid="uid://cq08l86ne25gx" path="res://Assets/Sounds/FNF/Hitsound/hit9.ogg" id="34_ubeu7"]
 
 [node name="Audio Manager" type="Node2D"]
 script = ExtResource("1_i1gpa")
@@ -143,6 +148,26 @@ volume_db = 5.0
 
 [node name="aehit4" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_opk2m")
+volume_db = 5.0
+
+[node name="aehit5" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("30_gtlko")
+volume_db = 5.0
+
+[node name="aehit6" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("31_fb3b6")
+volume_db = 5.0
+
+[node name="aehit7" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("32_ei7k1")
+volume_db = 5.0
+
+[node name="aehit8" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("33_85wio")
+volume_db = 5.0
+
+[node name="aehit9" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("34_ubeu7")
 volume_db = 5.0
 
 [node name="clap" type="AudioStreamPlayer" parent="."]

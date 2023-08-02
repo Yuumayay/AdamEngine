@@ -30,10 +30,30 @@ var keybind_default_sub: Dictionary = {}
 var setting: Dictionary = {
 	"category": {
 		"keybind": {
-			"bind": {
+			"4k bind": {
 				"type": "bind",
 				"key": 4,
 				"cur": keybind_default["4k"]
+			},
+			"6k bind": {
+				"type": "bind",
+				"key": 6,
+				"cur": keybind_default["6k"]
+			},
+			"9k bind": {
+				"type": "bind",
+				"key": 9,
+				"cur": keybind_default["9k"]
+			},
+			"12k bind": {
+				"type": "bind",
+				"key": 12,
+				"cur": keybind_default["12k"]
+			},
+			"18k bind": {
+				"type": "bind",
+				"key": 18,
+				"cur": keybind_default["18k"]
 			}
 		},
 		"gameplay": {
@@ -48,10 +68,14 @@ var setting: Dictionary = {
 			"hit sound": {
 				"type": "array",
 				"cur": 0,
-				"array": ["None", "Osu hit", "AE hit 1", "AE hit 2", "AE hit 3", "AE hit 4", "KE clap", "KE snap", "Keystroke"],
-				"metadata": ["none", "osu", "aehit1", "aehit2", "aehit3", "aehit4", "clap", "snap", "key"]
+				"array": ["None", "Osu hit", "AE hit 1", "AE hit 2", "AE hit 3", "AE hit 4", "AE hit 5", "AE hit 6", "AE hit 7", "AE hit 8", "AE hit 9", "KE clap", "KE snap", "Keystroke"],
+				"metadata": ["none", "osu", "aehit1", "aehit2", "aehit3", "aehit4", "aehit5", "aehit6", "aehit7", "aehit8", "aehit9", "clap", "snap", "key"]
 			},
 			"botplay": {
+				"type": "bool",
+				"cur": false
+			},
+			"practice": {
 				"type": "bool",
 				"cur": false
 			}

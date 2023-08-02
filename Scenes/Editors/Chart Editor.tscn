@@ -1236,7 +1236,6 @@ title = "Save a file"
 position = Vector2i(50, 50)
 size = Vector2i(640, 640)
 access = 2
-filters = PackedStringArray(".json")
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(640, 360)

@@ -19,3 +19,7 @@ func _process(delta):
 			if Game.PLAYING and !$Label.visible:
 				$Label.visible = true
 			$Label.text = "%d:%02d" % [remain_min, remain_sec % 60]
+			if Setting.s_get("gameplay", "botplay"):
+				$Label.text += " (BOT)"
+			if Setting.s_get("gameplay", "practice"):
+				$Label.text += " (PRACTICE)"

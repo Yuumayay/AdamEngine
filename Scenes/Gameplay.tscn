@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=19 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -10,7 +10,6 @@
 [ext_resource type="Script" path="res://Script/HealthBar.gd" id="7_a67nu"]
 [ext_resource type="Texture2D" uid="uid://dclghcld50src" path="res://Assets/Images/Icons/icon-dad.png" id="8_nygbt"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="9_hks2i"]
-[ext_resource type="Texture2D" path="res://Assets/Images/Icons/bf.png" id="9_y4rhq"]
 [ext_resource type="Script" path="res://Script/Info.gd" id="11_0kbrg"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="11_mwtkh"]
 [ext_resource type="Script" path="res://Script/TimeBar.gd" id="12_fwr13"]
@@ -92,7 +91,6 @@ what_music = "Inst"
 
 [node name="iconP1" type="Sprite2D" parent="UI/HealthBarBG/icons"]
 position = Vector2(50, 0)
-texture = ExtResource("9_y4rhq")
 flip_h = true
 hframes = 2
 script = ExtResource("9_hks2i")
@@ -179,7 +177,7 @@ offset_left = 898.0
 offset_top = 691.0
 offset_right = 1271.0
 offset_bottom = 716.0
-theme_override_colors/font_color = Color(0.898039, 0.737255, 1, 1)
+theme_override_colors/font_color = Color(0.964706, 0.701961, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("11_mwtkh")
@@ -220,6 +218,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ModchartCanvas" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="LyricsLabel" type="Label" parent="ModchartCanvas"]
 anchors_preset = 12

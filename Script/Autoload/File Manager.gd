@@ -48,9 +48,16 @@ func f_read(path: String, type: String):
 
 func _ready():
 	if FileAccess.file_exists("user://ae_options_data.json"):
+		f_save("user://ae_options_data", ".json", Setting.setting)
 		Setting.setting = f_read("user://ae_options_data.json", ".json")
 	else:
 		f_save("user://ae_options_data", ".json", Setting.setting)
+	
+	if not FileAccess.file_exists("user://ae_score_data.json"):
+		File.f_save("user://ae_score_data", ".json", {"song": []})
+	
+	if not FileAccess.file_exists("user://ae_week_score_data.json"):
+		File.f_save("user://ae_week_score_data", ".json", {"week": []})
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
