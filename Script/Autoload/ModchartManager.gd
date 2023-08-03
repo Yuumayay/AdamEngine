@@ -53,7 +53,14 @@ func _process(delta):
 		if Audio.section_hit_event:
 			if has_onSectionHit:
 				mNode.call("onSectionHit")
-	
+
+func mGet(key: String, index = -1):
+	if modcharts.has(key):
+		if index == -1:
+			return modcharts[key]
+		else:
+			return modcharts[key][index]
+	return null
 
 func drawBlackBG():
 	var blackBG = ColorRect.new()
@@ -122,8 +129,29 @@ func showUI():
 	ui.show()
 	info.show()
 
-func setHealthDrain(value = 0.05, health_min = 0.0):
-	modcharts["healthDrain"] = [value, health_min]
+func setHealthDrain(damage = 0.05, healthMin = 0.0):
+	modcharts["healthDrain"] = [damage, healthMin]
 
-func setMiddleScroll(value = true, hide_enemy = true):
-	modcharts["middleScroll"] = [value, hide_enemy]
+func setMiddleScroll(value = true, hideEnemy = true):
+	modcharts["middleScroll"] = [value, hideEnemy]
+
+func setDefeatModchart(missLimit = 1, allowShit = true, counter = true, moveHealthBar = false):
+	modcharts["defeat"] = [missLimit, allowShit, counter, moveHealthBar]
+
+func setGhostTapping(value = 0.1, addMiss = true, missAnim = true):
+	modcharts["ghostTapping"] = [value, addMiss, missAnim]
+
+# 未実装
+func setHealthGain(value = 0.1):
+	if value is int: # valueがintだったらすべてのhealthGain量をvalueにする
+		modcharts["healthGain"] = [value]
+	elif value is Array: # Arrayだったら細かい調整
+		modcharts["healthGain"] = value
+
+# 未実装
+func setMissDamage(value = 0.1):
+	modcharts["missDamage"] = value
+
+# 未実装
+func keyToMove(where = "debug", key = "7"):
+	modcharts["keyToMove"] = [where, key]

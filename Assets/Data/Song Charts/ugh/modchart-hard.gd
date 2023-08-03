@@ -1,7 +1,10 @@
 extends Node
 
 func onCreate():
-	Modchart.setHealthDrain()
+	#Modchart.setHealthDrain()
+	#Modchart.setGhostTapping()
+	#Modchart.setMiddleScroll()
+	Modchart.setDefeatModchart()
 
 func onBeatHit():
 	if Audio.cur_beat == 15:

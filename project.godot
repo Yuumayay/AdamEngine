@@ -28,17 +28,17 @@ Chart="*res://Script/Autoload/Chart Editor Manager.gd"
 View="*res://Script/Autoload/GameplayView.gd"
 Setting="*res://Script/Autoload/SettingManager.gd"
 FPS="*res://Scenes/Autoload/FPS.tscn"
-DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 Modchart="*res://Script/Autoload/ModchartManager.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 

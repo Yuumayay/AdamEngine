@@ -54,6 +54,7 @@ func option():
 		new_item.text = itemname
 		
 		match itemtype:
+			# typeがbindだったら
 			"bind":
 				new_item.text = "bind"
 				var keytext = new_item.get_node("Current").duplicate()
@@ -74,8 +75,10 @@ func option():
 				keytext.scale = Vector2(0.8, 0.8)
 				new_item.value = key
 				new_item.add_child(keytext)
+			# typeがarrayだったら
 			"array":
 				valuetext.text = Setting.setting.category[selected_name][i]["array"][current]
+			#それ以外
 			_:
 				valuetext.text = str(current)
 		

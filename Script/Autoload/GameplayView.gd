@@ -1,10 +1,10 @@
 extends Node
 
-var note_spawn_y: Array = [-600, 600]
+var note_spawn_y: Array = [-600, 1320]
 var strum_pos: Array
 var miss_offset: Array = [750, -100]
-var version_text: String = "Adam Engine - Beta 2"
-var version_text_color: Color = Color("f6b3ff")
+var version_text: String = "Adam Engine - Beta 3"
+var version_text_color: Color = Color("feaffb")
 
 # Gameplay Managerに移動
 var keys: Dictionary

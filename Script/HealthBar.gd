@@ -18,6 +18,9 @@ var p2_normal: int
 var p2_lose: int
 
 func _ready():
+	if not Setting.s_get("gameplay", "downscroll"):
+		position.y = 720 - position.y
+	
 	await Game.game_ready
 	p1.texture = Paths.p_icon(Game.p1_json.healthicon)
 	p2.texture = Paths.p_icon(Game.p2_json.healthicon)
@@ -33,14 +36,24 @@ func _ready():
 	health.set("theme_override_styles/background", styleboxbg)
 	health.set("theme_override_styles/fill", styleboxfill)
 
+func updatePos():
+	if not Setting.s_get("gameplay", "downscroll"):
+		position.y = 720 - position.y
+	else:
+		position.y = 57
+
 func _process(_delta):
 	if Game.health != last_health:
-		var t = create_tween()
-		t.parallel()
-		t.tween_property(health, "value", Game.health_percent, 0.05)
-		t.tween_property(icon, "position", Vector2(600 - Game.health * 300, 20), 0.05)
-		t.set_ease(Tween.EASE_IN)
-		t.set_trans(Tween.TRANS_QUART)
+		if !Modchart.mGet("defeat", 3):
+			var t = create_tween()
+			t.parallel()
+			t.tween_property(health, "value", Game.health_percent, 0.05)
+			t.tween_property(icon, "position", Vector2(600 - Game.health * 300, 20), 0.05)
+			t.set_ease(Tween.EASE_IN)
+			t.set_trans(Tween.TRANS_QUART)
+		else:
+			self_modulate.a = 0
+			health.self_modulate.a = 0
 		last_health = Game.health
 		if Game.health_percent > 80.0:
 			p1.frame = p1_win

@@ -17,6 +17,7 @@ var dad
 var gf
 
 func _process(_delta):
+	if Game.cur_state == Game.NOT_PLAYING: return
 	if state == NORMAL:
 		zoom = lerp(zoom, Vector2(Game.defaultZoom, Game.defaultZoom), baseSpeed * 2)
 		if Game.mustHit:

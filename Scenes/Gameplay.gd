@@ -65,34 +65,17 @@ func _process(_delta):
 		if !Audio.a_check("Inst") and Game.cur_state != Game.PAUSE and Game.cur_state != Game.GAMEOVER:
 			if Game.is_story:
 				Game.cur_song_index += 1
+				Game.week_fc_state.append(Game.fc_state)
 				if Game.cur_song_index < Game.songList.size():
 					moveSong(Game.songList[Game.cur_song_index])
 				else:
 					Game.is_story = false
+					
+					scoreSave("story")
+					
 					quitStory()
 			else:
-				var json: Dictionary = File.f_read("user://ae_score_data.json", ".json")
-				var songpath = Game.cur_song.to_lower() + "-" + Game.cur_diff
-				var scorejson: Dictionary = {
-					songpath: {
-						"score": 0,
-						"fc_state": 0,
-						"accuracy": 0
-					}
-				}
-				if not json.song.has(songpath):
-					json.song.append(scorejson)
-				for i in json.song:
-					if i.has(songpath):
-						if i[songpath].score < Game.score:
-							i[songpath].score = Game.score
-							i[songpath].fc_state = Game.fc_state
-							i[songpath].accuracy = floor(Game.accuracy * 10000.0) / 100.0
-							File.f_save("user://ae_score_data", ".json", json)
-						else:
-							print("not high score")
-						break
-				print(json)
+				scoreSave("freeplay")
 				
 				quit()
 	
@@ -118,9 +101,64 @@ func _process(_delta):
 		if Input.is_action_just_pressed("ui_accept"):
 			gameover.accepted()
 
+func scoreSave(case: String):
+	if not Setting.s_get("gameplay", "botplay") and not Setting.s_get("gameplay", "practice"):
+		if case == "freeplay":
+				var json: Dictionary = File.f_read("user://ae_score_data.json", ".json")
+				var songpath = Game.cur_song.to_lower() + "-" + Game.cur_diff
+				var scorejson: Dictionary = {
+					songpath: {
+						"score": 0,
+						"fc_state": 0,
+						"accuracy": 0
+					}
+				}
+				if not json.song.has(songpath):
+					json.song.append(scorejson)
+				for i in json.song:
+					if i.has(songpath):
+						if i[songpath].score < Game.score:
+							i[songpath].score = Game.score
+							i[songpath].fc_state = Game.fc_state
+							i[songpath].accuracy = floor(Game.accuracy * 10000.0) / 100.0
+							File.f_save("user://ae_score_data", ".json", json)
+						else:
+							print("not high score")
+						break
+				print(json)
+		elif case == "story":
+				var json: Dictionary = File.f_read("user://ae_week_score_data.json", ".json")
+				var songpath = Game.cur_week.to_lower() + "-" + Game.cur_diff
+				var scorejson: Dictionary = {
+					songpath: {
+						"score": 0,
+						"fc_state": 0,
+						"accuracy": 0
+					}
+				}
+				if not json.week.has(songpath):
+					json.week.append(scorejson)
+				for i in json.week:
+					if i.has(songpath):
+						if i[songpath].score < Game.week_score:
+							i[songpath].score = Game.week_score
+							i[songpath].fc_state = Game.week_fc_state
+							i[songpath].accuracy = floor(Game.week_accuracy * 10000.0) / 100.0
+							File.f_save("user://ae_week_score_data", ".json", json)
+						else:
+							print("not high score")
+						break
+				print(json)
+
 func gameoverCheck():
 	if Game.cur_state != Game.GAMEOVER:
-		if Game.health <= 0:
+		if Modchart.mGet("defeat"):
+			var missCount = Game.rating_total[Game.MISS]
+			if not Modchart.mGet("defeat", 1):
+				missCount += Game.rating_total[Game.SHIT]
+			if missCount >= Modchart.mGet("defeat", 0):
+				gameover.gameover()
+		elif Game.health <= 0:
 			Game.fc_state = "Failed"
 			if not Setting.s_get("gameplay", "practice"):
 				gameover.gameover()
@@ -149,6 +187,10 @@ func note_spawn_load():
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
 		new_note.sus = Game.sus[note_count]
+		if Setting.s_get("gameplay", "downscroll"):
+			new_note.up_or_down = 1
+		else:
+			new_note.up_or_down = -1
 		#new_note.visible = true
 		if Game.dir[note_count] >= Game.key_count:
 			new_note.player = 1
@@ -169,10 +211,17 @@ func note_spawn_load():
 #			note_count += 1
 
 func strum_set():
+	if strum_group.get_child_count() != 0:
+		for i in strum_group.get_children():
+			i.queue_free()
+	View.strum_pos.clear()
 	for i in Game.key_count * 2:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
 		new_strum.dir = i
-		new_strum.position = Vector2(150, 600)
+		if Setting.s_get("gameplay", "downscroll"):
+			new_strum.position = Vector2(150, 600)
+		else:
+			new_strum.position = Vector2(150, 120)
 		new_strum.scale = Vector2(0.75 * (4.0 / Game.key_count), 0.75 * (4.0 / Game.key_count))
 		if i >= Game.key_count:
 			if Setting.s_get("gameplay", "botplay"):
@@ -185,6 +234,15 @@ func strum_set():
 		new_strum.position.x += 115.0 * (4.0 / Game.key_count) * i
 		View.strum_pos.append(new_strum.position)
 		strum_group.add_child(new_strum)
+
+func note_pos_set():
+	for i in Game.notes_data.notes:
+		if not i or i.free_f: continue
+		if Setting.s_get("gameplay", "downscroll"):
+			i.up_or_down = 1
+		else:
+			i.up_or_down = -1
+		i.posUpdate()
 
 func character_set():
 	for i in range(3):
@@ -254,7 +312,7 @@ func start():
 	Game.cur_state = Game.PLAYING
 
 func reset_property():
-	Game.total_hit = 0
+	Game.cur_song = "test"
 	Game.score = 0
 	Game.health = 1.0
 	Game.health_percent = 50.0
@@ -266,6 +324,17 @@ func reset_property():
 	Game.fc_state = "N/A"
 	Game.rating_total = [0,0,0,0,0,0]
 	Audio.songLength = 0
+
+func reset_week_property():
+	Game.cur_week = ""
+	Game.songList = []
+	Game.cur_song_index = 0
+	Game.week_score = 0
+	Game.week_accuracy = 0.0
+	Game.week_total_hit = 0.0
+	Game.week_hit = 0
+	Game.week_fc_state = []
+	Game.week_rating_total = [0,0,0,0,0,0]
 
 func reset_dict_and_array():
 	Game.spawn_end = false
@@ -299,7 +368,7 @@ func quitStory():
 	reset_dict_and_array()
 	Audio.a_title()
 	await Trans.t_trans("Story Mode")
-	reset_property()
+	reset_week_property()
 
 func moveSong(what):
 	Game.cur_state = Game.NOT_PLAYING

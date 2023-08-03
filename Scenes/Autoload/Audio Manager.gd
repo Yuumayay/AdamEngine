@@ -97,6 +97,13 @@ func a_volume_set(key: String, volume: float):
 	else:
 		printerr("audio_volume_set: node not found")
 
+func a_volume_add(key: String, volume: float):
+	var target: AudioStreamPlayer = get_node_or_null(key)
+	if target:
+		target.volume_db += volume
+	else:
+		printerr("audio_volume_set: node not found")
+
 func a_title():
 	get_node("Freaky Menu").play()
 	

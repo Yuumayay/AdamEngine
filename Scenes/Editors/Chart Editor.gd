@@ -162,62 +162,54 @@ func add_character(type):
 		Chart.bf_count += 1
 		Chart.bf_data["key_count"].append(4)
 		Chart.bf_data["icon_name"].append("bf")
-		draw_all()
 	elif type == "OPPONENT":
 		Chart.dad_count += 1
 		Chart.dad_data["key_count"].append(4)
 		Chart.dad_data["icon_name"].append("dad")
-		draw_all()
 	elif type == "GF":
 		Chart.gf_count += 1
 		Chart.gf_data["key_count"].append(4)
 		Chart.gf_data["icon_name"].append("gf")
-		draw_all()
+	draw_all()
 
 func erase_character(type, ind):
 	if type == "PLAYER":
 		Chart.bf_count -= 1
 		Chart.bf_data["key_count"].erase(Chart.bf_data["key_count"][ind])
 		Chart.bf_data["icon_name"].erase(Chart.bf_data["icon_name"][ind])
-		draw_all()
 	elif type == "OPPONENT":
 		Chart.dad_count -= 1
 		Chart.dad_data["key_count"].erase(Chart.dad_data["key_count"][ind])
 		Chart.dad_data["icon_name"].erase(Chart.dad_data["icon_name"][ind])
-		draw_all()
 	elif type == "GF":
 		Chart.gf_count -= 1
 		Chart.gf_data["key_count"].erase(Chart.gf_data["key_count"][ind])
 		Chart.gf_data["icon_name"].erase(Chart.gf_data["icon_name"][ind])
-		draw_all()
+	draw_all()
 
 func clone_character(type, icon_name, key_count):
 	if type == "PLAYER":
 		Chart.bf_count += 1
 		Chart.bf_data["key_count"].append(key_count)
 		Chart.bf_data["icon_name"].append(icon_name)
-		draw_all()
 	elif type == "OPPONENT":
 		Chart.dad_count += 1
 		Chart.dad_data["key_count"].append(key_count)
 		Chart.dad_data["icon_name"].append(icon_name)
-		draw_all()
 	elif type == "GF":
 		Chart.gf_count += 1
 		Chart.gf_data["key_count"].append(key_count)
 		Chart.gf_data["icon_name"].append(icon_name)
-		draw_all()
+	draw_all()
 
 func set_character(type, ind, value):
 	if type == "PLAYER":
 		Chart.bf_data["icon_name"][ind] = value
-		draw_all()
 	elif type == "OPPONENT":
 		Chart.dad_data["icon_name"][ind] = value
-		draw_all()
 	elif type == "GF":
 		Chart.gf_data["icon_name"][ind] = value
-		draw_all()
+	draw_all()
 
 func set_key_count(type, ind, value):
 	if type == "PLAYER":
@@ -229,7 +221,6 @@ func set_key_count(type, ind, value):
 		#			Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
 		#		index += 1
 		Chart.bf_data["key_count"][ind] = value
-		draw_all()
 	elif type == "OPPONENT":
 		#if Chart.dad_data["key_count"][ind] > value:
 		#	var index := 0
@@ -238,7 +229,6 @@ func set_key_count(type, ind, value):
 		#			Chart.placed_notes.notes.erase(Chart.placed_notes.notes[index])
 		#		index += 1
 		Chart.dad_data["key_count"][ind] = value
-		draw_all()
 	elif type == "GF":
 		#if Chart.gf_data["key_count"][ind] > value:
 		#	var index := 0
@@ -247,7 +237,7 @@ func set_key_count(type, ind, value):
 		#			Chart.placed_notes.notes[index].erase()
 		#		index += 1
 		Chart.gf_data["key_count"][ind] = value
-		draw_all()
+	draw_all()
 
 func set_note_skin(type, ind, value):
 	pass

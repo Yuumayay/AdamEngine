@@ -75,9 +75,6 @@ func strum_anim_dad():
 	else:
 		if animation.contains("confirm"):
 			frame += 1
-		else:
-			if type == PLAYER:
-				animation = Game.note_anim[dir] + " press"
 
 func bot_strum():
 	for i in Game.notes_data.notes:
@@ -191,6 +188,7 @@ func player_strum():
 func judge(hit_ms, notetype):
 	emit_signal("bf_hit")
 	
+	
 	var ms = abs(hit_ms)
 	var layer = rating.instantiate()
 	var new_rating = layer.get_node("Rating")
@@ -198,6 +196,7 @@ func judge(hit_ms, notetype):
 	Audio.a_volume_set("Voices", 0)
 	Audio.a_play(hit)
 	
+	Game.bf_hit_bool = true
 	if notetype == 4:
 		Audio.a_play("Loss Shaggy")
 		Game.add_rating(Game.MISS)
@@ -236,6 +235,7 @@ func judge(hit_ms, notetype):
 		Game.add_score(Game.score_gain[Game.SHIT])
 	else:
 		Audio.a_stop(hit)
+		Game.bf_hit_bool = false
 		return
 	
 	var mstext = layer.get_node("Label")

@@ -3,7 +3,15 @@ extends ProgressBar
 var atime = 1.0
 
 func _ready():
+	if not Setting.s_get("gameplay", "downscroll"):
+		get_parent().position.y = 700 - get_parent().position.y
 	value = 0.0
+
+func updatePos():
+	if not Setting.s_get("gameplay", "downscroll"):
+		get_parent().position.y = 700 - get_parent().position.y
+	else:
+		get_parent().position.y = 678
 
 func _process(delta):
 	atime += delta * Game.cur_multi

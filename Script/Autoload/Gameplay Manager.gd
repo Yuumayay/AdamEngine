@@ -35,6 +35,7 @@ var cur_input_sub: Array
 var dad_input: Array
 var gf_input: Array
 var bf_miss: Array
+var bf_hit_bool: bool
 
 enum {PERF, SICK, GOOD, BAD, SHIT, MISS}
 var rating_offset: Array = [0.0, 20.0, 45.0, 75.0, 90.0, 135.0]
@@ -70,6 +71,16 @@ var is_story: bool
 var songList: Array
 var cur_song_index: int
 
+## GAMEPLAY WEEK PROPERTY ##
+var cur_week: String
+
+var week_score: int
+var week_accuracy: float
+var week_total_hit: float
+var week_hit: int
+var week_fc_state: Array
+var week_rating_total: Array = [0, 0, 0, 0, 0, 0]
+
 ## STAGE JSON ##
 var stage: Dictionary
 var defaultZoom: float
@@ -77,12 +88,12 @@ var isPixel: bool
 
 ## SONG JSON ##
 var cur_song: String = "ugh"
-var cur_diff: String = "normal"
+var cur_diff: String = "hard"
 
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
-var player3: String = "dad"
+var player3: String = "gf"
 
 ## CHARACTER JSON ##
 var p1_json: Dictionary
@@ -108,6 +119,7 @@ var gf_load_fail: bool
 
 func add_score(value):
 	score += value
+	week_score += value
 
 func set_score(value):
 	score = value
@@ -123,6 +135,7 @@ func set_health(value):
 
 func add_rating(value):
 	rating_total[value] += 1
+	week_rating_total[value] += 1
 	if value == MISS:
 		combo = 0
 	else:
@@ -130,9 +143,12 @@ func add_rating(value):
 	if combo >= max_combo:
 		max_combo = combo
 	total_hit += rating_value[value]
+	week_total_hit += rating_value[value]
 		
 	hit += 1
+	week_hit += 1
 	accuracy = total_hit / hit
+	week_accuracy = week_total_hit / week_hit
 	
 func sort_ascending(a, b):
 	if a[0] < b[0]:
@@ -450,7 +466,6 @@ func _input(event):
 		if event.is_released():
 			cur_input_str = ""
 			cur_input[input] = 0
-			#print("lol")
 		else:
 			if cur_input[input] == 0:
 				cur_input_str = event.as_text()
@@ -458,6 +473,7 @@ func _input(event):
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 				cur_input[input] = 1
+				ghostTappingCheck(input)
 				
 	if sub_input != -1 and cur_input_sub: #サブインプット（方向キー。）
 		if event.is_released():
@@ -467,12 +483,20 @@ func _input(event):
 			if cur_input_sub[sub_input] == 0:
 				cur_input_sub[sub_input] = 2
 				cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
-				
 				await get_tree().create_timer(0).timeout #processに変更
 				if cur_state == NOT_PLAYING or cur_state == PAUSE: return
 				cur_input_sub[sub_input] = 1
 				cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
+				ghostTappingCheck(sub_input)
 				
 			
-	
-	
+func ghostTappingCheck(input):
+	if Modchart.mGet("ghostTapping"):
+		if bf_hit_bool:
+			Game.bf_hit_bool = false
+			return
+		if Modchart.mGet("ghostTapping", 1):
+			Game.add_rating(Game.MISS)
+		if Modchart.mGet("ghostTapping", 2):
+			Game.bf_miss[input] = 1
+		Game.add_health(Modchart.mGet("ghostTapping", 0) * -1)

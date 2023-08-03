@@ -19,6 +19,7 @@ var init_y: float = 0.
 var elapsed_ms: float = 0.
 var distance: float
 var speed: float
+var spawn_y: float
 
 var held: Array = [preload("res://Assets/Images/Notes/Default/held/left hold0000.png"),
 preload("res://Assets/Images/Notes/Default/held/down hold0000.png"),
@@ -30,21 +31,25 @@ var remain_time := 0.1
 var typename: Array = ["note", "hurt", "death", "caution", "shaggydeath", "bullet"]
 
 func calc_distance():
-	var distance = View.strum_pos[dir].y - View.note_spawn_y[0]
+	var distance = View.strum_pos[dir].y - spawn_y
 	var p_ms = Game.get_preload_sec() * 1000
 	var to_ms = ms - Audio.cur_ms # あと何msでhitする？
 	var calc_distance2 = distance * (to_ms / p_ms) # あと何msでhit？と距離から、strumから遠ざける距離を決定
-	return calc_distance2
+	return calc_distance2 * up_or_down
 
 func calc_sus():
 	# susのms から　Y距離を計算
-	var distance_sus = View.strum_pos[dir].y - View.note_spawn_y[0]
+	var distance_sus = View.strum_pos[dir].y - spawn_y * up_or_down
 	var p_ms = Game.get_preload_sec() * 1000
 	var distance_per_ms = distance_sus / p_ms # 1msにつき、移動すべきY距離　（速度
 	var calc_distance_sus = distance_per_ms * sus # + Game.sus_tolerance # あと何msでhit？と距離から、strumから遠ざける距離を決定
 	return calc_distance_sus
 
 func _ready():
+	if Setting.s_get("gameplay", "downscroll"):
+		spawn_y = View.note_spawn_y[0]
+	else:
+		spawn_y = View.note_spawn_y[1]
 	if dir >= Game.key_count * 2:
 		var over = floor(dir / Game.key_count)
 		if Game.who_sing[ind]:
@@ -71,7 +76,7 @@ func _ready():
 	position = View.strum_pos[dir]
 	
 	# 読み出した時間を考慮してY位置を計算
-	position.y = View.strum_pos[dir].y + calc_distance() * up_or_down *-1
+	position.y = View.strum_pos[dir].y + calc_distance()
 	
 	
 	if type == 0:
@@ -79,14 +84,14 @@ func _ready():
 	else:
 		animation = typename[type]
 	
-	var linelen = calc_sus() * up_or_down * -1 
+	var linelen = calc_sus() * up_or_down * -1
 	line.set_point_position(1, Vector2(0, linelen / scale.y)) #親のスケールに依存しないのでスケールでわる
 	line.texture = held[dir % 4]
 	line.modulate.a = 0.5
 	if dir == 0:
 		pass
 	
-	speed = (View.strum_pos[dir].y - View.note_spawn_y[0]) / (Game.get_preload_sec())
+	speed = (View.strum_pos[dir].y - spawn_y) / (Game.get_preload_sec())
 	
 	#print("note check:", Audio.cur_ms, "@ ", to_ms, " ", calc_distance, " / ", speed*(to_ms/1000), " diff: ", calc_distance - speed*(to_ms/1000) )
 
@@ -95,6 +100,25 @@ func _ready():
 func update_linelen():
 	#長押しラインの長さをアップデート
 	line.set_point_position(0, Vector2(0, (View.strum_pos[dir].y - position.y) / scale.y)) #親のスケールに依存しないのでスケールでわる
+
+func posUpdate():
+	if Setting.s_get("gameplay", "downscroll"):
+		spawn_y = View.note_spawn_y[0]
+	else:
+		spawn_y = View.note_spawn_y[1]
+	
+	# X座標をストラムにあわせる
+	position = View.strum_pos[dir]
+	
+	# 読み出した時間を考慮してY位置を計算
+	position.y = View.strum_pos[dir].y + calc_distance() * up_or_down *-1
+	
+	var linelen = calc_sus() * up_or_down * -1
+	line.set_point_position(1, Vector2(0, linelen / scale.y)) #親のスケールに依存しないのでスケールでわる
+	line.texture = held[dir % 4]
+	line.modulate.a = 0.5
+	
+	speed = (View.strum_pos[dir].y - spawn_y) / (Game.get_preload_sec())
 
 var last_audio_ms = 0.0
 func _process(delta):

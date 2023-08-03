@@ -1,42 +1,115 @@
 extends Control
 
+var layer: int = 0
 var select: int = 0
 var child_count: int = 0
+var select2: int = 0
+var child_count2: int = 0
 var canvas: CanvasLayer
+var db: float
 
 func _ready():
 	child_count = get_child_count() - 1
 	canvas = get_parent().get_parent()
+	Audio.a_play("Pause Menu", 1.0, -10)
+	Audio.get_node("Pause Menu").volume_db = -20
+	db = Audio.get_node("Pause Menu").volume_db
+	if Setting.s_get("gameplay", "botplay"):
+		get_node("Botplay").text += " on"
+	else:
+		get_node("Botplay").text += " off"
+	if Setting.s_get("gameplay", "practice"):
+		get_node("Practice").text += " on"
+	else:
+		get_node("Practice").text += " off"
+	if Setting.s_get("gameplay", "downscroll"):
+		get_node("Downscroll").text = "downscroll"
+	else:
+		get_node("Downscroll").text = "upscroll"
 
-func _process(_delta):
+func _process(delta):
+	if db <= 0:
+		Audio.a_volume_add("Pause Menu", delta)
+		db = Audio.get_node("Pause Menu").volume_db
 	if Game.can_input:
 		if Input.is_action_just_pressed("game_ui_up"):
 			Audio.a_scroll()
-			if select == 0:
-				select = child_count
+			if layer == 0:
+				if select == 0:
+					select = child_count
+				else:
+					select -= 1
 			else:
-				select -= 1
+				if select2 == 0:
+					select2 = child_count2
+				else:
+					select2 -= 1
 		if Input.is_action_just_pressed("game_ui_down"):
 			Audio.a_scroll()
-			if select == child_count:
-				select = 0
+			if layer == 0:
+				if select == child_count:
+					select = 0
+				else:
+					select += 1
 			else:
-				select += 1
+				if select2 == child_count2:
+					select2 = 0
+				else:
+					select2 += 1
 		if Input.is_action_just_pressed("ui_accept"):
 			match get_child(select).name:
 				"Resume":
 					Game.cur_state = Game.PLAYING
 					Audio.a_resume("Inst")
 					Audio.a_resume("Voices")
+					Audio.a_stop("Pause Menu")
+					canvas.queue_free()
 				"Restart":
 					Audio.a_resume("Inst")
 					Audio.a_resume("Voices")
+					Audio.a_stop("Pause Menu")
 					canvas.get_parent().moveSong(Game.cur_song)
+					canvas.queue_free()
+				"Difficulty":
+					for i in get_children():
+						remove_child(i)
+					for i in Game.difficulty:
+						var label = Label.new()
+						label.text = i
+						label.uppercase = true
+						label.add_theme_font_override("font", load("res://Assets/Fonts/alphabet.png"))
+						add_child(label)
+					child_count2 = get_child_count() - 1
+				"Downscroll":
+					Setting.s_set("gameplay", "downscroll", !Setting.s_get("gameplay", "downscroll"))
+					if Setting.s_get("gameplay", "downscroll"):
+						get_node("Downscroll").text = "downscroll"
+					else:
+						get_node("Downscroll").text = "upscroll"
+					canvas.get_parent().strum_set()
+					canvas.get_parent().note_pos_set()
+					canvas.get_parent().get_node("UI/HealthBarBG").updatePos()
+					canvas.get_parent().get_node("Info").updatePos()
+					canvas.get_parent().get_node("UI/ColorRect/TimeBar").updatePos()
+				"Botplay":
+					Setting.s_set("gameplay", "botplay", !Setting.s_get("gameplay", "botplay"))
+					if Setting.s_get("gameplay", "botplay"):
+						get_node("Botplay").text = "botplay on"
+					else:
+						get_node("Botplay").text = "botplay off"
+					canvas.get_parent().strum_set()
+				"Practice":
+					Setting.s_set("gameplay", "practice", !Setting.s_get("gameplay", "practice"))
+					if Setting.s_get("gameplay", "practice"):
+						get_node("Practice").text = "practice on"
+					else:
+						get_node("Practice").text = "practice off"
 				"Back":
 					Audio.a_stop("Inst")
 					Audio.a_stop("Voices")
+					Audio.a_stop("Pause Menu")
 					canvas.get_parent().quit()
-			canvas.queue_free()
+					canvas.queue_free()
 		if Input.is_action_just_pressed("ui_cancel"):
 			Game.cur_state = Game.PLAYING
 			Audio.a_resume("Inst")

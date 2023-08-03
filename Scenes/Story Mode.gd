@@ -138,6 +138,7 @@ func accept():
 	Game.cur_song_index = 0
 	Game.cur_song = Game.songList[Game.cur_song_index]
 	Game.cur_diff = Game.difficulty[diffselect]
+	Game.cur_week = list.get_child(select).name
 	Game.is_story = true
 	for i in list.get_children():
 		if i == list.get_child(select):

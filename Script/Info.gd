@@ -11,7 +11,11 @@ var adam_conditions: Array = [["Perfect!!", "PFC"], ["Sick!", 1.0], ["Great", 0.
  ["Nice", 0.7], ["Meh", 0.69], ["Bruh", 0.6], ["Bad", 0.5], ["Shit", 0.4], ["You Suck!", 0.2]]
 
 func _ready():
+	if not Setting.s_get("gameplay", "downscroll"):
+		info1.position.y = 720 - info1.position.y
 	info1.text = "Score: 0 | Misses: 0 | Rating: N/A"
+	if Modchart.mGet("defeat", 2):
+		info1.text = "Score: 0 | Misses: 0 / " + str(Modchart.mGet("defeat", 0)) + " | Rating: N/A"
 
 	info2.text = ""
 	info2.text += "Marvelous: 0\n"
@@ -29,13 +33,22 @@ func _ready():
 	else:
 		info4.text = Game.cur_song[0] + " - " + Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1)
 
+func updatePos():
+	if not Setting.s_get("gameplay", "downscroll"):
+		info1.position.y = 720 - info1.position.y
+	else:
+		info1.position.y = 129
+
 func _process(_delta):
 	if last_hit != Game.hit:
 		last_hit = Game.hit
 		var fc_state: String = fc_state_check()
 		var rating_text: String = rating_text_check()
-
-		info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " | Rating: " + rating_text + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+		
+		if Modchart.mGet("defeat", 2):
+			info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " / " + str(Modchart.mGet("defeat", 0) - 1) + " | Rating: " + rating_text + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+		else:
+			info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " | Rating: " + rating_text + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
 		
 		info2.text = ""
 		info2.text += "Marvelous: " + str(Game.rating_total[Game.PERF]) + "\n"
@@ -51,6 +64,9 @@ func _process(_delta):
 
 func fc_state_check():
 	var fc_state: String
+	if Game.health == 0 or Game.fc_state == "Failed":
+		fc_state = "- Failed"
+		return fc_state
 	if Game.rating_total[Game.PERF] > 0:
 		Game.fc_state = "MFC"
 		fc_state = "- MFC"

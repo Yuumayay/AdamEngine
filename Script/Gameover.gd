@@ -54,7 +54,7 @@ func gameover(): #ゲームオーバー
 
 
 func accepted(): #リトライ決定
-	if Game.cur_state == Game.GAMEOVER and gameoverState == GAMEOVER:
+	if Game.cur_state == Game.GAMEOVER and gameoverState != END:
 		gameoverState = END
 		if Audio.a_check("Gameover"):
 			Audio.a_stop("Gameover")
@@ -68,5 +68,5 @@ func accepted(): #リトライ決定
 		
 		await get_tree().create_timer(2.5).timeout
 		
-		if Game.can_input: #リトライ決定してからドタキャンした場合の条件分岐
+		if Game.cur_state == Game.GAMEOVER: #リトライ決定してからドタキャンした場合の条件分岐
 			get_parent().moveSong(Game.cur_song)

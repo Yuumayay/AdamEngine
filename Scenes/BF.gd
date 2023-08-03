@@ -105,6 +105,7 @@ func getPosOffset():
 	return position + bf.offset
 
 func getScale():
+	#キャラクターデータの中のscaleを返す カメラの位置計算に使う
 	return json.scale
 
 func setOffset(animname : String):
@@ -259,6 +260,8 @@ func loadFail(p_type, case):
 	label.add_theme_color_override("font_color", Color(1, 0, 0))
 	label.add_theme_constant_override("outline_size", 5)
 	label.position = getPosOffset()
+	
+	
 	var p_name: String
 	if p_type == "bf":
 		p_name = Game.player1
