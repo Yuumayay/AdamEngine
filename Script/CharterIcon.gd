@@ -10,7 +10,7 @@ extends Sprite2D
 func init():
 	var label = Label.new()
 	label.add_theme_font_size_override("font_size", 40)
-	label.add_theme_font_override("font", load("res://Assets/Fonts/vcr.ttf"))
+	label.add_theme_font_override("font", load("Assets/Fonts/vcr.ttf"))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
 	label.add_theme_constant_override("outline_size", 10)
 	label.grow_horizontal = Control.GROW_DIRECTION_BOTH

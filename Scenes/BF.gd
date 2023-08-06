@@ -6,9 +6,9 @@ enum {PLAYER, DAD, GF}
 @export var type: int = 0
 
 var DEFAULT_XML = [
-"res://Assets/Images/characters/BOYFRIEND.xml", 
-"res://Assets/Images/characters/DADDY_DEAREST.xml", 
-"res://Assets/Images/characters/GF_assets.xml"
+"Assets/Images/characters/BOYFRIEND.xml", 
+"Assets/Images/characters/DADDY_DEAREST.xml", 
+"Assets/Images/characters/GF_assets.xml"
 ]
 var SPR_NAME = ["bf", "dad", "gf"]
 
@@ -17,7 +17,6 @@ var SPR_NAME = ["bf", "dad", "gf"]
 var note_anim: Array = ["singleft", "singdown", "singup", "singright"]
 var miss_anim: Array = ["singleftmiss", "singdownmiss", "singupmiss", "singrightmiss"]
 var idle_anim = "idle"
-var gf_anim = ["danceleft", "danceright"]
 
 enum {IDLE = -1, NOTE, MISS}
 var state: int = -1
@@ -114,7 +113,7 @@ func setup2D():
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
 		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
-	#ResourceSaver.save(bf.sprite_frames, "res://Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
+	#ResourceSaver.save(bf.sprite_frames, "Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
 	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
 
 func setup3D():
@@ -190,7 +189,7 @@ func setup3D():
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
 		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0] / offset3D.x, i.offsets[1] / 2.0 / offset3D.y)
-	#ResourceSaver.save(bf.sprite_frames, "res://Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
+	#ResourceSaver.save(bf.sprite_frames, "Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
 	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
 
 func getPosOffset():
@@ -315,8 +314,8 @@ func run_anim(delta):
 		if gf_beatanim_flag: #gfの特殊パターン!!!
 			if state != IDLE: 
 				state = IDLE
-				bf.play(gf_anim[beat], 1.0, true)  #????
-				setOffset(gf_anim[beat])			
+				bf.play(idle_anim[beat], 1.0, true)  #????
+				setOffset(idle_anim[beat])			
 			else:
 				if Audio.beat_hit_event and Game.cur_state != Game.PAUSE:
 					bf.stop()
@@ -339,39 +338,11 @@ func run_anim(delta):
 					setOffset(idle_anim)
 
 
-# アニメの速度をビートに合わせる計算をしていないのが原因では？？？
-func gf_process(delta):
-	if Game.gf_input[dir_2] == 1:
-		if bf.frame >= 3:
-			bf.frame = 0
-	else:
-		if Game.cur_state != Game.PAUSE:
-			animRemain -= delta
-	for i in range(Game.key_count):
-		if Game.gf_input[i] == 2:
-			Game.gf_input[i] = 0
-			animDirection(i)
-	if animRemain <= 0:
-		if state == IDLE: #idleのとき
-			if Audio.beat_hit_event and Game.cur_state != Game.PAUSE:
-				bf.stop()
-				bf.play(idle_anim, 1.0, true)
-				setOffset(idle_anim)
-				bf.frame = beat % 2 * 15 #GFのみ、アニメフレームを強制的にいじるHACK
-				if beat == 0:
-					beat = 1
-				else:
-					beat = 0
-		else:
-			state = IDLE
-			bf.play(gf_anim[beat], 1.0, true)  #????
-			setOffset(gf_anim[beat])
-
 func loadFail(p_type, case):
 	print(p_type, " load_fail ", case)
 	var label = Label.new()
 	label.add_theme_font_size_override("font_size", 32)
-	label.add_theme_font_override("font", load("res://Assets/Fonts/vcr.ttf"))
+	label.add_theme_font_override("font", load("Assets/Fonts/vcr.ttf"))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
 	label.add_theme_color_override("font_color", Color(1, 0, 0))
 	label.add_theme_constant_override("outline_size", 5)
@@ -393,7 +364,7 @@ func loadFail(p_type, case):
 			elif count == 2:
 				label.text = "Character XML and JSON \"" + p_name + "\"\ndoes not exist."
 	
-	var shader: Shader = load("res://Assets/Shader/ChangeHue.gdshader")
+	var shader: Shader = load("Assets/Shader/ChangeHue.gdshader")
 	var shader_material = ShaderMaterial.new()
 	shader_material.shader = shader
 	shader_material.set_shader_parameter("saturation", 0)

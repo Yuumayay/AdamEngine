@@ -1,47 +1,16 @@
-[gd_scene load_steps=43 format=3 uid="uid://b736w0428g7i6"]
+[gd_scene load_steps=12 format=3 uid="uid://b736w0428g7i6"]
 
 [ext_resource type="Script" path="res://Scenes/Autoload/Audio Manager.gd" id="1_i1gpa"]
 [ext_resource type="AudioStream" uid="uid://mi5qxw8ah3m5" path="res://Assets/Music/freakyMenu.ogg" id="2_pawgv"]
-[ext_resource type="AudioStream" uid="uid://cqs5xeq4p3yvu" path="res://Assets/Sounds/FNF/UI/confirmMenu.ogg" id="3_7k3jy"]
 [ext_resource type="AudioStream" uid="uid://dnu4nccswet76" path="res://Assets/Music/freakyDebug.ogg" id="3_x8kgg"]
 [ext_resource type="AudioStream" uid="uid://c3cimsn8tv0" path="res://Assets/Music/pauseAsd.ogg" id="4_8q7wd"]
-[ext_resource type="AudioStream" uid="uid://c6tcf4o2apntx" path="res://Assets/Sounds/FNF/UI/cancelMenu.ogg" id="4_qnaxj"]
-[ext_resource type="AudioStream" uid="uid://c3crp71qg7dfv" path="res://Assets/Sounds/FNF/UI/scrollMenu.ogg" id="5_4r8wr"]
 [ext_resource type="AudioStream" uid="uid://cp2hcvfdpbau6" path="res://Assets/Music/fnf_loss_sfx.ogg" id="5_wmoxj"]
-[ext_resource type="AudioStream" uid="uid://0v510pm2h56c" path="res://Assets/Sounds/FNF/UI/Error.ogg" id="6_e6tnv"]
 [ext_resource type="AudioStream" uid="uid://b8yvu83o3xush" path="res://Assets/Music/gameOver.ogg" id="6_uf8oc"]
 [ext_resource type="AudioStream" uid="uid://b52sg1i448n1v" path="res://Assets/Music/gameOverEnd.ogg" id="7_frl80"]
-[ext_resource type="AudioStream" uid="uid://ct1rmf02f85m0" path="res://Assets/Sounds/FNF/Countdown/intro3.ogg" id="8_7tpoe"]
-[ext_resource type="AudioStream" uid="uid://blhfaconp8nt4" path="res://Assets/Sounds/FNF/Countdown/intro2.ogg" id="9_o5tlg"]
-[ext_resource type="AudioStream" uid="uid://b8nhu8indwuk" path="res://Assets/Sounds/FNF/Countdown/intro1.ogg" id="10_4o6x8"]
-[ext_resource type="AudioStream" uid="uid://bfe77wgdjchp0" path="res://Assets/Sounds/FNF/Countdown/introGo.ogg" id="11_jiu46"]
-[ext_resource type="AudioStream" uid="uid://cce1tywb3iffn" path="res://Assets/Sounds/FNF/Chart Editor/Place.ogg" id="12_3s2qk"]
-[ext_resource type="AudioStream" uid="uid://dk4gp4o5oeayg" path="res://Assets/Sounds/FNF/Chart Editor/Erase.ogg" id="13_q0u0h"]
-[ext_resource type="AudioStream" uid="uid://t1or6d342g4v" path="res://Assets/Sounds/FNF/Editor/open.ogg" id="14_1chc2"]
-[ext_resource type="AudioStream" uid="uid://dl2mf04k73t5d" path="res://Assets/Sounds/FNF/Chart Editor/Tick.ogg" id="14_8657v"]
-[ext_resource type="AudioStream" uid="uid://cbj3chbg7nud6" path="res://Assets/Sounds/FNF/Chart Editor/Tock.ogg" id="15_2el16"]
-[ext_resource type="AudioStream" uid="uid://bfifsmht3bbwy" path="res://Assets/Sounds/FNF/Editor/open2.ogg" id="15_2t7ir"]
-[ext_resource type="AudioStream" uid="uid://by3cqjixf0oil" path="res://Assets/Sounds/FNF/Editor/close.ogg" id="16_k3go6"]
-[ext_resource type="AudioStream" uid="uid://cpmn0of4wiyc4" path="res://Assets/Sounds/FNF/Hitsound/hitsound.ogg" id="16_lbn2s"]
-[ext_resource type="AudioStream" uid="uid://cqmtc1yrop1m7" path="res://Assets/Sounds/FNF/Editor/Type.ogg" id="16_t7eyi"]
-[ext_resource type="AudioStream" uid="uid://b7q8onu4tiltx" path="res://Assets/Sounds/FNF/Editor/close2.ogg" id="17_7oxa3"]
-[ext_resource type="AudioStream" uid="uid://ce110akbje506" path="res://Assets/Sounds/FNF/Hitsound/CLAP.ogg" id="17_new4y"]
-[ext_resource type="AudioStream" uid="uid://bvlsv3jr7xkoc" path="res://Assets/Sounds/FNF/Hitsound/SNAP.ogg" id="18_kfjam"]
-[ext_resource type="AudioStream" uid="uid://men6ytxojj8g" path="res://Assets/Sounds/FNF/Misssound/missnote1.ogg" id="19_qln2c"]
 [ext_resource type="AudioStream" uid="uid://dt2por4xh4u88" path="res://Assets/Sounds/FNF/Misssound/missnote2.ogg" id="20_rpxw5"]
 [ext_resource type="AudioStream" uid="uid://cgl0w1yyqy08i" path="res://Assets/Sounds/FNF/Misssound/missnote3.ogg" id="21_oocdq"]
-[ext_resource type="AudioStream" uid="uid://ddklw2vpi2n45" path="res://Assets/Sounds/FNF/Hitsound/hit.ogg" id="23_aqs2w"]
 [ext_resource type="AudioStream" uid="uid://r3scpi5rnolj" path="res://Assets/Sounds/FNF/Gameover/loss_shaggy.ogg" id="23_v52c4"]
-[ext_resource type="AudioStream" uid="uid://c4d6c7sdr6lps" path="res://Assets/Sounds/FNF/Hitsound/hit2.ogg" id="24_fh7sh"]
 [ext_resource type="AudioStream" uid="uid://b62hfj6jrv78d" path="res://Assets/Sounds/FNF/Gameover/loss_matt.ogg" id="24_ge8lx"]
-[ext_resource type="AudioStream" uid="uid://dp5ym6xl61sd8" path="res://Assets/Sounds/FNF/Hitsound/hit3.ogg" id="25_jeav6"]
-[ext_resource type="AudioStream" uid="uid://cd3xdpn2n7wip" path="res://Assets/Sounds/FNF/Hitsound/hit4.ogg" id="26_opk2m"]
-[ext_resource type="AudioStream" uid="uid://bdvnetj0uolfc" path="res://Assets/Sounds/FNF/Hitsound/key.ogg" id="29_gbdfq"]
-[ext_resource type="AudioStream" uid="uid://lccw2t7kj0yq" path="res://Assets/Sounds/FNF/Hitsound/hit5.ogg" id="30_gtlko"]
-[ext_resource type="AudioStream" uid="uid://b7aawsqv5ppdk" path="res://Assets/Sounds/FNF/Hitsound/hit6.ogg" id="31_fb3b6"]
-[ext_resource type="AudioStream" uid="uid://l3rt10nbpmj8" path="res://Assets/Sounds/FNF/Hitsound/hit7.ogg" id="32_ei7k1"]
-[ext_resource type="AudioStream" uid="uid://dt845c324h50p" path="res://Assets/Sounds/FNF/Hitsound/hit8.ogg" id="33_85wio"]
-[ext_resource type="AudioStream" uid="uid://cq08l86ne25gx" path="res://Assets/Sounds/FNF/Hitsound/hit9.ogg" id="34_ubeu7"]
 
 [node name="Audio Manager" type="Node2D"]
 script = ExtResource("1_i1gpa")
@@ -71,121 +40,90 @@ volume_db = 7.858
 stream = ExtResource("7_frl80")
 volume_db = 7.858
 
-[node name="Accept" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_7k3jy")
-
-[node name="Cancel" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_qnaxj")
-
-[node name="Scroll" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_4r8wr")
-max_polyphony = 10
-
-[node name="Error" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_e6tnv")
-
-[node name="Three" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_7tpoe")
-
-[node name="Two" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("9_o5tlg")
-
-[node name="One" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("10_4o6x8")
-
-[node name="Go" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("11_jiu46")
-
 [node name="Inst" type="AudioStreamPlayer" parent="."]
 
 [node name="Voices" type="AudioStreamPlayer" parent="."]
 
+[node name="Accept" type="AudioStreamPlayer" parent="."]
+
+[node name="Cancel" type="AudioStreamPlayer" parent="."]
+
+[node name="Scroll" type="AudioStreamPlayer" parent="."]
+max_polyphony = 10
+
+[node name="Error" type="AudioStreamPlayer" parent="."]
+
+[node name="Three" type="AudioStreamPlayer" parent="."]
+
+[node name="Two" type="AudioStreamPlayer" parent="."]
+
+[node name="One" type="AudioStreamPlayer" parent="."]
+
+[node name="Go" type="AudioStreamPlayer" parent="."]
+
 [node name="Place" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("12_3s2qk")
 
 [node name="Erase" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("13_q0u0h")
 
 [node name="open" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("14_1chc2")
 
 [node name="open2" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("15_2t7ir")
 
 [node name="close" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("16_k3go6")
 
 [node name="close2" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("17_7oxa3")
 
 [node name="Tick" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("14_8657v")
 volume_db = 5.0
 
 [node name="Tock" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("15_2el16")
 volume_db = 5.0
 
 [node name="Type" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("16_t7eyi")
 volume_db = 5.0
 
 [node name="osu" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("16_lbn2s")
 volume_db = 5.0
 
 [node name="aehit1" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("23_aqs2w")
 volume_db = 5.0
 
 [node name="aehit2" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("24_fh7sh")
 volume_db = 5.0
 
 [node name="aehit3" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("25_jeav6")
 volume_db = 5.0
 
 [node name="aehit4" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("26_opk2m")
 volume_db = 5.0
 
 [node name="aehit5" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("30_gtlko")
 volume_db = 5.0
 
 [node name="aehit6" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("31_fb3b6")
 volume_db = 5.0
 
 [node name="aehit7" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("32_ei7k1")
 volume_db = 5.0
 
 [node name="aehit8" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("33_85wio")
 volume_db = 5.0
 
 [node name="aehit9" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("34_ubeu7")
 volume_db = 5.0
 
 [node name="clap" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("17_new4y")
 volume_db = 5.0
 
 [node name="snap" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("18_kfjam")
 volume_db = 5.0
 
 [node name="key" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("29_gbdfq")
 
 [node name="none" type="AudioStreamPlayer" parent="."]
 volume_db = 5.0
 
 [node name="Miss1" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("19_qln2c")
 volume_db = 5.0
 
 [node name="Miss2" type="AudioStreamPlayer" parent="."]

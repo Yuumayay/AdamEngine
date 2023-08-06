@@ -14,11 +14,11 @@ func _ready():
 		var new_song: RichTextLabel = get_parent().get_node("Template").duplicate()
 		var songname = i
 		var icon: Texture2D
-		if FileAccess.file_exists("res://Assets/Images/Other Icons/" + songname + ".png"):
-			icon = load("res://Assets/Images/Other Icons/" + songname + ".png")
+		if FileAccess.file_exists("Assets/Images/Other Icons/" + songname + ".png"):
+			icon = Game.load_image("Assets/Images/Other Icons/" + songname + ".png")
 		else:
 			printerr("icon: icon not found")
-			icon = load("res://Assets/Images/Icons/icon-face.png")
+			icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 		
 		new_song.text = songname.to_upper()
 		new_song.ind = ind

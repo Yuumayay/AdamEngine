@@ -9,10 +9,10 @@ var child_count: int = 0
 
 func _ready():
 	var ind := 0
-	var json = File.f_read("res://Assets/Data/Credits/credits.json", ".json")
+	var json = File.f_read("Assets/Data/Credits/credits.json", ".json")
 	var read_property = Setting.get_translate(json, "peoples")
 	if Setting.jpn():
-		desc.add_theme_font_override("font", load("res://Assets/Fonts/BugMaru.ttc"))
+		desc.add_theme_font_override("font", load("Assets/Fonts/BugMaru.ttc"))
 		desc.add_theme_color_override("font_outline_color", Color(0.5, 0.5, 0.5))
 		desc.add_theme_constant_override("shadow_outline_size", 5)
 		desc.add_theme_color_override("font_shadow_color", Color(0, 0, 0))

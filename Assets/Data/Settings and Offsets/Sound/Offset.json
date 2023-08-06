@@ -1,0 +1,41 @@
+{
+    "system_sound":[
+        ["Accept", "UI/confirmMenu.ogg"],
+        ["Cancel", "UI/cancelMenu.ogg"],
+        ["Scroll", "UI/scrollMenu.ogg"],
+        ["Error", "UI/Error.ogg"],
+        ["Three", "Countdown/intro3.ogg"],
+        ["Two", "Countdown/intro2.ogg"],
+        ["One", "Countdown/intro1.ogg"],
+        ["Go", "Countdown/introGo.ogg"],
+        ["Place","Chart Editor/Place.ogg"],
+        ["Erase","Chart Editor/Erase.ogg"],
+        ["open","Editor/open.ogg"],
+        ["open2","Editor/open2.ogg"],
+        ["close","Editor/open.ogg"],
+        ["close2","Editor/close2.ogg"],
+        ["Tick","Chart Editor/Tick.ogg"],
+        ["Tock","Chart Editor/Tock.ogg"],
+        ["Type","Editor/Type.ogg"],
+        ["osu","Hitsound/hitsound.ogg"],
+        ["aehit1","Hitsound/hit.ogg"],
+        ["aehit2","Hitsound/hit2.ogg"],
+        ["aehit3","Hitsound/hit3.ogg"],
+        ["aehit4","Hitsound/hit4.ogg"],
+        ["aehit5","Hitsound/hit5.ogg"],
+        ["aehit6","Hitsound/hit6.ogg"],
+        ["aehit7","Hitsound/hit7.ogg"],
+        ["aehit8","Hitsound/hit8.ogg"],
+        ["aehit9","Hitsound/hit9.ogg"],
+        ["clap","Hitsound/CLAP.ogg"],
+        ["snap","Hitsound/SNAP.ogg"],
+        ["key","Hitsound/key.ogg"],
+        ["Miss1","Misssound/missnote1.ogg"],
+        ["Miss2","Misssound/missnote2.ogg"],
+        ["Miss3","Misssound/missnote3.ogg"],
+        ["Loss Shaggy","Gameover/loss_shaggy.ogg"],
+        ["Loss Matt","Gameover/loss_matt.ogg"]
+    ]
+}
+
+

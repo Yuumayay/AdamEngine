@@ -15,9 +15,9 @@ var countDownTimer: Timer = Timer.new()
 
 var pause = preload("res://Scenes/Pause Menu.tscn")
 
-var countdowns: Array = [preload("res://Assets/Images/Skins/FNF/Countdown/ready.png"),
-preload("res://Assets/Images/Skins/FNF/Countdown/set.png"),
-preload("res://Assets/Images/Skins/FNF/Countdown/go.png")]
+var countdowns: Array = [preload("Assets/Images/Skins/FNF/Countdown/ready.png"),
+preload("Assets/Images/Skins/FNF/Countdown/set.png"),
+preload("Assets/Images/Skins/FNF/Countdown/go.png")]
 
 func _ready():
 	timer.name = "timer"

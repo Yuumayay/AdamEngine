@@ -2,16 +2,7 @@ extends AnimatedSprite2D
 
 var y_speed = -1
 var x_speed = randf_range(-2.0, 2.0)
-var num = [preload("res://Assets/Images/Skins/FNF/Numbers/num0.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num1.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num2.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num3.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num4.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num5.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num6.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num7.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num8.png"),
-preload("res://Assets/Images/Skins/FNF/Numbers/num9.png")]
+@onready var num = View.num
 
 func _ready():
 	var ind := 0

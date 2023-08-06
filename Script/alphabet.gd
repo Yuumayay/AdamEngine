@@ -51,12 +51,12 @@ func property_changed():
 					total_x = 0
 					total_y += 50
 				elif text_name == lower:
-					if FileAccess.file_exists("res://Assets/Images/alphabet/" + text_name.to_upper() + " LOWERCASE.png"):
-						sprite.texture = load("res://Assets/Images/alphabet/" + text_name.to_upper() + " LOWERCASE.png")
+					if FileAccess.file_exists("Assets/Images/alphabet/" + text_name.to_upper() + " LOWERCASE.png"):
+						sprite.texture = Game.load_image("Assets/Images/alphabet/" + text_name.to_upper() + " LOWERCASE.png")
 					else:
-						sprite.texture = load("res://Assets/Images/alphabet/" + text_name.to_upper() + ".png")
+						sprite.texture = Game.load_image("Assets/Images/alphabet/" + text_name.to_upper() + ".png")
 				else:
-					sprite.texture = load("res://Assets/Images/alphabet/" + text_name.to_upper() + ".png")
+					sprite.texture = Game.load_image("Assets/Images/alphabet/" + text_name.to_upper() + ".png")
 			elif type == 1:
 				if text_name == " ":
 					total_x += 50
@@ -64,7 +64,7 @@ func property_changed():
 					total_x = 0
 					total_y += 50
 				else:
-					sprite.texture = load("res://Assets/Images/alphabet/" + text_name.to_upper() + " BOLD.png")
+					sprite.texture = Game.load_image("Assets/Images/alphabet/" + text_name.to_upper() + " BOLD.png")
 			sprite.centered = true
 			sprite.hframes = 2
 			sprite.position.x = total_x

@@ -296,6 +296,14 @@ func conv_anim_name(text : String):
 	if conv_anim_name_dict.has(text):
 		return conv_anim_name_dict[text]
 	return text
+
+# ファイルのイメージをオンラインで読む
+func load_image(path):
+	var texture:Texture
+	var image = Image.new()
+	image.load(path)
+	texture = ImageTexture.create_from_image(image)
+	return texture
 	
 # XML load
 func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
@@ -304,16 +312,16 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 		printerr("invalid path. cannot load xml")
 		var sprite = AnimatedSprite2D.new()
 		var frames:SpriteFrames = SpriteFrames.new()
-		frames.add_frame("default", load("res://Assets/Images/UI/Missing.png"))
+		frames.add_frame("default", Game.load_image("Assets/Images/UI/Missing.png"))
 		sprite.frames = frames
 		return sprite
 	
 	var sprite_data:AnimatedSprite2D = AnimatedSprite2D.new() 
 	
 	var base_path:StringName = path.get_basename()
-	#var file_name:StringName = path.get_file()
 	
-	var texture:Texture = load(base_path + ".png")
+	#var texture:Texture = load( base_path + ".png")
+	var texture:Texture = load_image(base_path + ".png")
 	
 	var xml:XMLParser = XMLParser.new()
 	xml.open(base_path + ".xml")
@@ -390,7 +398,6 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 					
 					#var raw_frame_x:int
 					#var raw_frame_y:int
-
 					#raw_frame_x = xml.get_named_attribute_value("frameX").to_int()
 					#raw_frame_y = xml.get_named_attribute_value("frameY").to_int()
 				
@@ -449,7 +456,7 @@ func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, c
 		printerr("invalid path. cannot load xml")
 		var sprite = AnimatedSprite3D.new()
 		var frames:SpriteFrames = SpriteFrames.new()
-		frames.add_frame("default", load("res://Assets/Images/UI/Missing.png"))
+		frames.add_frame("default", Game.load_image("Assets/Images/UI/Missing.png"))
 		sprite.frames = frames
 		return sprite
 	

@@ -20,8 +20,8 @@ var empty_section = {"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]
 
 func _ready():
 	if !Chart.cur_song:
-		Audio.a_set("Voices", "res://Assets/Songs/test/Voices.ogg", Chart.bpm)
-		Audio.a_set("Inst", "res://Assets/Songs/test/Inst.ogg", Chart.bpm)
+		Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", Chart.bpm)
+		Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", Chart.bpm)
 		Chart.cur_song = "test"
 	
 	draw_menu()

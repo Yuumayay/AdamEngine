@@ -8,7 +8,7 @@ extends Node2D
 @onready var weekNameJPLabel: Label = $WeekNameJP
 @onready var weekScoreLabel: Label = $WeekScore
 
-var arrow = "res://Assets/Images/Story Mode/ui_arrow.xml"
+var arrow = "Assets/Images/Story Mode/ui_arrow.xml"
 
 var difficulty: Array = []
 
@@ -47,7 +47,7 @@ func _ready():
 			var sprite: Sprite2D = new_item.get_node("Sprite")
 			var week_image_path = Paths.p_week_image(fileName)
 			
-			sprite.texture = load(week_image_path)
+			sprite.texture = Game.load_image(week_image_path)
 			if week_image_path.contains("Missing"):
 				new_item.get_node("Error").visible = true
 				new_item.get_node("Error").text += "Missing week image\n\"" + fileName + ".png\""
@@ -68,7 +68,7 @@ func _ready():
 		add_child(new_arrow)
 	
 	for i in Game.difficulty.size():
-		difficulty.append(load("res://Assets/Images/Story Mode/Difficulties/" + Game.difficulty[i] + ".png"))
+		difficulty.append(Game.load_image("Assets/Images/Story Mode/Difficulties/" + Game.difficulty[i] + ".png"))
 	
 	child_count = list.get_child_count() - 1
 	diff_count = Game.difficulty.size() - 1

@@ -10,7 +10,7 @@ var beat = 0
 var ind = 0
 
 var music_offset = File.f_read(Paths.p_offset("Music/Offset.json"), ".json")
-var menu_music_path = "res://Assets/Music/" + music_offset.MenuMusic[0]
+var menu_music_path = "Assets/Music/" + music_offset.MenuMusic[0]
 var menu_music_bpm = music_offset.MenuMusic[1]
 
 func _ready():

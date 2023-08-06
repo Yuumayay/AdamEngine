@@ -31,7 +31,7 @@ func _ready():
 		
 	if !Setting.eng():
 		for i in get_children():
-			i.add_theme_font_override("font", load("res://Assets/Fonts/DarumadropOne-Regular.ttf"))
+			i.add_theme_font_override("font", load("Assets/Fonts/DarumadropOne-Regular.ttf"))
 			i.add_theme_font_size_override("font_size", 100)
 			i.add_theme_constant_override("outline_size", 25)
 			i.add_theme_color_override("font_outline_color", Color(0, 0, 0))
@@ -90,7 +90,7 @@ func _process(delta):
 						var label = Label.new()
 						label.text = i
 						label.uppercase = true
-						label.add_theme_font_override("font", load("res://Assets/Fonts/alphabet.png"))
+						label.add_theme_font_override("font", Game.load_image("Assets/Fonts/alphabet.png"))
 						add_child(label)
 					child_count2 = get_child_count() - 1
 				"Downscroll":

@@ -14,7 +14,7 @@ func _ready():
 	await Game.game_ready
 	
 	# スプライトのロード
-	spr = Game.load_XMLSprite("res://Assets/Images/characters/BOYFRIEND_DEAD.xml", "bf dies", false, 24, 2)
+	spr = Game.load_XMLSprite("Assets/Images/characters/BOYFRIEND_DEAD.xml", "bf dies", false, 24, 2)
 	spr.name = "Sprite"
 	spr.visible = false
 	add_child(spr)

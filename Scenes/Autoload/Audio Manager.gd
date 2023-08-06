@@ -104,6 +104,19 @@ func a_volume_add(key: String, volume: float):
 	else:
 		printerr("audio_volume_set: node not found")
 
+func se_set(key: String, path: String):
+	var target: AudioStreamPlayer = get_node(key)
+	if path == "":
+		target.stream = null
+	else:
+		if FileAccess.file_exists(path):
+			var soundfile: AudioStreamOggVorbis = load(path)
+			soundfile.loop = false
+			target.stream = soundfile
+			print("se_set: load @ "+ path)
+		else:
+			printerr("se_set: sound not found @ "+ path)
+
 func a_title():
 	get_node("Freaky Menu").play()
 	
@@ -149,36 +162,15 @@ func a_get_sec(key: String):
 ############################## オーディオの読み込みと初期化 ##############################
 
 func _ready():
-	var music_offset = File.f_read(Paths.p_offset("Music/Offset.json"), ".json")
-	var menu_music_path = "res://Assets/Music/" + music_offset.MenuMusic[0]
-	var menu_music_bpm = music_offset.MenuMusic[1]
+	# music
+	var system_music = File.f_read(Paths.p_offset("Music/Offset.json"), ".json").system_music
+	for m in system_music:
+		Audio.a_set(m[0], "Assets/Music/" + m[1], float(m[2]), m[3])
 	
-	var debug_music_path = "res://Assets/Music/" + music_offset.DebugMusic[0]
-	var debug_music_bpm = music_offset.DebugMusic[1]
-	
-	var pause_music_path = "res://Assets/Music/" + music_offset.PauseMusic[0]
-	var pause_music_bpm = music_offset.PauseMusic[1]
-	
-	var option_music_path = "res://Assets/Music/" + music_offset.OptionMusic[0]
-	var option_music_bpm = music_offset.OptionMusic[1]
-
-	var gameoverstart_music_path = "res://Assets/Music/" + music_offset.GameoverStart[0]
-	var gameoverstart_music_bpm = music_offset.GameoverStart[1]
-
-	var gameover_music_path = "res://Assets/Music/" + music_offset.Gameover[0]
-	var gameover_music_bpm = music_offset.Gameover[1]
-
-	var gameoverend_music_path = "res://Assets/Music/" + music_offset.GameoverEnd[0]
-	var gameoverend_music_bpm = music_offset.GameoverEnd[1]
-	
-	Audio.a_set("Freaky Menu", menu_music_path, menu_music_bpm, true)
-	Audio.a_set("Debug Menu", debug_music_path, debug_music_bpm, true)
-	Audio.a_set("Pause Menu", pause_music_path, pause_music_bpm, true)
-	Audio.a_set("Option Menu", option_music_path, option_music_bpm, true)
-	Audio.a_set("GameoverStart", gameoverstart_music_path, gameoverstart_music_bpm, false)
-	Audio.a_set("Gameover", gameover_music_path, gameover_music_bpm, true)
-	Audio.a_set("GameoverEnd", gameoverend_music_path, gameoverend_music_bpm, false)
-
+	# sound
+	var system_sound = File.f_read(Paths.p_offset("Sound/Offset.json"), ".json").system_sound
+	for m in system_sound:
+		Audio.se_set(m[0], "Assets/Sounds/FNF/" + m[1])
 
 
 ############################## 曲の情報更新 ##############################

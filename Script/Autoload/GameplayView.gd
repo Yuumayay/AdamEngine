@@ -12,6 +12,9 @@ var strum_pos: Array
 # Gameplay Managerに移動
 var keys: Dictionary
 
+func _init():
+	loadAssets()
+
 func _ready():
 	var l = "left"
 	var d = "down"
@@ -51,3 +54,33 @@ func _ready():
 		"17k": [l, d, u, r, rl, rd, ru, rr, s, rl2, rd2, ru2, rr2, l2, d2, u2, r2],
 		"18k": [l, d, u, r, rl, rd, ru, rr, s, p, rl2, rd2, ru2, rr2, l2, d2, u2, r2]
 	}
+
+var held: Array
+var countdowns: Array
+var num: Array
+var arrow : AnimatedSprite2D
+var arrowSpriteFrames: SpriteFrames
+
+func loadAssets():
+	arrow = Game.load_XMLSprite("Assets/Images/Notes/Default/default.xml")
+	arrowSpriteFrames = arrow.sprite_frames
+	
+	held = [Game.load_image("Assets/Images/Notes/Default/held/left hold0000.png"),
+Game.load_image("Assets/Images/Notes/Default/held/down hold0000.png"),
+Game.load_image("Assets/Images/Notes/Default/held/up hold0000.png"),
+Game.load_image("Assets/Images/Notes/Default/held/right hold0000.png")]
+	
+	countdowns = [Game.load_image("Assets/Images/Skins/FNF/Countdown/ready.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Countdown/set.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Countdown/go.png")]
+	
+	num = [Game.load_image("Assets/Images/Skins/FNF/Numbers/num0.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num1.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num2.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num3.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num4.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num5.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num6.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num7.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num8.png"),
+	Game.load_image("Assets/Images/Skins/FNF/Numbers/num9.png")]

@@ -8,7 +8,7 @@ enum {AUTO_DAD, PLAYER, AUTO_PLAYER}
 @export var type: int
 
 var rating = preload("res://Scenes/Rating.tscn")
-var splash_path = "res://Assets/Images/Notes/Default/Note_Splashes.xml"
+var splash_path = "Assets/Images/Notes/Default/Note_Splashes.xml"
 var hit: String
 
 func _ready():

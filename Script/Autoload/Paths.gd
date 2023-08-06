@@ -1,17 +1,17 @@
 extends Node
 
-var missing = "res://Assets/Images/UI/Missing.png"
+var missing = "Assets/Images/UI/Missing.png"
 
-var song_path_list: Array = ["res://Assets/Songs/", "res://Mods/songs/"]
-var chart_path_list: Array = ["res://Assets/Songs/", "res://Mods/songs/", "res://Assets/Data/Song Charts/", "res://Mods/data/song charts/", "res://Mods/data/", "res://Mods/data/song data/"]
-var icon_path_list: Array = ["res://Assets/Images/Icons/", "res://Mods/images/icons/"]
-var icon_credits_path_list: Array = ["res://Assets/Images/Other Icons/Credits/", "res://Mods/images/other icons/credits/", "res://Mods/images/credits/"]
-var week_path_list: Array = ["res://Assets/Weeks/", "res://mods/weeks/"]
-var week_image_path_list: Array = ["res://Assets/Images/Story Mode/Weeks/", "res://Mods/Images/Story Mode/Weeks/"]
-var character_data_path_list: Array = ["Assets/Data/characters/", "res://mods/data/characters/", "res://mods/characters/"]
-var character_image_path_list: Array = ["Assets/Images/characters/", "res://mods/images/characters/"]
-var stage_data_path_list: Array = ["res://Assets/Data/Stages/", "res://Mods/data/stages/", "res://Mods/stages/"]
-var stage_image_path_list: Array = ["res://Assets/Images/Stages/", "res://Mods/images/stages/", "res://Mods/images/"]
+var song_path_list: Array = ["Assets/Songs/", "Mods/songs/"]
+var chart_path_list: Array = ["Assets/Songs/", "Mods/songs/", "Assets/Data/Song Charts/", "Mods/data/song charts/", "Mods/data/", "Mods/data/song data/"]
+var icon_path_list: Array = ["Assets/Images/Icons/", "Mods/images/icons/"]
+var icon_credits_path_list: Array = ["Assets/Images/Other Icons/Credits/", "Mods/images/other icons/credits/", "Mods/images/credits/"]
+var week_path_list: Array = ["Assets/Weeks/", "Mods/weeks/"]
+var week_image_path_list: Array = ["Assets/Images/Story Mode/Weeks/", "Mods/Images/Story Mode/Weeks/"]
+var character_data_path_list: Array = ["Assets/Data/characters/", "Mods/data/characters/", "Mods/characters/"]
+var character_image_path_list: Array = ["Assets/Images/characters/", "Mods/images/characters/"]
+var stage_data_path_list: Array = ["Assets/Data/Stages/", "Mods/data/stages/", "Mods/stages/"]
+var stage_image_path_list: Array = ["Assets/Images/Stages/", "Mods/images/stages/", "Mods/images/"]
 
 var modchart_extensions: Array = [".gd", ".lua"]
 var modchart_filenames: Array = ["modchart", "script"]
@@ -20,7 +20,7 @@ var load_assets_song: bool
 
 func _ready():
 	# Mods/songsが存在する場合、MODが読み込まれる。
-	if FileAccess.file_exists("res://Mods/songs"):
+	if FileAccess.file_exists("Mods/songs"):
 		load_assets_song = false
 	else:
 		load_assets_song = true
@@ -30,17 +30,17 @@ func _ready():
 # ゲームのマスターデータを読む
 func load_masterdata():
 	if not load_assets_song:
-		week_path_list = ["res://mods/weeks"]
-		song_path_list = ["res://Mods/songs/"]
-		if FileAccess.file_exists("res://Mods/data/difficulty.json"):
-			var json = File.f_read("res://Mods/data/difficulty.json", ".json")
+		week_path_list = ["Mods/weeks"]
+		song_path_list = ["Mods/songs/"]
+		if FileAccess.file_exists("Mods/data/difficulty.json"):
+			var json = File.f_read("Mods/data/difficulty.json", ".json")
 			Game.difficulty = json.difficulty
 			Game.difficulty_color.clear()
 			for diffColor in json.color:
 				Game.difficulty_color.append(Color8(diffColor[0], diffColor[1], diffColor[2]))
 
 func p_offset(path: String):
-	return "res://Assets/Data/Settings and Offsets/" + path
+	return "Assets/Data/Settings and Offsets/" + path
 
 func p_song(path: String, path2: String):
 	for i in song_path_list:
@@ -211,9 +211,9 @@ func p_week_image(path: String):
 func p_stage_img(path: String):
 	for i in stage_image_path_list:
 		if FileAccess.file_exists(i + path + ".png"):
-			return load(i + path + ".png")
+			return Game.load_image(i + path + ".png")
 		elif FileAccess.file_exists(i + path.to_lower() + ".png"):
-			return load(i + path.to_lower() + ".png")
+			return Game.load_image(i + path.to_lower() + ".png")
 	Audio.a_play("Error")
 	printerr("paths stage image: invalid path")
 	return missing
@@ -233,16 +233,16 @@ func p_icon(path: String):
 	for i in icon_path_list:
 		var p = i
 		if FileAccess.file_exists(p + path + ".png"):
-			icon = load(p + path + ".png")
+			icon = Game.load_image(p + path + ".png")
 			return icon
 		elif FileAccess.file_exists(p + "icon-" + path + ".png"):
-			icon = load(p + "icon-" + path + ".png")
+			icon = Game.load_image(p + "icon-" + path + ".png")
 			return icon
 		elif FileAccess.file_exists(p + path + "-icons.png"):
-			icon = load(p + path + "-icons.png")
+			icon = Game.load_image(p + path + "-icons.png")
 			return icon
 	printerr("icon: icon not found")
-	icon = load("res://Assets/Images/Icons/icon-face.png")
+	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon
 
 func p_icon_credits(path: String):
@@ -250,14 +250,14 @@ func p_icon_credits(path: String):
 	for i in icon_credits_path_list:
 		var p = i
 		if FileAccess.file_exists(p + path + ".png"):
-			icon = load(p + path + ".png")
+			icon = Game.load_image(p + path + ".png")
 			return icon
 		elif FileAccess.file_exists(p + "icon-" + path + ".png"):
-			icon = load(p + "icon-" + path + ".png")
+			icon = Game.load_image(p + "icon-" + path + ".png")
 			return icon
 		elif FileAccess.file_exists(p + path + "-icons.png"):
-			icon = load(p + path + "-icons.png")
+			icon = Game.load_image(p + path + "-icons.png")
 			return icon
 	printerr("icon: icon not found")
-	icon = load("res://Assets/Images/Icons/icon-face.png")
+	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon

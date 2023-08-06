@@ -246,7 +246,7 @@ func dfont():
 # dynamic fontのひな形set
 func set_dfont(new_item):
 	if !Setting.eng():
-		new_item.add_theme_font_override("font", load("res://Assets/Fonts/DarumadropOne-Regular.ttf"))
+		new_item.add_theme_font_override("font", load("Assets/Fonts/DarumadropOne-Regular.ttf"))
 		new_item.add_theme_font_size_override("font_size", 100)
 		new_item.add_theme_constant_override("outline_size", 25)
 		new_item.add_theme_color_override("font_outline_color", Color(0, 0, 0))
@@ -255,7 +255,7 @@ func set_dfont(new_item):
 # dynamic fontのひな形set
 func set_dfont_mini(new_item):
 	if !Setting.eng():
-		new_item.add_theme_font_override("font", load("res://Assets/Fonts/BugMaru.ttc"))
+		new_item.add_theme_font_override("font", load("Assets/Fonts/BugMaru.ttc"))
 		new_item.add_theme_color_override("font_outline_color", Color(0.5, 0.5, 0.5))
 		new_item.add_theme_constant_override("shadow_outline_size", 5)
 	return new_item

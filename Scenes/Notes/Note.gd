@@ -21,10 +21,8 @@ var distance: float
 var speed: float
 var spawn_y: float
 
-var held: Array = [preload("res://Assets/Images/Notes/Default/held/left hold0000.png"),
-preload("res://Assets/Images/Notes/Default/held/down hold0000.png"),
-preload("res://Assets/Images/Notes/Default/held/up hold0000.png"),
-preload("res://Assets/Images/Notes/Default/held/right hold0000.png")]
+@onready var held: Array = View.held
+@onready var arrowSpriteFrames: SpriteFrames = View.arrowSpriteFrames
 
 var remain_time := 0.1
 
@@ -46,6 +44,7 @@ func calc_sus():
 	return calc_distance_sus
 
 func _ready():
+	sprite_frames = arrowSpriteFrames
 	if Setting.s_get("gameplay", "downscroll"):
 		spawn_y = View.note_spawn_y[0]
 	else:

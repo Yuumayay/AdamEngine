@@ -33,10 +33,10 @@ func _ready():
 				#var alphabet: Node = new_song.get_node("Alphabet")
 				var songname = i[0]
 				var icon = Paths.p_icon(i[1])
-				if icon == load("res://Assets/Images/Icons/icon-face.png"):
+				if icon == Game.load_image("Assets/Images/Icons/icon-face.png"):
 					var label = new_song.get_node("Icon").get_node("Error")
 					printerr("icon: icon not found")
-					icon = load("res://Assets/Images/Icons/icon-face.png")
+					icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 					label.visible = true
 					label.text = "Icon \"" + i[1] + "\"\ndoes not exist"
 				var songcolor: Color = Color(i[2][0] / 255.0, i[2][1] / 255.0, i[2][2] / 255.0, 1)

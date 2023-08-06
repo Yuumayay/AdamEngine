@@ -73,7 +73,7 @@ func lua_to_gd(content):
 	for i in conv_lua:
 		content = content.replace()
 	
-	#File.f_save("res://Mods/songs/" + Game.cur_song + "/modchart", ".gd", content)
+	#File.f_save("Mods/songs/" + Game.cur_song + "/modchart", ".gd", content)
 	return content
 
 func _process(delta):

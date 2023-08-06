@@ -1,9 +1,12 @@
 {
-    "MenuMusic": ["freakyMenu.ogg", 102],
-    "DebugMusic": ["adamDebug.ogg", 200],
-    "PauseMusic": ["pauseAsd.ogg", 130],
-    "OptionMusic": ["pauseAsd.ogg", 130],
-    "GameoverStart": ["fnf_loss_sfx.ogg", 100],
-    "Gameover": ["gameOver.ogg", 100],
-    "GameoverEnd": ["gameOverEnd.ogg", 100]
+    "system_music":[
+        ["Freaky Menu", "freakyMenu.ogg", 102, true],
+        ["Debug Menu", "adamDebug.ogg", 200, true],
+        ["Pause Menu", "pauseAsd.ogg", 130, true],
+        ["Option Menu", "pauseAsd.ogg", 130, true],
+        ["GameoverStart", "fnf_loss_sfx.ogg", 100, false],
+        ["Gameover","gameOver.ogg", 100, true],
+        ["GameoverEnd", "gameOverEnd.ogg", 100, false]
+    ]
 }
+

@@ -12,7 +12,6 @@ func _ready():
 	for i in selectable:
 		var new_selectable: Node2D = get_parent().get_node("Template").duplicate()
 		new_selectable.position.y = 100 + ind * 150
-		#new_selectable.texture = load("res://Assets/Images/Main Menu/" + i.to_lower() + " placeholder.png")
 		new_selectable.name = i
 		new_selectable.visible = true
 		ind += 1

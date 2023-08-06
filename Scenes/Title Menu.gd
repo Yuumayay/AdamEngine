@@ -13,7 +13,7 @@ var intro_offset = File.f_read(Paths.p_offset("Title Menu/Intro.json"), ".json")
 var texts: Array = intro_offset.introtext.texts
 var time: Array = intro_offset.introtext.time
 
-var intro_text_data = File.f_read("res://Assets/Data/introText" + Game.language + ".txt", ".txt")
+var intro_text_data = File.f_read("Assets/Data/introText" + Game.language + ".txt", ".txt")
 var intro_texts: PackedStringArray = intro_text_data.split("\n")
 
 var random: int = randi_range(0, intro_texts.size() - 1)
@@ -46,7 +46,7 @@ func introend():
 	intro_end = true
 	
 	#GF sprite
-	var spr = Game.load_XMLSprite("res://Assets/Images/Title Menu/gfDanceTitle.xml", "", true, 24)
+	var spr = Game.load_XMLSprite("Assets/Images/Title Menu/gfDanceTitle.xml", "", true, 24)
 	spr.name = "GF"
 	$Logo/gfpos.add_child(spr)
 

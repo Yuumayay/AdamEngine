@@ -2,7 +2,7 @@ extends Node2D
 
 func _ready():
 	if get_child_count() == 0:
-		var spr = Game.load_XMLSprite("res://Assets/Images/Main Menu/FNF_main_menu_assets.xml", "", true, 24)
+		var spr = Game.load_XMLSprite("Assets/Images/Main Menu/FNF_main_menu_assets.xml", "", true, 24)
 		spr.name = "Sprite"
 		add_child(spr)
 	else:
