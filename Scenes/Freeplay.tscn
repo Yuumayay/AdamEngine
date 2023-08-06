@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dnwsewr85wjs2"]
+[gd_scene load_steps=11 format=3 uid="uid://dnwsewr85wjs2"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_vcpxn"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
@@ -6,6 +6,10 @@
 [ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
 [ext_resource type="Script" path="res://Scenes/Freeplay Selector.gd" id="6_ohx30"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="6_rqsen"]
+[ext_resource type="Texture2D" uid="uid://duag3d448sxqg" path="res://Assets/Images/UI/ScorePanel.png" id="7_l7lhw"]
+[ext_resource type="Texture2D" uid="uid://ba5h5gve1km0e" path="res://Assets/Images/UI/DifficultyPanel.png" id="8_ltwua"]
+[ext_resource type="FontFile" uid="uid://clqfmqaltqtkq" path="res://Assets/Fonts/DarumadropOne-Regular.ttf" id="9_wbykf"]
+[ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="9_y07c1"]
 
 [node name="Freeplay" type="Node2D"]
 
@@ -57,34 +61,122 @@ layout_mode = 3
 anchors_preset = 0
 
 [node name="InfoPanel" type="Panel" parent="Info"]
+visible = false
 layout_mode = 0
 offset_left = 669.0
 offset_top = -20.0
 offset_right = 1298.0
 offset_bottom = 203.0
 
-[node name="Difficulty" type="Label" parent="Info"]
-offset_left = 945.0
-offset_top = 65.0
-offset_right = 1269.0
-offset_bottom = 155.0
-theme_override_fonts/font = ExtResource("3_n65er")
-text = "normal"
+[node name="ScorePanel" type="TextureRect" parent="Info"]
+layout_mode = 0
+offset_left = 522.0
+offset_top = 12.0
+offset_right = 1814.0
+offset_bottom = 159.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_l7lhw")
+
+[node name="HighScore" type="Label" parent="Info/ScorePanel"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 488.0
+offset_top = 8.0
+offset_right = 650.0
+offset_bottom = 68.0
+scale = Vector2(2, 2)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_rqsen")
+theme_override_font_sizes/font_size = 25
+text = "0
+(0.00%)"
+vertical_alignment = 1
+uppercase = true
+
+[node name="Best" type="Label" parent="Info/ScorePanel"]
+layout_mode = 0
+offset_left = 204.0
+offset_top = 16.0
+offset_right = 349.0
+offset_bottom = 63.0
+scale = Vector2(2, 2)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_rqsen")
+theme_override_font_sizes/font_size = 50
+text = "best:"
 horizontal_alignment = 2
 uppercase = true
 
-[node name="Multi" type="Label" parent="Info"]
-offset_left = 1048.0
-offset_top = 148.0
-offset_right = 1403.0
-offset_bottom = 238.0
+[node name="FCState" type="Label" parent="Info/ScorePanel"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 884.0
+offset_top = 26.0
+offset_right = 999.0
+offset_bottom = 65.0
+grow_horizontal = 2
+scale = Vector2(2, 2)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_rqsen")
+theme_override_font_sizes/font_size = 40
+text = "FC"
+horizontal_alignment = 1
+
+[node name="DiffPanel" type="TextureRect" parent="Info"]
+layout_mode = 0
+offset_left = 618.0
+offset_top = 92.0
+offset_right = 1910.0
+offset_bottom = 239.0
 scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_ltwua")
+
+[node name="Multi" type="Label" parent="Info/DiffPanel"]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 22.0
+offset_right = 1035.0
+offset_bottom = 112.0
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "1.00"
 horizontal_alignment = 2
 uppercase = true
 
+[node name="Difficulty" type="Label" parent="Info/DiffPanel"]
+layout_mode = 0
+offset_left = 358.0
+offset_top = 30.0
+offset_right = 682.0
+offset_bottom = 120.0
+scale = Vector2(0.8, 0.8)
+theme_override_fonts/font = ExtResource("3_n65er")
+text = "normal"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Difficulty2" type="Label" parent="Info/DiffPanel"]
+visible = false
+layout_mode = 0
+offset_left = 328.0
+offset_top = -2.0
+offset_right = 717.0
+offset_bottom = 146.0
+scale = Vector2(0.8, 0.8)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("9_wbykf")
+theme_override_font_sizes/font_size = 80
+text = "フツウ"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
 [node name="X" type="Label" parent="Info"]
+visible = false
+layout_mode = 0
 offset_left = 1232.0
 offset_top = 159.0
 offset_right = 1285.0
@@ -94,15 +186,7 @@ theme_override_fonts/font = ExtResource("3_n65er")
 text = "x"
 uppercase = true
 
-[node name="HighScore" type="Label" parent="Info"]
-offset_left = 542.0
-offset_top = 8.0
-offset_right = 1273.0
-offset_bottom = 38.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = ExtResource("6_rqsen")
-theme_override_font_sizes/font_size = 30
-text = "personal best: 0 (0.00%)"
-horizontal_alignment = 2
-uppercase = true
+[node name="Alphabet" parent="." instance=ExtResource("9_y07c1")]
+position = Vector2(168, 344)
+text = ">"
+type = 1

@@ -1,29 +1,42 @@
 extends Node
 
+signal modchart_ready
+
 var is_modchart: bool = false
 var mNode: Node
-var gameplay: Node2D
+var gameplay
 var modLayer: CanvasLayer
 var lyricslabel: Label
 var ui: CanvasLayer
 var info: CanvasLayer
+var scoretext
 
 var has_onUpdate: bool = false
 var has_onBeatHit: bool = false
 var has_onSectionHit: bool = false
+var has_onDestroy: bool = false
 
 var modcharts: Dictionary = {}
 
-# MODCHARTの初期化がされていないので、曲が終わったら初期化するようにする TODO
 func loadModchart():
-	gameplay = $/root/Gameplay
+	if Game.is3D:
+		gameplay = $/root/Gameplay3D
+	else:
+		gameplay = $/root/Gameplay
 	modLayer = gameplay.get_node("ModchartCanvas")
 	lyricslabel = modLayer.get_node("LyricsLabel")
 	ui = gameplay.get_node("UI")
 	info = gameplay.get_node("Info")
+	scoretext = info.get_node("Label1")
 	if Paths.p_modchart(Game.cur_song, Game.cur_diff): #もしmodchartファイルが存在するなら
 		# modchart.gdのonCreate関数を実行
-		var scr: Script = load(Paths.p_modchart(Game.cur_song, Game.cur_diff))
+		var modchartPath = Paths.p_modchart(Game.cur_song, Game.cur_diff)
+		
+		# TODO lua対応
+		#if modchartPath.get_extension() == "lua":
+			#lua_to_gd(File.f_read(modchartPath, ".lua"))
+		
+		var scr: Script = load(modchartPath)
 		mNode = $/root/Gameplay/ModchartScript
 		mNode.set_script(scr)
 		
@@ -31,17 +44,37 @@ func loadModchart():
 			mNode.call("onCreate")
 			
 		if mNode.has_method("onUpdate"):
-			has_onUpdate = true # 初期化されていない
+			has_onUpdate = true
 			
 		if mNode.has_method("onBeatHit"):
-			has_onBeatHit = true # 初期化されていない
+			has_onBeatHit = true
 			
 		if mNode.has_method("onSectionHit"):
-			has_onSectionHit = true # 初期化されていない
+			has_onSectionHit = true
+		
+		if mNode.has_method("onDestroy"):
+			has_onDestroy = true
 			
-		is_modchart = true # 初期化されていない
+		is_modchart = true
 	else: #存在しないなら何もしない
 		print("no modchart")
+	
+	emit_signal("modchart_ready")
+
+var conv_lua: Dictionary = {
+	"local function": "func",
+	"function": "func",
+	"local": "var",
+	"end": ""
+}
+
+# 途中
+func lua_to_gd(content):
+	for i in conv_lua:
+		content = content.replace()
+	
+	#File.f_save("res://Mods/songs/" + Game.cur_song + "/modchart", ".gd", content)
+	return content
 
 func _process(delta):
 	if is_modchart:
@@ -53,6 +86,18 @@ func _process(delta):
 		if Audio.section_hit_event:
 			if has_onSectionHit:
 				mNode.call("onSectionHit")
+		if Game.cur_state == Game.NOT_PLAYING:
+			if has_onDestroy:
+				mNode.call("onDestroy")
+			reset()
+
+func reset():
+	is_modchart = false
+	has_onUpdate = false
+	has_onBeatHit = false
+	has_onDestroy = false
+	has_onSectionHit = false
+	mNode = null
 
 func mGet(key: String, index = -1):
 	if modcharts.has(key):
@@ -128,6 +173,9 @@ func hideUI():
 func showUI():
 	ui.show()
 	info.show()
+
+func setScoreTextColor(value = Color(1, 1, 1)):
+	scoretext.add_theme_color_override("font_color", value)
 
 func setHealthDrain(damage = 0.05, healthMin = 0.0):
 	modcharts["healthDrain"] = [damage, healthMin]

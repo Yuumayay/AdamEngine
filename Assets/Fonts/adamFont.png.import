@@ -1,0 +1,21 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://bscjqs20nvnnn"
+path="res://.godot/imported/adamFont.png-3f38fb04e8672dc8d6c65db7429a8180.fontdata"
+
+[deps]
+
+source_file="res://Assets/Fonts/adamFont.png"
+dest_files=["res://.godot/imported/adamFont.png-3f38fb04e8672dc8d6c65db7429a8180.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("65-90", "44", "32", "48-57", "45-46", "58", "64", "95")
+columns=43
+rows=1
+image_margin=Rect2i(-17, 0, 0, 0)
+character_margin=Rect2i(34, 0, 0, 0)
+fallbacks=[]
+compress=true

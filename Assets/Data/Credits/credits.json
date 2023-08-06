@@ -1,6 +1,9 @@
 {
     "comment": ["0 = name, 1 = desc, 2 = selfdesc, 3 = color, 4 = url"],
     "peoples": [
-        ["Yuumayay", "Main Creator", "sussy", [255, 255, 0], "https://twitter.com/yuumayay"]
+        ["Yuumayay", "Main Creator", "I had a lot of fun developing the Adam Engine!", [255, 255, 0], "https://twitter.com/yuumayay"]
+    ],
+    "peoplesJPN": [
+        ["Yuumayay", "メインクリエイター", "アダムエンジン開発、楽しめたぞー！", [255, 255, 0], "https://twitter.com/yuumayay"]
     ]
 }

@@ -31,15 +31,15 @@ var remain_time := 0.1
 var typename: Array = ["note", "hurt", "death", "caution", "shaggydeath", "bullet"]
 
 func calc_distance():
-	var distance = View.strum_pos[dir].y - spawn_y
+	var note_distance = View.strum_pos[dir].y - spawn_y
 	var p_ms = Game.get_preload_sec() * 1000
 	var to_ms = ms - Audio.cur_ms # あと何msでhitする？
-	var calc_distance2 = distance * (to_ms / p_ms) # あと何msでhit？と距離から、strumから遠ざける距離を決定
+	var calc_distance2 = note_distance * (to_ms / p_ms) # あと何msでhit？と距離から、strumから遠ざける距離を決定
 	return calc_distance2 * up_or_down
 
 func calc_sus():
 	# susのms から　Y距離を計算
-	var distance_sus = View.strum_pos[dir].y - spawn_y * up_or_down
+	var distance_sus = (View.strum_pos[dir].y - spawn_y) * up_or_down
 	var p_ms = Game.get_preload_sec() * 1000
 	var distance_per_ms = distance_sus / p_ms # 1msにつき、移動すべきY距離　（速度
 	var calc_distance_sus = distance_per_ms * sus # + Game.sus_tolerance # あと何msでhit？と距離から、strumから遠ざける距離を決定
@@ -51,7 +51,7 @@ func _ready():
 	else:
 		spawn_y = View.note_spawn_y[1]
 	if dir >= Game.key_count * 2:
-		var over = floor(dir / Game.key_count)
+		var over = floor(float(dir) / float(Game.key_count))
 		if Game.who_sing[ind]:
 			dir = dir - (Game.key_count * over - Game.key_count)
 		else:
@@ -85,9 +85,13 @@ func _ready():
 		animation = typename[type]
 	
 	var linelen = calc_sus() * up_or_down * -1
-	line.set_point_position(1, Vector2(0, linelen / scale.y)) #親のスケールに依存しないのでスケールでわる
-	line.texture = held[dir % 4]
-	line.modulate.a = 0.5
+	
+	if linelen == 0:
+		line.hide()
+	else:
+		line.set_point_position(1, Vector2(0, linelen / scale.y)) #親のスケールに依存しないのでスケールでわる
+		line.texture = held[dir % 4]
+		line.modulate.a = 0.5
 	if dir == 0:
 		pass
 	
@@ -129,6 +133,10 @@ func _process(delta):
 		position.y = View.strum_pos[dir].y + calc_distance() * up_or_down *-1
 	else:
 		position.y += speed * delta
+	
+	if sus != 0 and !line.visible:
+		line.show()
+	
 	last_audio_ms = Audio.cur_ms
 	
 	# queue_free

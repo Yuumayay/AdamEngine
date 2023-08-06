@@ -20,7 +20,6 @@ var random: int = randi_range(0, intro_texts.size() - 1)
 var intro_text: PackedStringArray = intro_texts[random].split("--")
 
 func _ready():
-	print()
 	#print(intro_text)
 	
 	#discord_sdk.app_id = 1133432665505280140
@@ -48,8 +47,10 @@ func introend():
 	
 	#GF sprite
 	var spr = Game.load_XMLSprite("res://Assets/Images/Title Menu/gfDanceTitle.xml", "", true, 24)
+	spr.name = "GF"
 	$Logo/gfpos.add_child(spr)
-	
+
+var beat_gf = 0
 
 func _process(_delta):
 	var beat = Audio.a_get_beat("Freaky Menu", 8)
@@ -60,22 +61,27 @@ func _process(_delta):
 		else:
 			Audio.a_accept()
 			enter.accepted()
-			
-	if beat == time[ind] and not intro_end:
-		if texts[ind] == "<erase>":
-			introtext.text = ""
-			ind += 1
-		elif texts[ind] == "<end>":
-			introend()
-		elif texts[ind] == "<random>":
-			if index == 0:
-				introtext.text += intro_text[index]
-				index += 1
+	
+	if intro_end:
+		if beat_gf != Audio.a_get_beat("Freaky Menu", 4):
+			beat_gf = Audio.a_get_beat("Freaky Menu", 4)
+			$Logo/gfpos/GF.frame = int(beat_gf) % 2 * 15
+	else:
+		if beat == time[ind]:
+			if texts[ind] == "<erase>":
+				introtext.text = ""
 				ind += 1
+			elif texts[ind] == "<end>":
+				introend()
+			elif texts[ind] == "<random>":
+				if index == 0:
+					introtext.text += intro_text[index]
+					index += 1
+					ind += 1
+				else:
+					introtext.text += "\n" + intro_text[index]
+					index += 1
+					ind += 1
 			else:
-				introtext.text += "\n" + intro_text[index]
-				index += 1
+				introtext.text += texts[ind]
 				ind += 1
-		else:
-			introtext.text += texts[ind]
-			ind += 1

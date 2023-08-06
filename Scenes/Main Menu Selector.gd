@@ -11,7 +11,7 @@ func _ready():
 	var ind = 0
 	for i in selectable:
 		var new_selectable: Node2D = get_parent().get_node("Template").duplicate()
-		new_selectable.position.y = 50 + ind * 150
+		new_selectable.position.y = 100 + ind * 150
 		#new_selectable.texture = load("res://Assets/Images/Main Menu/" + i.to_lower() + " placeholder.png")
 		new_selectable.name = i
 		new_selectable.visible = true
@@ -42,41 +42,12 @@ func _process(_delta):
 				else:
 					i.accepted(false)
 		if Input.is_action_just_pressed("ui_cancel"):
-			if Game.debug_mode:
-				Game.debug_mode = false
-				Game.can_input = false
-				Audio.a_stop("Debug Menu")
-				Audio.a_cancel()
-				for i in range(80):
-					Audio.a_volume_set("Freaky Menu", i - 80)
-					await get_tree().create_timer(0.001).timeout
-				var t = create_tween()
-				t.set_ease(Tween.EASE_OUT)
-				t.set_trans(Tween.TRANS_BOUNCE)
-				t.tween_property(Debug.get_node("BG"), "position", Vector2(Debug.get_node("BG").position.x, -400), 0.5)
-				t.tween_property(get_parent(), "position", Vector2(get_parent().position.x, 0), 0.5)
-				t.tween_callback(func():
-					Game.can_input = true)
-			else:
-				Game.can_input = false
-				Audio.a_cancel()
-				Trans.t_trans("Title Menu")
-		if Input.is_action_just_pressed("game_debug"):
-			if Game.debug_mode: return
-			Debug.visible = true
 			Game.can_input = false
-			for i in range(80):
-				Audio.a_volume_set("Freaky Menu", -i)
-				await get_tree().create_timer(0.001).timeout
-			var t = create_tween()
-			t.set_ease(Tween.EASE_OUT)
-			t.set_trans(Tween.TRANS_BOUNCE)
-			t.tween_property(get_parent(), "position", Vector2(get_parent().position.x, 750), 0.5)
-			t.tween_property(Debug.get_node("BG"), "position", Vector2(Debug.get_node("BG").position.x, 325), 0.5)
-			t.tween_callback(func():
-				Game.debug_mode = true
-				Game.can_input = true)
-			Audio.a_play("Debug Menu")
+			Audio.a_cancel()
+			Trans.t_trans("Title Menu")
+		if Input.is_action_just_pressed("game_debug"):
+			Audio.a_stop("Freaky Menu")
+			Trans.t_trans("Debug Menu")
 	update_position()
 
 func update_position():

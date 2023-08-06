@@ -58,16 +58,6 @@ theme_override_fonts/font = ExtResource("1_hh2s2")
 text = "Difficulty"
 uppercase = true
 
-[node name="Downscroll" type="Label" parent="Control/Selectable"]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 254.0
-offset_right = 1081.0
-offset_bottom = 344.0
-theme_override_fonts/font = ExtResource("1_hh2s2")
-text = "upscroll"
-uppercase = true
-
 [node name="Botplay" type="Label" parent="Control/Selectable"]
 layout_mode = 0
 offset_left = 210.0
@@ -88,12 +78,22 @@ theme_override_fonts/font = ExtResource("1_hh2s2")
 text = "practice"
 uppercase = true
 
+[node name="Downscroll" type="Label" parent="Control/Selectable"]
+layout_mode = 0
+offset_left = 338.0
+offset_top = 500.0
+offset_right = 1239.0
+offset_bottom = 590.0
+theme_override_fonts/font = ExtResource("1_hh2s2")
+text = "upscroll"
+uppercase = true
+
 [node name="Back" type="Label" parent="Control/Selectable"]
 layout_mode = 0
-offset_left = 302.0
-offset_top = 490.0
-offset_right = 514.0
-offset_bottom = 580.0
+offset_left = 385.0
+offset_top = 599.0
+offset_right = 597.0
+offset_bottom = 689.0
 theme_override_fonts/font = ExtResource("1_hh2s2")
 text = "back"
 uppercase = true

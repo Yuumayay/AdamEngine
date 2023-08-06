@@ -308,8 +308,6 @@ var menu_dict: Dictionary = {
 	}
 }
 
-var can_input: bool = true
-
 #var key_count: Array = [[4], [4], [4]]
 
 var cur_section: int
@@ -321,7 +319,7 @@ var mouse_scroll_speed: float = 1
 
 var playing: bool = false
 
-var cur_song := "test"
+var cur_song: String
 var songSpeed := 1.0
 
 var cur_x: float

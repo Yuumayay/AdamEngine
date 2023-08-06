@@ -5,6 +5,8 @@ extends Sprite2D
 @export var p_ind: int
 @export var key_count: int
 
+@onready var sceneroot = $/root/"Chart Editor"/Mass
+
 func init():
 	var label = Label.new()
 	label.add_theme_font_size_override("font_size", 40)
@@ -100,24 +102,24 @@ func init():
 func item_pressed(id):
 	if p_type != "EVENT":
 		if id == 0:
-			get_parent().add_character(p_type)
+			sceneroot.add_character(p_type)
 		elif id == 2:
-			get_parent().clone_character(p_type, icon_name, key_count)
+			sceneroot.clone_character(p_type, icon_name, key_count)
 		elif id == 4:
-			get_parent().set_character(p_type, p_ind, "face")
+			sceneroot.set_character(p_type, p_ind, "face")
 		elif id == 8:
-			get_parent().set_note_skin(p_type, p_ind, "face")
+			sceneroot.set_note_skin(p_type, p_ind, "face")
 		elif id == 18:
-			get_parent().erase_character(p_type, p_ind)
+			sceneroot.erase_character(p_type, p_ind)
 
 func modchart_pressed(id):
-	get_parent().set_modchart(p_type, p_ind, id + 1)
+	sceneroot.set_modchart(p_type, p_ind, id + 1)
 
 func keycount_pressed(id):
-	get_parent().set_key_count(p_type, p_ind, id + 1)
+	sceneroot.set_key_count(p_type, p_ind, id + 1)
 
 func menubutton_pressed():
-	Chart.can_input = false
+	pass
 
 func menubutton_exited():
-	Chart.can_input = true
+	pass

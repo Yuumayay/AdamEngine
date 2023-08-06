@@ -1,35 +1,8 @@
-[gd_scene load_steps=32 format=3 uid="uid://c6v5xug8ylw45"]
+[gd_scene load_steps=5 format=3 uid="uid://c6v5xug8ylw45"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_224nq"]
 [ext_resource type="Script" path="res://Scenes/Editors/Modchart Editor.gd" id="1_p7cxk"]
 [ext_resource type="Script" path="res://Script/ModchartCodeEdit.gd" id="2_1l5dw"]
-[ext_resource type="Texture2D" uid="uid://cgf5j3b0n7xff" path="res://Assets/Images/Other Icons/Attack.png" id="4_tpptl"]
-[ext_resource type="Texture2D" uid="uid://dycy8361yi3sg" path="res://Assets/Images/Other Icons/ChangeKeybind.png" id="5_cbosn"]
-[ext_resource type="Texture2D" uid="uid://1eticb4b3e6w" path="res://Assets/Images/Other Icons/Cheating.png" id="6_7olvm"]
-[ext_resource type="Texture2D" uid="uid://7sp7gx4lar36" path="res://Assets/Images/Other Icons/Darkness.png" id="7_ymmw2"]
-[ext_resource type="Texture2D" uid="uid://chm74hwxhu33j" path="res://Assets/Images/Other Icons/Disrupt.png" id="8_vsfds"]
-[ext_resource type="Texture2D" uid="uid://duxc3niex0fmh" path="res://Assets/Images/Other Icons/Flash.png" id="9_fesp3"]
-[ext_resource type="Texture2D" uid="uid://bmp6jobdyu80g" path="res://Assets/Images/Other Icons/Flip.png" id="10_03fcw"]
-[ext_resource type="Texture2D" uid="uid://d3yrmeubvfvva" path="res://Assets/Images/Other Icons/FlipPosition.png" id="11_owmc1"]
-[ext_resource type="Texture2D" uid="uid://mcpmqxoq6exb" path="res://Assets/Images/Other Icons/Freeze.png" id="12_grcyi"]
-[ext_resource type="Texture2D" uid="uid://kp4wt7r7n5ir" path="res://Assets/Images/Other Icons/GameCrash.png" id="13_mqxis"]
-[ext_resource type="Texture2D" uid="uid://t3aiur6n8olo" path="res://Assets/Images/Other Icons/GhostNote.png" id="14_3r5uv"]
-[ext_resource type="Texture2D" uid="uid://cqhac8rvcuu14" path="res://Assets/Images/Other Icons/HealthDrain.png" id="15_aacqh"]
-[ext_resource type="Texture2D" uid="uid://ci7e0b0hutn0o" path="res://Assets/Images/Other Icons/HealthGain.png" id="16_ueo24"]
-[ext_resource type="Texture2D" uid="uid://f322kvpxdir7" path="res://Assets/Images/Other Icons/HypnoPendelum.png" id="17_6hxwp"]
-[ext_resource type="Texture2D" uid="uid://b8vmxbjbxqrd1" path="res://Assets/Images/Other Icons/JumpScare.png" id="18_ncxse"]
-[ext_resource type="Texture2D" uid="uid://btfm6bpk1iooe" path="res://Assets/Images/Other Icons/Lyrics.png" id="19_rxbpx"]
-[ext_resource type="Texture2D" uid="uid://b2ab6guexcmap" path="res://Assets/Images/Other Icons/MissLimit.png" id="20_s0t7l"]
-[ext_resource type="Texture2D" uid="uid://dklswv7s2vtsu" path="res://Assets/Images/Other Icons/NoCharacterEditor.png" id="21_mvt27"]
-[ext_resource type="Texture2D" uid="uid://ctv5sntlhhi7i" path="res://Assets/Images/Other Icons/NoCheat.png" id="22_obsre"]
-[ext_resource type="Texture2D" uid="uid://cu8nmtdlbl1v" path="res://Assets/Images/Other Icons/NoGhostTapping.png" id="23_sh03m"]
-[ext_resource type="Texture2D" uid="uid://cyrta1yg0s1v2" path="res://Assets/Images/Other Icons/NoHack.png" id="24_iqh17"]
-[ext_resource type="Texture2D" uid="uid://bmotd17tq0wpx" path="res://Assets/Images/Other Icons/Poison.png" id="25_jayi6"]
-[ext_resource type="Texture2D" uid="uid://bj0khxwu1s82" path="res://Assets/Images/Other Icons/Popup.png" id="26_lk4uh"]
-[ext_resource type="Texture2D" uid="uid://cuo0ydxe0qn55" path="res://Assets/Images/Other Icons/ScreenShake.png" id="27_1iwhv"]
-[ext_resource type="Texture2D" uid="uid://c2dfxtdd88tye" path="res://Assets/Images/Other Icons/SickOnly.png" id="28_xgtt6"]
-[ext_resource type="Texture2D" uid="uid://be3tahkpuph3j" path="res://Assets/Images/Other Icons/Trail.png" id="29_vcgag"]
-[ext_resource type="Texture2D" uid="uid://bax6h4qyrai7v" path="res://Assets/Images/Other Icons/Unfairness.png" id="30_2mjib"]
 [ext_resource type="Script" path="res://Script/ModchartList.gd" id="31_88pp6"]
 
 [node name="Modchart Editor" type="Node2D"]
@@ -70,59 +43,32 @@ max_columns = 4
 same_column_width = true
 icon_scale = 0.5
 item_0/text = ""
-item_0/icon = ExtResource("4_tpptl")
 item_1/text = ""
-item_1/icon = ExtResource("5_cbosn")
 item_2/text = ""
-item_2/icon = ExtResource("6_7olvm")
 item_3/text = ""
-item_3/icon = ExtResource("7_ymmw2")
 item_4/text = ""
-item_4/icon = ExtResource("8_vsfds")
 item_5/text = ""
-item_5/icon = ExtResource("9_fesp3")
 item_6/text = ""
-item_6/icon = ExtResource("10_03fcw")
 item_7/text = ""
-item_7/icon = ExtResource("11_owmc1")
 item_8/text = ""
-item_8/icon = ExtResource("12_grcyi")
 item_9/text = ""
-item_9/icon = ExtResource("13_mqxis")
 item_10/text = ""
-item_10/icon = ExtResource("14_3r5uv")
 item_11/text = ""
-item_11/icon = ExtResource("15_aacqh")
 item_12/text = ""
-item_12/icon = ExtResource("16_ueo24")
 item_13/text = ""
-item_13/icon = ExtResource("17_6hxwp")
 item_14/text = ""
-item_14/icon = ExtResource("18_ncxse")
 item_15/text = ""
-item_15/icon = ExtResource("19_rxbpx")
 item_16/text = ""
-item_16/icon = ExtResource("20_s0t7l")
 item_17/text = ""
-item_17/icon = ExtResource("21_mvt27")
 item_18/text = ""
-item_18/icon = ExtResource("22_obsre")
 item_19/text = ""
-item_19/icon = ExtResource("23_sh03m")
 item_20/text = ""
-item_20/icon = ExtResource("24_iqh17")
 item_21/text = ""
-item_21/icon = ExtResource("25_jayi6")
 item_22/text = ""
-item_22/icon = ExtResource("26_lk4uh")
 item_23/text = ""
-item_23/icon = ExtResource("27_1iwhv")
 item_24/text = ""
-item_24/icon = ExtResource("28_xgtt6")
 item_25/text = ""
-item_25/icon = ExtResource("29_vcgag")
 item_26/text = ""
-item_26/icon = ExtResource("30_2mjib")
 script = ExtResource("31_88pp6")
 
 [node name="SaveLua" type="Button" parent="."]

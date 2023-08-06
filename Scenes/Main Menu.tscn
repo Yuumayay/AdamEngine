@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://xin33k5nvo15"]
+[gd_scene load_steps=8 format=3 uid="uid://xin33k5nvo15"]
 
 [ext_resource type="Texture2D" uid="uid://dihi2qx63mvbl" path="res://Assets/Images/UI/menuBG.png" id="1_fmid5"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_t8xj5"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scenes/Main Menu Selector.gd" id="3_wrgma"]
 [ext_resource type="Script" path="res://Script/VersionText.gd" id="4_g0x1x"]
 [ext_resource type="Script" path="res://Script/Main Menu Selectable.gd" id="5_ota4b"]
+[ext_resource type="Texture2D" uid="uid://b6fikjs35k4eu" path="res://Assets/Images/UI/AdamEngineLogo.png" id="7_pstdg"]
 
 [node name="Main Menu" type="Node2D"]
 
@@ -16,6 +17,7 @@ script = ExtResource("2_t8xj5")
 bumpin_scale = Vector2(1.02, 1.02)
 
 [node name="Version" type="Label" parent="."]
+visible = false
 offset_left = 5.0
 offset_top = 677.0
 offset_right = 134.0
@@ -46,3 +48,7 @@ script = ExtResource("5_ota4b")
 
 [node name="List" type="Node2D" parent="."]
 script = ExtResource("3_wrgma")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(119, 647)
+texture = ExtResource("7_pstdg")

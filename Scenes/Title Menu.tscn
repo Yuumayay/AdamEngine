@@ -41,8 +41,7 @@ texture = ExtResource("3_vv2f3")
 hframes = 2
 vframes = 2
 script = ExtResource("4_6ltcd")
-og_scale = Vector2(0.9, 0.9)
-bumpin_scale = Vector2(1, 1)
+bumpin_scale = Vector2(1.1, 1.1)
 
 [node name="Enter" type="RichTextLabel" parent="Logo"]
 modulate = Color(0, 1, 1, 1)
@@ -61,5 +60,4 @@ script = ExtResource("5_748cc")
 
 [node name="gfpos" type="Node2D" parent="Logo"]
 z_index = -1
-position = Vector2(873, 339)
-scale = Vector2(0.7, 0.7)
+position = Vector2(879, 355)

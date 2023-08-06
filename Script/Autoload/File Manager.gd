@@ -40,7 +40,7 @@ func f_read(path: String, type: String):
 		var content = file.get_as_text()
 		content = JSON.parse_string(content)
 		data = content
-	elif type == ".txt":
+	else:
 		var content = file.get_as_text()
 		data = content
 	file.close()
@@ -48,7 +48,7 @@ func f_read(path: String, type: String):
 
 func _ready():
 	if FileAccess.file_exists("user://ae_options_data.json"):
-		f_save("user://ae_options_data", ".json", Setting.setting)
+		#f_save("user://ae_options_data", ".json", Setting.setting)
 		Setting.setting = f_read("user://ae_options_data.json", ".json")
 	else:
 		f_save("user://ae_options_data", ".json", Setting.setting)
@@ -58,6 +58,8 @@ func _ready():
 	
 	if not FileAccess.file_exists("user://ae_week_score_data.json"):
 		File.f_save("user://ae_week_score_data", ".json", {"week": []})
+	
+	Setting.setting_refresh()
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:

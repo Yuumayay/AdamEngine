@@ -1,0 +1,111 @@
+[gd_scene load_steps=11 format=3 uid="uid://cqaaaqv6dn8no"]
+
+[ext_resource type="Script" path="res://Scenes/Debug Menu.gd" id="1_4ej6k"]
+[ext_resource type="Texture2D" uid="uid://c10dj51ekonn4" path="res://Assets/Images/UI/menuAdam.png" id="1_d6kg0"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_ef43x"]
+[ext_resource type="Script" path="res://Script/DebugBG.gd" id="3_yhs3m"]
+[ext_resource type="FontFile" uid="uid://bscjqs20nvnnn" path="res://Assets/Fonts/adamFont.png" id="4_vhxar"]
+[ext_resource type="Script" path="res://Script/DebugLabel.gd" id="5_onehu"]
+[ext_resource type="Texture2D" uid="uid://bn43h8sgd18x8" path="res://Assets/Images/Icons/icon-adam-new.png" id="5_rmaby"]
+[ext_resource type="Script" path="res://Script/DebugMenuTemplate.gd" id="6_6buop"]
+[ext_resource type="Script" path="res://Script/DebugMenuCamera.gd" id="7_x7glx"]
+[ext_resource type="Texture2D" uid="uid://5vtrwkhuprr5" path="res://Assets/Images/UI/basicPanel.png" id="9_tt1jv"]
+
+[node name="Debug Menu" type="Node2D"]
+script = ExtResource("1_4ej6k")
+
+[node name="BG" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(640, 360)
+texture = ExtResource("1_d6kg0")
+script = ExtResource("3_yhs3m")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -318.0
+offset_top = -171.0
+offset_right = 1600.0
+offset_bottom = 145.0
+color = Color(0.466667, 0.466667, 0.466667, 1)
+
+[node name="TheDebugMenu" type="RichTextLabel" parent="."]
+offset_left = 295.0
+offset_top = 27.0
+offset_right = 1037.0
+offset_bottom = 117.0
+theme_override_fonts/normal_font = ExtResource("4_vhxar")
+bbcode_enabled = true
+text = "[shake rate=10 level=20]THE DEBUG MENU[/shake]"
+fit_content = true
+scroll_active = false
+script = ExtResource("5_onehu")
+
+[node name="adam1" type="Sprite2D" parent="."]
+position = Vector2(214, 70)
+texture = ExtResource("5_rmaby")
+hframes = 3
+script = ExtResource("3_ef43x")
+bumpin_scale = Vector2(2, 1)
+music_div = 2
+what_music = "Debug Menu"
+
+[node name="adam2" type="Sprite2D" parent="."]
+position = Vector2(1122, 68)
+texture = ExtResource("5_rmaby")
+flip_h = true
+hframes = 3
+frame = 1
+script = ExtResource("3_ef43x")
+bumpin_scale = Vector2(2, 1)
+music_div = 2
+what_music = "Debug Menu"
+
+[node name="Template" type="RichTextLabel" parent="."]
+visible = false
+z_index = -1
+clip_contents = false
+offset_left = 188.0
+offset_top = 354.0
+offset_right = 1147.0
+offset_bottom = 474.0
+theme_override_fonts/normal_font = ExtResource("4_vhxar")
+bbcode_enabled = true
+text = "ASD"
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("6_6buop")
+bumpin_scale = Vector2(1.1, 1.1)
+music_div = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Template"]
+z_index = -1
+position = Vector2(371.036, 49)
+scale = Vector2(0.896341, 0.954619)
+skew = 0.298451
+texture = ExtResource("9_tt1jv")
+
+[node name="Selectable" type="Node2D" parent="."]
+
+[node name="DebugMenuCamera" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+position_smoothing_enabled = true
+script = ExtResource("7_x7glx")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+offset_left = -25.0
+offset_top = 466.0
+offset_right = 479.0
+offset_bottom = 750.0
+
+[node name="Label" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 8.0
+offset_top = 488.0
+offset_right = 990.0
+offset_bottom = 924.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/normal_font = ExtResource("4_vhxar")
+bbcode_enabled = true
+text = "[shake rate=10 level=20]DO NOT ENTER
+THESE EDITOR
+BECAUSE ITS REALLLLY UNSTABLE AND UNCOMPLETE[/shake]"

@@ -16,7 +16,17 @@ func accepted(selected: bool):
 			Trans.t_trans("Editors/" + name)
 			Game.debug_mode = false
 		else:
-			Trans.t_trans("Gameplay")
+			var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+			if song_data.song.has("is3D"):
+				if song_data.song.is3D:
+					Game.is3D = true
+					Trans.t_trans("Gameplay3D")
+				else:
+					Game.is3D = false
+					Trans.t_trans("Gameplay")
+			else:
+				Game.is3D = false
+				Trans.t_trans("Gameplay")
 	else:
 		t.tween_property(self, "position", Vector2(position.x + 100, position.y), 0.25)
 		t.tween_property(self, "position", Vector2(-2000, position.y), 0.25)

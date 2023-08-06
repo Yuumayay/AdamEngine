@@ -10,6 +10,7 @@ animation = &"shaggydeath"
 script = ExtResource("2_ynu17")
 
 [node name="Line" type="Line2D" parent="."]
+visible = false
 z_index = -1
 points = PackedVector2Array(0, 0, 0, 0)
 width = 50.0

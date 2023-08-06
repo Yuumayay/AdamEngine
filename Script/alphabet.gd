@@ -6,14 +6,22 @@ extends Node2D
 @export var width: float
 @export var value: int
 
+var conv_name: Dictionary = {">": "GREATER", "<": "LESS"}
+
 var last_text: String
 var last_type: int
 
-func _process(delta):
+func _process(_delta):
 	if text != last_text or type != last_type:
 		property_changed()
 		last_text = text
 		last_type = type
+
+func conv_text_name(i):
+	print(conv_name.get(i))
+	if conv_name.get(i):
+		return conv_name.get(i)
+	return i
 
 func _ready():
 	pass
@@ -34,7 +42,7 @@ func property_changed():
 				remove_child(i)
 		for i in text.length():
 			var sprite = Sprite2D.new()
-			var text_name = text[i]
+			var text_name = conv_text_name(text[i])
 			if type == 0:
 				var lower = text_name.to_lower()
 				if text_name == " ":

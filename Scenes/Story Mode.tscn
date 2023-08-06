@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cod07bdbqm65m"]
+[gd_scene load_steps=7 format=3 uid="uid://cod07bdbqm65m"]
 
 [ext_resource type="Script" path="res://Scenes/Story Mode.gd" id="1_uus7e"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="2_kn2e5"]
 [ext_resource type="Texture2D" uid="uid://bvpfemptbcnvf" path="res://Assets/Images/Story Mode/Difficulties/normal.png" id="3_skovm"]
 [ext_resource type="Script" path="res://Script/Week Template.gd" id="4_ei46h"]
+[ext_resource type="FontFile" uid="uid://clqfmqaltqtkq" path="res://Assets/Fonts/DarumadropOne-Regular.ttf" id="4_y67g0"]
+[ext_resource type="FontFile" uid="uid://2xv0r3rj1xw8" path="res://Assets/Fonts/BugMaru.ttc" id="5_lnkly"]
 
 [node name="Story Mode" type="Node2D"]
 script = ExtResource("1_uus7e")
@@ -44,6 +46,22 @@ uppercase = true
 [node name="Difficulty" type="Sprite2D" parent="."]
 position = Vector2(1060, 512)
 texture = ExtResource("3_skovm")
+
+[node name="DifficultyLabel" type="Label" parent="."]
+visible = false
+offset_left = 929.0
+offset_top = 448.0
+offset_right = 1191.0
+offset_bottom = 560.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("4_y67g0")
+theme_override_font_sizes/font_size = 75
+text = "フツウ"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Template" type="Node2D" parent="."]
 visible = false
@@ -90,6 +108,22 @@ theme_override_colors/font_color = Color(0.643137, 0.643137, 0.643137, 1)
 theme_override_fonts/font = ExtResource("2_kn2e5")
 theme_override_font_sizes/font_size = 35
 text = "adam adam adam adam"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="WeekNameJP" type="Label" parent="."]
+visible = false
+offset_left = 826.0
+offset_top = 16.0
+offset_right = 1263.0
+offset_bottom = 55.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_colors/font_outline_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("5_lnkly")
+theme_override_font_sizes/font_size = 35
+text = "adam adam あだむ"
 horizontal_alignment = 2
 uppercase = true
 

@@ -6,11 +6,38 @@ var song_path_list: Array = ["res://Assets/Songs/", "res://Mods/songs/"]
 var chart_path_list: Array = ["res://Assets/Songs/", "res://Mods/songs/", "res://Assets/Data/Song Charts/", "res://Mods/data/song charts/", "res://Mods/data/", "res://Mods/data/song data/"]
 var icon_path_list: Array = ["res://Assets/Images/Icons/", "res://Mods/images/icons/"]
 var icon_credits_path_list: Array = ["res://Assets/Images/Other Icons/Credits/", "res://Mods/images/other icons/credits/", "res://Mods/images/credits/"]
-var week_path_list: Array = ["res://Assets/Weeks", "res://mods/weeks"]
-var character_data_path_list: Array = ["res://Assets/Data/characters/", "res://mods/data/characters/", "res://mods/characters/"]
-var character_image_path_list: Array = ["res://Assets/Images/characters/", "res://mods/images/characters/"]
+var week_path_list: Array = ["res://Assets/Weeks/", "res://mods/weeks/"]
+var week_image_path_list: Array = ["res://Assets/Images/Story Mode/Weeks/", "res://Mods/Images/Story Mode/Weeks/"]
+var character_data_path_list: Array = ["Assets/Data/characters/", "res://mods/data/characters/", "res://mods/characters/"]
+var character_image_path_list: Array = ["Assets/Images/characters/", "res://mods/images/characters/"]
 var stage_data_path_list: Array = ["res://Assets/Data/Stages/", "res://Mods/data/stages/", "res://Mods/stages/"]
 var stage_image_path_list: Array = ["res://Assets/Images/Stages/", "res://Mods/images/stages/", "res://Mods/images/"]
+
+var modchart_extensions: Array = [".gd", ".lua"]
+var modchart_filenames: Array = ["modchart", "script"]
+
+var load_assets_song: bool
+
+func _ready():
+	# Mods/songsが存在する場合、MODが読み込まれる。
+	if FileAccess.file_exists("res://Mods/songs"):
+		load_assets_song = false
+	else:
+		load_assets_song = true
+		
+	load_masterdata()
+
+# ゲームのマスターデータを読む
+func load_masterdata():
+	if not load_assets_song:
+		week_path_list = ["res://mods/weeks"]
+		song_path_list = ["res://Mods/songs/"]
+		if FileAccess.file_exists("res://Mods/data/difficulty.json"):
+			var json = File.f_read("res://Mods/data/difficulty.json", ".json")
+			Game.difficulty = json.difficulty
+			Game.difficulty_color.clear()
+			for diffColor in json.color:
+				Game.difficulty_color.append(Color8(diffColor[0], diffColor[1], diffColor[2]))
 
 func p_offset(path: String):
 	return "res://Assets/Data/Settings and Offsets/" + path
@@ -36,8 +63,7 @@ func p_song(path: String, path2: String):
 		elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"):
 			return p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"
 
-	Audio.a_play("Error")
-	printerr("paths song: invalid path")
+	#print("paths song: invalid path")
 	return null
 
 func p_chart(path: String, diff: String):
@@ -87,44 +113,64 @@ func p_chart(path: String, diff: String):
 
 func p_modchart(path: String, diff: String):
 	for i in chart_path_list:
-		var p = i
-		if diff == "normal":
-			if FileAccess.file_exists(p + path + "/modchart.gd"):
-				return p + path + "/modchart.gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower() + "/modchart.gd"):
-				return p + path.to_lower() + "/modchart.gd"
-				
-			elif FileAccess.file_exists(p + path.replace(" ", "-") + "/modchart.gd"):
-				return p + path.replace(" ", "-") + "/modchart.gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/modchart.gd"):
-				return p + path.to_lower().replace(" ", "-") + "/modchart.gd"
-				
-			elif FileAccess.file_exists(p + path.replace("-", " ") + "/modchart.gd"):
-				return p + path.replace("-", " ") + "/modchart.gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/modchart.gd"):
-				return p + path.to_lower().replace("-", " ") + "/modchart.gd"
-				
-		else:
-			if FileAccess.file_exists(p + path + "/modchart-" + diff + ".gd"):
-				return p + path + "/modchart-" + diff + ".gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower() + "/modchart-" + diff + ".gd"):
-				return p + path.to_lower() + "/modchart-" + diff + ".gd"
-				
-			elif FileAccess.file_exists(p + path.replace(" ", "-") + "/modchart-" + diff + ".gd"):
-				return p + path.replace(" ", "-") + "/modchart-" + diff + ".gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/modchart-" + diff + ".gd"):
-				return p + path.to_lower().replace(" ", "-") + "/modchart-" + diff + ".gd"
-				
-			elif FileAccess.file_exists(p + path.replace("-", " ") + "/modchart-" + diff + ".gd"):
-				return p + path.replace("-", " ") + "/modchart-" + diff + ".gd"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/modchart-" + diff + ".gd"):
-				return p + path.to_lower().replace("-", " ") + "/modchart-" + diff + ".gd"
+		for ind in modchart_extensions:
+			for index in modchart_filenames:
+				var p = i
+				if diff == "normal":
+					if FileAccess.file_exists(p + path + "/" + index + ind):
+						return p + path + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + ind):
+						return p + path.to_lower() + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + ind):
+						return p + path.replace(" ", "-") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + ind):
+						return p + path.to_lower().replace(" ", "-") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + ind):
+						return p + path.replace("-", " ") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + ind):
+						return p + path.to_lower().replace("-", " ") + "/" + index + ind
+						
+				else:
+					if FileAccess.file_exists(p + path + "/" + index + "-" + diff + ind):
+						return p + path + "/" + index + "-" + diff + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + "-" + diff + ind):
+						return p + path.to_lower() + "/" + index + "-" + diff + ind
+						
+					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + "-" + diff + ind):
+						return p + path.replace(" ", "-") + "/" + index + "-" + diff + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + "-" + diff + ind):
+						return p + path.to_lower().replace(" ", "-") + "/" + index + "-" + diff + ind
+						
+					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + "-" + diff + ind):
+						return p + path.replace("-", " ") + "/" + index + "-" + diff + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + "-" + diff + ind):
+						return p + path.to_lower().replace("-", " ") + "/" + index + "-" + diff + ind
+					
+					elif FileAccess.file_exists(p + path + "/" + index + ind):
+						return p + path + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + ind):
+						return p + path.to_lower() + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + ind):
+						return p + path.replace(" ", "-") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + ind):
+						return p + path.to_lower().replace(" ", "-") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + ind):
+						return p + path.replace("-", " ") + "/" + index + ind
+						
+					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + ind):
+						return p + path.to_lower().replace("-", " ") + "/" + index + ind
 				
 	print("paths modchart: no modchart")
 	return null
@@ -151,16 +197,16 @@ func p_chara_xml(path: String):
 	return null
 
 func p_week_image(path: String):
-	var p := "res://Assets/Images/Story Mode/Weeks/"
-	if path == "tutorial":
-		return p + "week0.png"
-	else:
-		if FileAccess.file_exists(p + path.to_lower().replace(" ", "") + ".png"):
-			return p + path.to_lower().replace(" ", "") + ".png"
+	for i in week_image_path_list:
+		var p = i
+		if path == "tutorial":
+			return p + "week0.png"
 		else:
-			Audio.a_play("Error")
-			printerr("paths week image: invalid path")
-			return missing
+			if FileAccess.file_exists(p + path.to_lower().replace(" ", "") + ".png"):
+				return p + path.to_lower().replace(" ", "") + ".png"
+	Audio.a_play("Error")
+	printerr("paths week image: invalid path")
+	return missing
 
 func p_stage_img(path: String):
 	for i in stage_image_path_list:

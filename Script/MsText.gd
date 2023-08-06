@@ -5,6 +5,8 @@ extends Label
 var hit: float
 
 func _ready():
+	if Setting.s_get("graphics", "show ms"):
+		show()
 	hit = Game.total_hit
 	text = str(floor(ms * 100.0) / 100.0) + " ms"
 	if ms == 0.0:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bom10y7e03gr1"]
+[gd_scene load_steps=15 format=3 uid="uid://bom10y7e03gr1"]
 
 [ext_resource type="Texture2D" uid="uid://doc7t6hw5jq6t" path="res://Assets/Images/Skins/FNF/Ratings/marvelous.png" id="1_l7n5h"]
 [ext_resource type="Texture2D" uid="uid://ck1o7jke8dl5n" path="res://Assets/Images/Skins/FNF/Ratings/sick.png" id="2_e5dxq"]
@@ -7,7 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://jyul76ww6hgu" path="res://Assets/Images/Skins/FNF/Ratings/shit.png" id="5_cl8ih"]
 [ext_resource type="Script" path="res://Scenes/Rating.gd" id="6_sni21"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="7_7mau3"]
+[ext_resource type="Texture2D" uid="uid://d0yfbfmgqxwfi" path="res://Assets/Images/Skins/FNF/Ratings/スゲェ.png" id="8_7gv0x"]
 [ext_resource type="Script" path="res://Script/MsText.gd" id="8_p4dyn"]
+[ext_resource type="Texture2D" uid="uid://cewrdv2y2h1ox" path="res://Assets/Images/Skins/FNF/Ratings/イイネ.png" id="9_esolh"]
+[ext_resource type="Texture2D" uid="uid://co44gk1kir0r8" path="res://Assets/Images/Skins/FNF/Ratings/フツー.png" id="10_bghw1"]
+[ext_resource type="Texture2D" uid="uid://bx0em4np5wj7x" path="res://Assets/Images/Skins/FNF/Ratings/ウーン.png" id="11_v1fp0"]
+[ext_resource type="Texture2D" uid="uid://u0xhbud6e7rh" path="res://Assets/Images/Skins/FNF/Ratings/ダメダメ.png" id="12_dyys6"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_mrojl"]
 animations = [{
@@ -30,11 +35,32 @@ animations = [{
 "loop": true,
 "name": &"ratings",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_7gv0x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_esolh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_bghw1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_v1fp0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_dyys6")
+}],
+"loop": true,
+"name": &"ratingsJP",
+"speed": 5.0
 }]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_left = 557.0
 offset_top = 261.0
 offset_right = 652.0
@@ -51,5 +77,5 @@ z_index = -1
 position = Vector2(570, 220)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_mrojl")
-animation = &"ratings"
+animation = &"ratingsJP"
 script = ExtResource("6_sni21")

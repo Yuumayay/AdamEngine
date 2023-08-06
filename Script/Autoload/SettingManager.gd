@@ -27,33 +27,23 @@ var keybind_default: Dictionary = {
 
 var keybind_default_sub: Dictionary = {}
 
+enum {ENG, JPN}
+var lang = ENG
+
 var setting: Dictionary = {
 	"category": {
+		"language": {
+			"language": {
+				"type": "array",
+				"cur": 1,
+				"array": ["english", "japanese"]
+			},
+		},
 		"keybind": {
 			"4k bind": {
 				"type": "bind",
 				"key": 4,
 				"cur": keybind_default["4k"]
-			},
-			"6k bind": {
-				"type": "bind",
-				"key": 6,
-				"cur": keybind_default["6k"]
-			},
-			"9k bind": {
-				"type": "bind",
-				"key": 9,
-				"cur": keybind_default["9k"]
-			},
-			"12k bind": {
-				"type": "bind",
-				"key": 12,
-				"cur": keybind_default["12k"]
-			},
-			"18k bind": {
-				"type": "bind",
-				"key": 18,
-				"cur": keybind_default["18k"]
 			}
 		},
 		"gameplay": {
@@ -71,6 +61,13 @@ var setting: Dictionary = {
 				"array": ["None", "Osu hit", "AE hit 1", "AE hit 2", "AE hit 3", "AE hit 4", "AE hit 5", "AE hit 6", "AE hit 7", "AE hit 8", "AE hit 9", "KE clap", "KE snap", "Keystroke"],
 				"metadata": ["none", "osu", "aehit1", "aehit2", "aehit3", "aehit4", "aehit5", "aehit6", "aehit7", "aehit8", "aehit9", "clap", "snap", "key"]
 			},
+			"hit sound volume": {
+				"type": "int_range",
+				"cur": 100,
+				"range": [0, 200],
+				"changesec": 0,
+				"step": 1
+			},
 			"botplay": {
 				"type": "bool",
 				"cur": false
@@ -84,9 +81,21 @@ var setting: Dictionary = {
 			"max fps": {
 				"type": "int_range",
 				"cur": 60,
-				"range": [30, 240],
+				"range": [60, 1000],
 				"changesec": 0,
 				"step": 1
+			},
+			"show ms": {
+				"type": "bool",
+				"cur": true
+			},
+			"show kps": {
+				"type": "bool",
+				"cur": false
+			},
+			"syobon-kun": {
+				"type": "bool",
+				"cur": false
 			}
 		}
 	}
@@ -122,11 +131,21 @@ func s_get(category: String, key: String):
 
 func s_set(category: String, key: String, value):
 	setting.category[category][key].cur = value
+	
+	setting_refresh() #設定項目の特殊更新
+
+func setting_refresh():
+	Engine.max_fps = s_get("graphics", "max fps")
+	lang = s_get("language", "language") #setting.category["language"]["language"].array[s_get("language", "language")]
 
 func s_set_array(category: String, key: String, value):
 	var ind = setting.category[category][key].cur
 	var array = setting.category[category][key].array
-	var metadata = setting.category[category][key].metadata
+	var metadata
+	if setting.category[category][key].has("metadata"):
+		metadata = setting.category[category][key].metadata
+	else:
+		metadata = array
 	var set_value = ind + value
 	if array.size() <= set_value:
 		set_value = 0
@@ -135,7 +154,138 @@ func s_set_array(category: String, key: String, value):
 	setting.category[category][key].cur = set_value
 	if key.contains("hit sound"):
 		Audio.a_stop("Scroll")
-		Audio.a_play(metadata[set_value])
+		Audio.a_play(metadata[set_value], 1.0, s_get("gameplay", "hit sound volume") * 0.5 - 50)
+		
+	setting_refresh() #設定項目の特殊更新
 
-func _process(_delta):
-	Engine.max_fps = s_get("graphics", "max fps")
+var conv_jpn := [
+	["daddy dearest", "親愛なるパパ"],
+	["spooky month", "コワーい ヤツら"],
+	["pico", "ピコ"],
+	["mommy must murder", "親愛なるママ"],
+	["red snow", "クリスマスだ！"],
+	["hating simulator ft. moawling", "嫉妬シュミレーター 呪"],
+	["tankman", "タンクマン"],
+	["options", "オプション"],
+	["keybind", "ソウサヘンコウ"],
+	["language", "ゲンゴ"],
+	["gameplay", "ゲームプレイ"],
+	["graphics", "グラフィック"],
+	["upscroll", "ウエスクロール"],
+	["downscroll", "シタスクロール"],
+	["middlescroll", "チュウオウスクロール"],
+	["hit sound", "ダケンオン"],
+	["none", "ナシ"],
+	["osu hit", "タイプ エー"],
+	["ae hit 1", "タイプ ビー"],
+	["ae hit 2", "タイプ シー"],
+	["ae hit 3", "タイプ ディー"],
+	["ae hit 4", "タイプ イー"],
+	["ae hit 5", "タイプ エフ"],
+	["ae hit 6", "タイプ ジー"],
+	["ae hit 7", "タイプ エイチ"],
+	["ae hit 8", "タイプ アイ"],
+	["ae hit 9", "タイプ ジェイ"],
+	["ke clap", "タイプ ケイ"],
+	["ke snap", "タイプ エル"],
+	["keystroke", "タイプ エム"],
+	["bind", "ソウサ"],
+	["hit sound volume", "ダケンオン オンリョウ"],
+	["botplay", "オート"],
+	["botplay on", "オート オン"],
+	["botplay off", "オート オフ"],
+	["practice", "レンシュウ"],
+	["practice on", "レンシュウ オン"],
+	["practice off", "レンシュウ オフ"],
+	["max fps", "サイダイ エフピーエス"],
+	["show ms", "エムエス ヒョウジ"],
+	["show kps", "ケーピーエス ヒョウジ"],
+	["syobon-kun", "ショボン ヒョウジ"],
+	["english", "エイゴ"],
+	["japanese", "ニホンゴ"],
+	["resume", "サイカイ"],
+	["restart", "リスタート"],
+	["difficulty", "ナンイド"],
+	["easy", "カンタン"],
+	["normal", "フツウ"],
+	["hard", "ムズカシイ"],
+	["insane", "ゲキヤバ"],
+	["true", "オン"],
+	["false", "オフ"],
+	["save", "セーブ"],
+	["save json", "JSON セーブ"],
+	["gf", "ガールフレンド"],
+	["bf", "ボーイフレンド"],
+	["dad", "オトウサン"],
+	["perfect!!", "カンペキ！！"],
+	["sick!", "スゲェ！"],
+	["great", "スバラシー"],
+	["good", "イイネ"],
+	["nice", "ナイス"],
+	["meh", "フツー"],
+	["bruh", "ウーン"],
+	["bad", "ダメ"],
+	["shit", "ダメダメ！"],
+	["you suck!", "下手くそ！"],
+	["chart editor", "フメン エディター"],
+	["stage editor", "ステージ エディター"],
+	["modchart editor", "モッドチャート エディター"],
+	["back", "メニュー ニ モドル"]
+]
+
+func eng():
+	return lang == ENG
+
+func jpn():
+	return lang == JPN
+
+# dynamic fontを使うか？
+func dfont():
+	return Setting.lang == JPN
+	
+# dynamic fontのひな形set
+func set_dfont(new_item):
+	if !Setting.eng():
+		new_item.add_theme_font_override("font", load("res://Assets/Fonts/DarumadropOne-Regular.ttf"))
+		new_item.add_theme_font_size_override("font_size", 100)
+		new_item.add_theme_constant_override("outline_size", 25)
+		new_item.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	return new_item
+	
+# dynamic fontのひな形set
+func set_dfont_mini(new_item):
+	if !Setting.eng():
+		new_item.add_theme_font_override("font", load("res://Assets/Fonts/BugMaru.ttc"))
+		new_item.add_theme_color_override("font_outline_color", Color(0.5, 0.5, 0.5))
+		new_item.add_theme_constant_override("shadow_outline_size", 5)
+	return new_item
+	
+# ゲームの多言語化対応
+func translate(text: String):
+	if lang == JPN:
+		for i in conv_jpn:
+			if i[0] == text.to_lower():
+				return i[1]
+	return text
+
+# ゲームの多言語から英語取得
+func rev_translate(text: String):
+	if lang == JPN:
+		for i in conv_jpn:
+			if i[1] == text.to_lower():
+				return i[0]	
+	return text
+
+# JSONの翻訳データ取得　（key + "JPN" などがあれば、翻訳データなのでそれを読む
+func get_translate(jsondat : Dictionary, key : String):
+	var text = ""
+	if Setting.lang == JPN:
+		if jsondat.has(key + "JPN"):
+			text = jsondat[key + "JPN"]
+		else:
+			text = Setting.translate(jsondat[key])
+	else:
+		text = jsondat[key]
+	
+	return text
+	

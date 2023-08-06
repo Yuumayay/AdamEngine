@@ -6,7 +6,8 @@ extends Node2D
 
 var note_count: int
 var cam_zoom: float = 1
-var timer: SceneTreeTimer
+var timer: Timer = Timer.new()
+var countDownTimer: Timer = Timer.new()
 
 var pause = preload("res://Scenes/Pause Menu.tscn")
 
@@ -14,8 +15,10 @@ var countdowns: Array = [preload("res://Assets/Images/Skins/FNF/Countdown/ready.
 preload("res://Assets/Images/Skins/FNF/Countdown/set.png"),
 preload("res://Assets/Images/Skins/FNF/Countdown/go.png")]
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
+	timer.name = "timer"
+	countDownTimer.name = "countDownTimer"
+	
 	Audio.a_stop("Freaky Menu")
 	var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
 	Game.setup(song_data)
@@ -23,11 +26,11 @@ func _ready():
 	cam_zoom = Game.defaultZoom
 	$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
-	if Paths.p_song(Game.cur_song.to_lower(), "Voices"):
-		Audio.a_set("Voices", Paths.p_song(Game.cur_song.to_lower(), "Voices"), Audio.bpm)
+	if Paths.p_song(Game.cur_song, "Voices"):
+		Audio.a_set("Voices", Paths.p_song(Game.cur_song, "Voices"), Audio.bpm)
 	else:
 		Audio.a_set("Voices", "", Audio.bpm)
-	Audio.a_set("Inst", Paths.p_song(Game.cur_song.to_lower(), "Inst"), Audio.bpm)
+	Audio.a_set("Inst", Paths.p_song(Game.cur_song, "Inst"), Audio.bpm)
 	
 	keybind(Game.key_count)
 	strum_set()
@@ -39,23 +42,25 @@ func _ready():
 
 var beatCount := 5
 
-func _process(_delta):
+func _process(delta):
 	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 	if Game.cur_state == Game.NOT_PLAYING: return
 	
 	gameoverCheck()
+	scoreSaveCheck()
 	
 	if !Game.spawn_end:
 		if Game.cur_state == Game.COUNTDOWN:
 			Audio.beat_hit_bool = false
 			Audio.beat_hit_event = false
-			if !timer:
-				timer = get_tree().create_timer((60.0 / Audio.bpm) * 5)
-			Audio.cur_ms = timer.time_left * -1000
+
+			Audio.cur_ms = timer.time_left * -1000 #+ (delta * 1000) # Timeの残り時間をマイナスで。　deltaで補正
 			if Audio.cur_ms >= (60.0 / Audio.bpm) * beatCount * -1000:
-				beatCount -= 1
-				Audio.beat_hit_bool = true
-				Audio.beat_hit_event = true
+				if beatCount != 0:
+					print("Count: ", beatCount, " ", Audio.cur_ms)
+					beatCount -= 1
+					Audio.beat_hit_bool = true
+					Audio.beat_hit_event = true
 		
 		for i in range(20000):
 			if Game.spawn_end or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
@@ -67,45 +72,47 @@ func _process(_delta):
 				Game.cur_song_index += 1
 				Game.week_fc_state.append(Game.fc_state)
 				if Game.cur_song_index < Game.songList.size():
+					scoreSave("freeplay", Game.songList[Game.cur_song_index])
 					moveSong(Game.songList[Game.cur_song_index])
 				else:
-					Game.is_story = false
+					scoreSave("story", Game.cur_week)
 					
-					scoreSave("story")
-					
-					quitStory()
+					quit()
 			else:
-				scoreSave("freeplay")
+				scoreSave("freeplay", Game.cur_song)
 				
 				quit()
 	
-	if Game.cur_state == Game.PLAYING: #プレイ中だったら
+	if Game.cur_state == Game.PLAYING or Game.cur_state == Game.COUNTDOWN: #プレイ中だったら
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_stop("Inst")
 			Audio.a_stop("Voices")
 			quit()
 		if Input.is_action_just_pressed("game_pause"):
-			add_child(pause.instantiate())
 			Game.cur_state = Game.PAUSE
+			if timer:
+				timer.paused = true
+				countDownTimer.paused = true
+			add_child(pause.instantiate())
 			Audio.a_pause("Inst")
 			Audio.a_pause("Voices")
 	elif Game.cur_state == Game.GAMEOVER: #ゲームオーバーだったら
 		if Input.is_action_just_pressed("ui_cancel"):
 			if Audio.a_check("Gameover"):
 				Audio.a_stop("Gameover")
-			elif Audio.a_check("GameoverStart"):
+			if Audio.a_check("GameoverStart"):
 				Audio.a_stop("GameoverStart")
-			elif Audio.a_check("GameoverEnd"):
+			if Audio.a_check("GameoverEnd"):
 				Audio.a_stop("GameoverEnd")
 			quit()
 		if Input.is_action_just_pressed("ui_accept"):
 			gameover.accepted()
 
-func scoreSave(case: String):
-	if not Setting.s_get("gameplay", "botplay") and not Setting.s_get("gameplay", "practice"):
+func scoreSave(case: String, song_or_week: String):
+	if Game.saveScore:
 		if case == "freeplay":
 				var json: Dictionary = File.f_read("user://ae_score_data.json", ".json")
-				var songpath = Game.cur_song.to_lower() + "-" + Game.cur_diff
+				var songpath = song_or_week.to_lower() + "-" + Game.cur_diff
 				var scorejson: Dictionary = {
 					songpath: {
 						"score": 0,
@@ -128,7 +135,7 @@ func scoreSave(case: String):
 				print(json)
 		elif case == "story":
 				var json: Dictionary = File.f_read("user://ae_week_score_data.json", ".json")
-				var songpath = Game.cur_week.to_lower() + "-" + Game.cur_diff
+				var songpath = song_or_week.to_lower() + "-" + Game.cur_diff
 				var scorejson: Dictionary = {
 					songpath: {
 						"score": 0,
@@ -150,21 +157,32 @@ func scoreSave(case: String):
 						break
 				print(json)
 
+func killBF():
+	if Game.cur_state == Game.COUNTDOWN:
+		timer.stop()
+		countDownTimer.stop()
+	gameover.gameover()
+
 func gameoverCheck():
 	if Game.cur_state != Game.GAMEOVER:
 		if Modchart.mGet("defeat"):
 			var missCount = Game.rating_total[Game.MISS]
+			
 			if not Modchart.mGet("defeat", 1):
 				missCount += Game.rating_total[Game.SHIT]
+			
 			if missCount >= Modchart.mGet("defeat", 0):
-				gameover.gameover()
+				killBF()
+			
 		elif Game.health <= 0:
 			Game.fc_state = "Failed"
+			
 			if not Setting.s_get("gameplay", "practice"):
-				gameover.gameover()
+				killBF()
+				
 		if Input.is_action_just_pressed("game_reset"):
-			if Game.cur_state != Game.PLAYING: return
-			gameover.gameover()
+			if Game.cur_state == Game.NOT_PLAYING or Game.cur_state == Game.PAUSE: return
+			killBF()
 
 func modchartCheck():
 	if Modchart.modcharts.has("middleScroll"):
@@ -177,6 +195,14 @@ func modchartCheck():
 				i.position.x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
 				View.strum_pos[strumCount].x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
 			strumCount += 1
+
+func scoreSaveCheck():
+	if Setting.s_get("gameplay", "botplay"):
+		Game.saveScore = false
+	elif Setting.s_get("gameplay", "practice"):
+		Game.saveScore = false
+	else:
+		Game.saveScore = true
 
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():
@@ -213,15 +239,15 @@ func note_spawn_load():
 func strum_set():
 	if strum_group.get_child_count() != 0:
 		for i in strum_group.get_children():
-			i.queue_free()
+			strum_group.remove_child(i)
 	View.strum_pos.clear()
 	for i in Game.key_count * 2:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
 		new_strum.dir = i
 		if Setting.s_get("gameplay", "downscroll"):
-			new_strum.position = Vector2(150, 600)
+			new_strum.position = View.strum_pos_og[0]
 		else:
-			new_strum.position = Vector2(150, 120)
+			new_strum.position = View.strum_pos_og[1]
 		new_strum.scale = Vector2(0.75 * (4.0 / Game.key_count), 0.75 * (4.0 / Game.key_count))
 		if i >= Game.key_count:
 			if Setting.s_get("gameplay", "botplay"):
@@ -234,6 +260,7 @@ func strum_set():
 		new_strum.position.x += 115.0 * (4.0 / Game.key_count) * i
 		View.strum_pos.append(new_strum.position)
 		strum_group.add_child(new_strum)
+	modchartCheck()
 
 func note_pos_set():
 	for i in Game.notes_data.notes:
@@ -268,7 +295,10 @@ func keybind(key):
 	if key <= 18:
 		Setting.sub_input = Setting.keybind_default_sub[str(key) + "k"]
 		Game.note_anim = View.keys[str(key) + "k"]
-		Setting.input = Setting.keybind_default[str(key) + "k"]
+		if Setting.setting.category.keybind.has(str(key) + "k bind"):
+			Setting.input = Setting.setting.category.keybind[str(key) + "k bind"]["cur"]
+		else:
+			Setting.input = Setting.keybind_default[str(key) + "k"]
 	else:
 		var n = floor(key / 18.0)
 		var n2 = key % 18
@@ -289,21 +319,30 @@ func keybind(key):
 
 func countdown():
 	Game.cur_state = Game.COUNTDOWN
-	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	add_child(timer)
+	timer.start((60.0 / Audio.bpm) * 5)
+				
+	add_child(countDownTimer)
+	countDownTimer.start(60.0 / Audio.bpm)
+	await countDownTimer.timeout
 	Audio.a_play("Three")
-	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	countDownTimer.start(60.0 / Audio.bpm)
+	await countDownTimer.timeout
 	$Countdown/Sprite.texture = countdowns[0]
 	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("Two")
-	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	countDownTimer.start(60.0 / Audio.bpm)
+	await countDownTimer.timeout
 	$Countdown/Sprite.texture = countdowns[1]
 	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("One")
-	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	countDownTimer.start(60.0 / Audio.bpm)
+	await countDownTimer.timeout
 	$Countdown/Sprite.texture = countdowns[2]
 	$Countdown/Sprite.modulate.a = 1
 	Audio.a_play("Go")
-	await get_tree().create_timer(60.0 / Audio.bpm).timeout
+	countDownTimer.start(60.0 / Audio.bpm)
+	await timer.timeout
 	start()
 	
 func start():
@@ -312,7 +351,6 @@ func start():
 	Game.cur_state = Game.PLAYING
 
 func reset_property():
-	Game.cur_song = "test"
 	Game.score = 0
 	Game.health = 1.0
 	Game.health_percent = 50.0
@@ -323,6 +361,8 @@ func reset_property():
 	Game.max_combo = 0
 	Game.fc_state = "N/A"
 	Game.rating_total = [0,0,0,0,0,0]
+	Game.iconBF = ""
+	Game.iconDAD = ""
 	Audio.songLength = 0
 
 func reset_week_property():
@@ -337,6 +377,7 @@ func reset_week_property():
 	Game.week_rating_total = [0,0,0,0,0,0]
 
 func reset_dict_and_array():
+	Game.cur_state = Game.NOT_PLAYING
 	Game.spawn_end = false
 	Game.notes_data.notes.clear()
 	Game.ms.clear()
@@ -355,25 +396,31 @@ func reset_dict_and_array():
 	Game.who_sing.clear()
 	Game.who_sing_section.clear()
 	View.strum_pos.clear()
+	Modchart.modcharts.clear()
 
 func quit():
-	Game.cur_state = Game.NOT_PLAYING
 	reset_dict_and_array()
 	Audio.a_title()
-	await Trans.t_trans("Freeplay")
+	if Game.is_story:
+		await Trans.t_trans("Story Mode")
+	else:
+		await Trans.t_trans("Freeplay")
 	reset_property()
 
-func quitStory():
-	Game.cur_state = Game.NOT_PLAYING
-	reset_dict_and_array()
-	Audio.a_title()
-	await Trans.t_trans("Story Mode")
-	reset_week_property()
 
 func moveSong(what):
-	Game.cur_state = Game.NOT_PLAYING
 	reset_dict_and_array()
 	Game.cur_song = what
-	Trans.t_trans("Gameplay")
+	var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+	if song_data.song.has("is3D"):
+		if song_data.song.is3D:
+			Game.is3D = true
+			Trans.t_trans("Gameplay3D")
+		else:
+			Game.is3D = false
+			Trans.t_trans("Gameplay")
+	else:
+		Game.is3D = false
+		Trans.t_trans("Gameplay")
 	await get_tree().create_timer(0.25).timeout
 	reset_property()

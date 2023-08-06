@@ -42,15 +42,18 @@ func gameover(): #ゲームオーバー
 	
 	spr.stop()
 	spr.play("bf dies")
-	spr.position = $/root/Gameplay/Characters/bfpos.getPosOffset()
+	if Game.is3D:
+		spr.position = $/root/Gameplay3D/Characters/bfpos.getPosOffset()
+	else:
+		spr.position = $/root/Gameplay/Characters/bfpos.getPosOffset()
 	spr.visible = true
 	bg.visible = true
 	
 	await get_tree().create_timer(2.5).timeout
 	
-	if Game.cur_state == Game.GAMEOVER:
+	if gameoverState == START and Game.cur_state == Game.GAMEOVER:
 		Audio.a_play("Gameover")
-	gameoverState = GAMEOVER
+		gameoverState = GAMEOVER
 
 
 func accepted(): #リトライ決定
@@ -58,15 +61,13 @@ func accepted(): #リトライ決定
 		gameoverState = END
 		if Audio.a_check("Gameover"):
 			Audio.a_stop("Gameover")
-		elif Audio.a_check("GameoverStart"):
-			Audio.a_stop("GameoverStart")
 		Audio.a_play("GameoverEnd")
 		spr.play("bf dead confirm")
 		
 		spr.scale = Vector2(1.05, 1.05)
 		
 		
-		await get_tree().create_timer(2.5).timeout
+		await get_tree().create_timer(2).timeout
 		
 		if Game.cur_state == Game.GAMEOVER: #リトライ決定してからドタキャンした場合の条件分岐
 			get_parent().moveSong(Game.cur_song)

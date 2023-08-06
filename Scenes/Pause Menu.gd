@@ -14,6 +14,12 @@ func _ready():
 	Audio.a_play("Pause Menu", 1.0, -10)
 	Audio.get_node("Pause Menu").volume_db = -20
 	db = Audio.get_node("Pause Menu").volume_db
+	
+	if Setting.s_get("gameplay", "downscroll"):
+		get_node("Downscroll").text = "downscroll"
+	else:
+		get_node("Downscroll").text = "upscroll"
+	
 	if Setting.s_get("gameplay", "botplay"):
 		get_node("Botplay").text += " on"
 	else:
@@ -22,10 +28,14 @@ func _ready():
 		get_node("Practice").text += " on"
 	else:
 		get_node("Practice").text += " off"
-	if Setting.s_get("gameplay", "downscroll"):
-		get_node("Downscroll").text = "downscroll"
-	else:
-		get_node("Downscroll").text = "upscroll"
+		
+	if !Setting.eng():
+		for i in get_children():
+			i.add_theme_font_override("font", load("res://Assets/Fonts/DarumadropOne-Regular.ttf"))
+			i.add_theme_font_size_override("font_size", 100)
+			i.add_theme_constant_override("outline_size", 25)
+			i.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+			i.text = Setting.translate(i.text)
 
 func _process(delta):
 	if db <= 0:
@@ -59,14 +69,17 @@ func _process(delta):
 		if Input.is_action_just_pressed("ui_accept"):
 			match get_child(select).name:
 				"Resume":
-					Game.cur_state = Game.PLAYING
 					Audio.a_resume("Inst")
 					Audio.a_resume("Voices")
 					Audio.a_stop("Pause Menu")
 					canvas.queue_free()
+					if Audio.cur_ms < 0.0:
+						canvas.get_parent().get_node("timer").paused = false
+						canvas.get_parent().get_node("countDownTimer").paused = false
+						Game.cur_state = Game.COUNTDOWN
+					else:
+						Game.cur_state = Game.PLAYING
 				"Restart":
-					Audio.a_resume("Inst")
-					Audio.a_resume("Voices")
 					Audio.a_stop("Pause Menu")
 					canvas.get_parent().moveSong(Game.cur_song)
 					canvas.queue_free()
@@ -86,6 +99,8 @@ func _process(delta):
 						get_node("Downscroll").text = "downscroll"
 					else:
 						get_node("Downscroll").text = "upscroll"
+					if !Setting.eng():
+						get_node("Downscroll").text = Setting.translate(get_node("Downscroll").text)
 					canvas.get_parent().strum_set()
 					canvas.get_parent().note_pos_set()
 					canvas.get_parent().get_node("UI/HealthBarBG").updatePos()
@@ -97,6 +112,8 @@ func _process(delta):
 						get_node("Botplay").text = "botplay on"
 					else:
 						get_node("Botplay").text = "botplay off"
+					if !Setting.eng():
+						get_node("Botplay").text = Setting.translate(get_node("Botplay").text)
 					canvas.get_parent().strum_set()
 				"Practice":
 					Setting.s_set("gameplay", "practice", !Setting.s_get("gameplay", "practice"))
@@ -104,6 +121,8 @@ func _process(delta):
 						get_node("Practice").text = "practice on"
 					else:
 						get_node("Practice").text = "practice off"
+					if !Setting.eng():
+						get_node("Practice").text = Setting.translate(get_node("Practice").text)
 				"Back":
 					Audio.a_stop("Inst")
 					Audio.a_stop("Voices")

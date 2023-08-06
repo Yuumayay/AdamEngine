@@ -1,0 +1,385 @@
+[gd_scene load_steps=31 format=3 uid="uid://1dd5xj4klol"]
+
+[ext_resource type="Script" path="res://Scenes/Gameplay3D.gd" id="1_rvy3f"]
+[ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="1_tgw0k"]
+[ext_resource type="Texture2D" uid="uid://d3l5qb04fw28b" path="res://Assets/Images/Stages/stagefront.png" id="2_jwy3q"]
+[ext_resource type="Texture2D" uid="uid://ge1x4us6wtvp" path="res://Assets/Images/Stages/stagecurtains.png" id="3_hmsf8"]
+[ext_resource type="Script" path="res://Script/Countdown.gd" id="4_s7lhb"]
+[ext_resource type="Texture2D" uid="uid://mecxcewe4tas" path="res://Assets/Images/Skins/FNF/Bars/healthBar.png" id="5_0kw71"]
+[ext_resource type="Texture2D" uid="uid://dclghcld50src" path="res://Assets/Images/Icons/icon-dad.png" id="6_6a3e4"]
+[ext_resource type="Texture2D" uid="uid://ihb7f5ftg7ct" path="res://Assets/Images/Skins/FNF/Countdown/go.png" id="6_34t6b"]
+[ext_resource type="Script" path="res://Script/HealthBar.gd" id="8_d1f7r"]
+[ext_resource type="Script" path="res://Script/TimeBar.gd" id="8_fb6r3"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="9_sstv0"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="10_6hqt1"]
+[ext_resource type="Script" path="res://Script/Info.gd" id="10_eabc7"]
+[ext_resource type="Script" path="res://Script/3DStageCamera.gd" id="12_amxfm"]
+[ext_resource type="Script" path="res://Script/Gameover.gd" id="13_2doka"]
+[ext_resource type="Script" path="res://Script/Syobon-kun.gd" id="14_c4a0e"]
+[ext_resource type="Script" path="res://Script/VersionText.gd" id="14_rfoj1"]
+[ext_resource type="Texture2D" uid="uid://d2afi6iva3esg" path="res://Assets/Images/Syobon-kun/base.png" id="15_bc3ep"]
+[ext_resource type="Texture2D" uid="uid://dxdr2hxi6e36p" path="res://Assets/Images/Syobon-kun/0001.png" id="16_h142i"]
+[ext_resource type="Texture2D" uid="uid://dh685y52xlh52" path="res://Assets/Images/Syobon-kun/0010.png" id="17_ybgne"]
+[ext_resource type="Texture2D" uid="uid://fqvix0ya8hu4" path="res://Assets/Images/Syobon-kun/0011.png" id="18_1yipa"]
+[ext_resource type="Texture2D" uid="uid://bn7u6epgb3t2i" path="res://Assets/Images/Syobon-kun/0100.png" id="19_7hgj2"]
+[ext_resource type="Texture2D" uid="uid://bvngpot61sg2d" path="res://Assets/Images/Syobon-kun/1000.png" id="20_tj5fd"]
+[ext_resource type="Texture2D" uid="uid://co5dwerbx2dy5" path="res://Assets/Images/Syobon-kun/1100.png" id="21_8ycni"]
+[ext_resource type="Texture2D" uid="uid://bwamhv6xf5gok" path="res://Assets/Images/Syobon-kun/lefthand.png" id="22_ervwi"]
+[ext_resource type="Texture2D" uid="uid://dodcr1vniuevl" path="res://Assets/Images/Syobon-kun/righthand.png" id="23_o0m20"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5t4ff"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sqkw1"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Environment" id="Environment_rk0he"]
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+glow_intensity = 7.96
+glow_strength = 1.4
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wnqfj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_h142i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_ybgne")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_1yipa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_7hgj2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_tj5fd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_8ycni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ervwi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_o0m20")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Gameplay3D" type="Node3D"]
+script = ExtResource("1_rvy3f")
+
+[node name="Stages" type="Node3D" parent="."]
+
+[node name="Sprite2D2" type="Sprite3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.105, 0.895, -0.33)
+shaded = true
+texture = ExtResource("1_tgw0k")
+
+[node name="Sprite2D3" type="Sprite3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.105, -4, 1)
+sorting_offset = 1.0
+shaded = true
+texture = ExtResource("2_jwy3q")
+
+[node name="Sprite2D" type="Sprite3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.105, 0, 2)
+shaded = true
+texture = ExtResource("3_hmsf8")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.07313, -2.14993, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4496, -1.78132, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.47322, -3.61657, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.537986, -3.96323, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.39605, -3.80129, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.51197, -3.17582, 5)
+light_color = Color(1, 1, 0.905882, 1)
+light_energy = 1.711
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D7" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04271, 3.4458, 5)
+light_color = Color(1, 1, 0.411765, 1)
+light_energy = 2.778
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="OmniLight3D8" type="OmniLight3D" parent="Stages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.79813, 3.4458, 5)
+light_color = Color(1, 1, 0.411765, 1)
+light_energy = 2.778
+shadow_enabled = true
+omni_range = 17.632
+
+[node name="Characters" type="Node3D" parent="."]
+
+[node name="Countdown" type="CanvasLayer" parent="."]
+script = ExtResource("4_s7lhb")
+
+[node name="Sprite" type="Sprite3D" parent="Countdown"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.31, 5)
+visible = false
+texture = ExtResource("6_34t6b")
+
+[node name="Strums" type="CanvasLayer" parent="."]
+
+[node name="Notes" type="CanvasLayer" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HealthBarBG" type="TextureRect" parent="UI"]
+offset_left = 356.0
+offset_top = 75.0
+offset_right = 957.0
+offset_bottom = 115.0
+scale = Vector2(1, 0.5)
+texture = ExtResource("5_0kw71")
+script = ExtResource("8_d1f7r")
+
+[node name="HealthBar" type="ProgressBar" parent="UI/HealthBarBG"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 9.0
+offset_right = 596.0
+offset_bottom = 32.0
+value = 50.0
+fill_mode = 1
+show_percentage = false
+
+[node name="icons" type="Node2D" parent="UI/HealthBarBG"]
+position = Vector2(300, 20)
+scale = Vector2(1, 2)
+
+[node name="iconP2" type="Sprite2D" parent="UI/HealthBarBG/icons"]
+position = Vector2(-50, 0)
+texture = ExtResource("6_6a3e4")
+hframes = 2
+script = ExtResource("10_6hqt1")
+what_music = "Inst"
+
+[node name="iconP1" type="Sprite2D" parent="UI/HealthBarBG/icons"]
+position = Vector2(50, 0)
+flip_h = true
+hframes = 2
+script = ExtResource("10_6hqt1")
+what_music = "Inst"
+
+[node name="ColorRect" type="ColorRect" parent="UI"]
+offset_left = 448.0
+offset_top = 678.0
+offset_right = 831.0
+offset_bottom = 709.0
+color = Color(0, 0, 0, 1)
+
+[node name="TimeBar" type="ProgressBar" parent="UI/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.5
+offset_top = -11.5
+offset_right = 185.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_5t4ff")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sqkw1")
+value = 50.0
+show_percentage = false
+script = ExtResource("8_fb6r3")
+
+[node name="Label" type="Label" parent="UI/ColorRect/TimeBar"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 30
+text = "0:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Info" type="CanvasLayer" parent="."]
+script = ExtResource("10_eabc7")
+
+[node name="Label1" type="Label" parent="Info"]
+offset_left = 454.0
+offset_top = 129.0
+offset_right = 853.0
+offset_bottom = 152.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 20
+text = "Score: 0 | Misses: 0 | Rating: N/A"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Info"]
+offset_left = 12.0
+offset_top = 306.0
+offset_right = 153.0
+offset_bottom = 432.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 20
+text = "Marvelous: 0
+Sick: 0
+Good: 0
+Bad: 0
+Shit: 0
+Misses: 0
+
+Combo: 0
+Max Combo: 0"
+
+[node name="Label3" type="Label" parent="Info"]
+offset_left = 898.0
+offset_top = 691.0
+offset_right = 1271.0
+offset_bottom = 716.0
+theme_override_colors/font_color = Color(1, 0.717647, 0.807843, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 25
+text = "Adam Engine"
+horizontal_alignment = 2
+script = ExtResource("14_rfoj1")
+
+[node name="Label4" type="Label" parent="Info"]
+offset_left = 20.0
+offset_top = 688.0
+offset_right = 208.0
+offset_bottom = 709.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 20
+text = "Asdasdasd - Hard"
+
+[node name="KPS" type="Label" parent="Info"]
+visible = false
+offset_left = 1080.0
+offset_top = 636.0
+offset_right = 1268.0
+offset_bottom = 683.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 50
+text = "0.00"
+horizontal_alignment = 2
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00518119, 0.563994, 8.35266)
+environment = SubResource("Environment_rk0he")
+script = ExtResource("12_amxfm")
+
+[node name="ModchartScript" type="Node" parent="."]
+
+[node name="Gameover" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("13_2doka")
+
+[node name="BG" type="ColorRect" parent="Gameover"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ModchartCanvas" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="LyricsLabel" type="Label" parent="ModchartCanvas"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -315.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("9_sstv0")
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Syobon-kun" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("14_c4a0e")
+
+[node name="Base" type="Sprite2D" parent="Syobon-kun"]
+position = Vector2(188, 614)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("15_bc3ep")
+
+[node name="Hand" type="AnimatedSprite2D" parent="Syobon-kun"]
+position = Vector2(188, 614)
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_wnqfj")
+frame = 7
+
+[node name="Hand2" type="AnimatedSprite2D" parent="Syobon-kun"]
+position = Vector2(188, 614)
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_wnqfj")
+frame = 6

@@ -19,7 +19,7 @@ var hit: bool = false
 
 func _ready():
 	for i in Chart.chartData.notes[Chart.cur_section]["sectionNotes"]:
-		if i.ms == 60.0 / Chart.bpm * ms * 1000 and i.dir == dir and i.player_type == player_type and i.player_ind == player_ind:
+		if i.ms == 60.0 / Chart.bpm * ms * 250 and i.dir == dir and i.player_type == player_type and i.player_ind == player_ind:
 			var sustain = i.sus
 			var note_type = i.note_type
 			print("find")
@@ -43,18 +43,15 @@ func anim_set():
 		note.animation = View.keys[str(Chart.gf_data["key_count"][player_ind]) + "k"][dir]
 
 func _process(_delta):
-	place()
 	scroll()
 	
 func place():
-	if abs(global_position.x + 24 - get_global_mouse_position().x) <= 24 and abs(global_position.y + 24 - get_global_mouse_position().y) <= 24:
-		if Input.is_action_just_pressed("game_click") and Chart.can_input:
 			if note.visible:
 				print("removed")
 				note.visible = false
 				line.visible = false
 				Audio.a_play("Erase")
-				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].erase({"ms" = 60.0 / Chart.bpm * ms * 1000, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
+				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].erase({"ms" = 60.0 / Chart.bpm * ms * 250, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
 			else:
 				var distance
 				
@@ -77,7 +74,7 @@ func place():
 						sus = distance
 						line.set_point_position(1, Vector2(0, distance + 25))
 					await get_tree().create_timer(0).timeout
-				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].append({"ms" = 60.0 / Chart.bpm * ms * 1000, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
+				Chart.chartData.notes[Chart.cur_section]["sectionNotes"].append({"ms" = 60.0 / Chart.bpm * ms * 250, "dir" = dir, "sus" = sus, "note_type" = note_type, "player_type" = player_type, "player_ind" = player_ind})
 			print(Chart.chartData.notes)
 	
 func scroll():
@@ -94,3 +91,8 @@ func scroll():
 		else:
 			note.modulate.a = 1
 			hit = false
+
+
+
+func _on_button_button_down():
+	place()

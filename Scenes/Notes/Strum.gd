@@ -122,6 +122,7 @@ func playerbot_strum():
 				Game.cur_input[dir - type * Game.key_count] = 2
 				hide_note(i)
 				i.hit_ms = 0.0
+				Game.kps.append(1.0)
 				judge(i.hit_ms, i.type)
 			else:# 長押しだったら
 				if i.self_modulate.a != 0:
@@ -129,6 +130,7 @@ func playerbot_strum():
 					Game.cur_input[dir - type * Game.key_count] = 2
 					i.self_modulate.a = 0
 					i.hit_ms = 0.0
+					Game.kps.append(1.0)
 					judge(i.hit_ms, i.type)
 					break
 				Game.cur_input[dir - type * Game.key_count] = 1
@@ -188,15 +190,18 @@ func player_strum():
 func judge(hit_ms, notetype):
 	emit_signal("bf_hit")
 	
-	
 	var ms = abs(hit_ms)
 	var layer = rating.instantiate()
 	var new_rating = layer.get_node("Rating")
 	
 	Audio.a_volume_set("Voices", 0)
-	Audio.a_play(hit)
+	Audio.a_play(hit, 1.0, Setting.s_get("gameplay", "hit sound volume") * 0.5 - 50)
 	
 	Game.bf_hit_bool = true
+	if Setting.eng():
+		new_rating.animation = "ratings"
+	elif Setting.jpn():
+		new_rating.animation = "ratingsJP"
 	if notetype == 4:
 		Audio.a_play("Loss Shaggy")
 		Game.add_rating(Game.MISS)

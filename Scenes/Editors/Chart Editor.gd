@@ -14,13 +14,15 @@ extends Node2D
 @onready var reloadaudio = menu.get_node("ReloadAudio")
 @onready var savejson = menu.get_node("SaveJSON")
 @onready var savejsonwindow: FileDialog = menu.get_node("SaveJSONWindow")
+@onready var icons = parent.get_node("Icons")
 
 var empty_section = {"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}
 
 func _ready():
-	if FileAccess.file_exists(Paths.p_song(Chart.cur_song.to_lower(), "Voices")):
-		Audio.a_set("Voices", Paths.p_song(Chart.cur_song.to_lower(), "Voices"), Chart.bpm)
-	Audio.a_set("Inst", Paths.p_song(Chart.cur_song.to_lower(), "Inst"), Chart.bpm)
+	if !Chart.cur_song:
+		Audio.a_set("Voices", "res://Assets/Songs/test/Voices.ogg", Chart.bpm)
+		Audio.a_set("Inst", "res://Assets/Songs/test/Inst.ogg", Chart.bpm)
+		Chart.cur_song = "test"
 	
 	draw_menu()
 	draw_all()
@@ -31,7 +33,6 @@ func _ready():
 	savejsonwindow.set_filters(PackedStringArray(["*.json ; FNF chart data files"]))
 	savejson.pressed.connect(func():
 		savejsonwindow.show()
-		Chart.can_input = false
 		)
 
 func draw_menu():
@@ -135,6 +136,8 @@ func draw_beat_line(value, value2):
 		add_child(new_beat)
 
 func draw_icon(x, icon_name, p_type, p_ind):
+	for i in icons.get_children():
+		icons.remove_child(i)
 	var new_icon = Sprite2D.new()
 	new_icon.texture = Paths.p_icon(icon_name)
 	new_icon.position.x = x + 50
@@ -155,7 +158,7 @@ func draw_icon(x, icon_name, p_type, p_ind):
 		new_icon.key_count = Chart.gf_data["key_count"][p_ind]
 	new_icon.init()
 	
-	add_child.call_deferred(new_icon)
+	icons.add_child.call_deferred(new_icon)
 
 func add_character(type):
 	if type == "PLAYER":
@@ -305,11 +308,11 @@ func setting_check_beta():
 	Chart.dad_data.icon_name[0] = dadname.text
 
 func reloadAudio():
-	if !FileAccess.file_exists(Paths.p_song(songname.text, "Inst")):
+	if !Paths.p_song(songname.text, "Inst"):
 		Audio.a_play("Error")
 		printerr("Inst.ogg not found")
 		return
-	if FileAccess.file_exists(Paths.p_song(songname.text, "Voices")):
+	if Paths.p_song(songname.text, "Voices"):
 		Audio.a_set("Voices", Paths.p_song(songname.text, "Voices"), Chart.bpm)
 	Audio.a_set("Inst", Paths.p_song(songname.text, "Inst"), Chart.bpm)
 	Chart.cur_song = songname.text
@@ -358,6 +361,10 @@ func generateJson() -> Dictionary:
 	#Chart.mouse_scroll_speed = container.get_node("Charting/Flow/Mouse Scroll Speed/Margin/Flow/SpinBox").value
 
 func key_check():
+	if Input.is_action_just_pressed("ui_cancel"):
+		Audio.a_volume_set("Debug Menu", 0)
+		Audio.a_stop("Debug Menu")
+		Trans.t_trans("Debug Menu")
 	if Input.is_action_just_pressed("game_space"):
 		if Chart.playing:
 			stop_audio()
@@ -386,7 +393,6 @@ func stop_audio():
 
 
 func _on_file_dialog_file_selected(path):
-	Chart.can_input = true
 	var extension = path.get_extension()
 	var basename = path.get_basename()
 	if extension == "json":

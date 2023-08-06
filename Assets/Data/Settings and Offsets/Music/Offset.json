@@ -1,6 +1,6 @@
 {
     "MenuMusic": ["freakyMenu.ogg", 102],
-    "DebugMusic": ["freakyDebug.ogg", 200],
+    "DebugMusic": ["adamDebug.ogg", 200],
     "PauseMusic": ["pauseAsd.ogg", 130],
     "OptionMusic": ["pauseAsd.ogg", 130],
     "GameoverStart": ["fnf_loss_sfx.ogg", 100],

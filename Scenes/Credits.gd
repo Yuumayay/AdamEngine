@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var bg = get_node("BG")
 @onready var list = get_node("Selectable")
+@onready var desc = $Panel/Desc
 
 var select: int = 0
 var child_count: int = 0
@@ -9,18 +10,29 @@ var child_count: int = 0
 func _ready():
 	var ind := 0
 	var json = File.f_read("res://Assets/Data/Credits/credits.json", ".json")
-	for i in json.peoples:
+	var read_property = Setting.get_translate(json, "peoples")
+	if Setting.jpn():
+		desc.add_theme_font_override("font", load("res://Assets/Fonts/BugMaru.ttc"))
+		desc.add_theme_color_override("font_outline_color", Color(0.5, 0.5, 0.5))
+		desc.add_theme_constant_override("shadow_outline_size", 5)
+		desc.add_theme_color_override("font_shadow_color", Color(0, 0, 0))
+	for i in read_property:
 		var new_item = $Template.duplicate()
 		var itemname = i[0]
 		var itemdesc = i[1]
 		var itemdesc2 = i[2]
 		var itemcolor: Color = Color(i[3][0] / 255.0, i[3][1] / 255.0, i[3][2] / 255.0, 1)
+		var itemurl
+		if i.size() - 1 == 4:
+			itemurl = i[4]
 		
 		new_item.name = itemname
 		new_item.text = itemname.to_upper()
 		new_item.ind = ind
 		new_item.color = itemcolor
 		new_item.name = itemname
+		new_item.url = itemurl
+		desc.text = itemdesc + "\n" + " " + "\n" + itemdesc2 + "\n- " + itemname 
 		
 		var icon = Paths.p_icon_credits(itemname)
 		if icon.get_size() == Vector2(150, 150):
@@ -52,6 +64,10 @@ func _process(_delta):
 				select = 0
 			else:
 				select += 1
+		if Input.is_action_just_pressed("ui_accept"):
+			Audio.a_scroll()
+			if list.get_child(select).url:
+				OS.shell_open(list.get_child(select).url)
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_cancel()
 			Trans.t_trans("Main Menu")
@@ -62,5 +78,5 @@ func update_position():
 		if i == list.get_child(select):
 			bg.modulate = lerp(bg.modulate, i.color, 0.05)
 		i.position.x = lerp(i.position.x, abs(select - i.ind) * -25.0 + 225.0, 0.25)
-		i.position.y = lerp(i.position.y, -select * 150.0 + (350.0 + i.ind * 150.0), 0.25)
+		i.position.y = lerp(i.position.y, -select * 150.0 + (300.0 + i.ind * 150.0), 0.25)
 		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.ind) / 5.0, 0.25)
