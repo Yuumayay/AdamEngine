@@ -60,16 +60,16 @@ var countdowns: Array
 var num: Array
 var arrow : AnimatedSprite2D
 var arrowSpriteFrames: SpriteFrames
-
+# 動的に画像を読み出す。
 func loadAssets():
 	arrow = Game.load_XMLSprite("Assets/Images/Notes/Default/default.xml")
 	arrowSpriteFrames = arrow.sprite_frames
 	
 	held = [Game.load_image("Assets/Images/Notes/Default/held/left hold0000.png"),
-Game.load_image("Assets/Images/Notes/Default/held/down hold0000.png"),
-Game.load_image("Assets/Images/Notes/Default/held/up hold0000.png"),
-Game.load_image("Assets/Images/Notes/Default/held/right hold0000.png")]
-	
+	Game.load_image("Assets/Images/Notes/Default/held/down hold0000.png"),
+	Game.load_image("Assets/Images/Notes/Default/held/up hold0000.png"),
+	Game.load_image("Assets/Images/Notes/Default/held/right hold0000.png")]
+		
 	countdowns = [Game.load_image("Assets/Images/Skins/FNF/Countdown/ready.png"),
 	Game.load_image("Assets/Images/Skins/FNF/Countdown/set.png"),
 	Game.load_image("Assets/Images/Skins/FNF/Countdown/go.png")]

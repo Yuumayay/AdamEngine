@@ -23,6 +23,9 @@ var path: String
 
 func _ready():
 	var ind = 0
+	
+	diffselect = Game.diff
+	
 	for indexi in Paths.week_path_list:
 		if !DirAccess.dir_exists_absolute(indexi): continue
 		for index in DirAccess.get_files_at(indexi):
@@ -155,6 +158,7 @@ func _process(_delta):
 			Game.can_input = false
 			Audio.a_cancel()
 			Trans.t_trans("Main Menu")
+			
 	update_position()
 	getSongScore()
 

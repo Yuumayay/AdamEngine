@@ -15,6 +15,7 @@ position = Vector2(641, 358)
 texture = ExtResource("1_fmid5")
 script = ExtResource("2_t8xj5")
 bumpin_scale = Vector2(1.02, 1.02)
+load_img = "Assets/Images/UI/menuBG.png"
 
 [node name="Version" type="Label" parent="."]
 visible = false

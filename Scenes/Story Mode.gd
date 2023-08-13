@@ -25,6 +25,9 @@ var json = File.f_read("user://ae_week_score_data.json", ".json")
 
 func _ready():
 	var ind := 0
+	
+	diffselect = Game.diff
+	
 	for index in Paths.week_path_list:
 		
 		#if !DirAccess.get_files_at(index): continue

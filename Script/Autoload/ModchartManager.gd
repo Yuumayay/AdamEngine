@@ -9,6 +9,7 @@ var modLayer: CanvasLayer
 var lyricslabel: Label
 var ui: CanvasLayer
 var info: CanvasLayer
+var stages
 var scoretext
 
 var has_onUpdate: bool = false
@@ -27,14 +28,16 @@ func loadModchart():
 	lyricslabel = modLayer.get_node("LyricsLabel")
 	ui = gameplay.get_node("UI")
 	info = gameplay.get_node("Info")
+	stages = gameplay.get_node("Stages")
 	scoretext = info.get_node("Label1")
 	if Paths.p_modchart(Game.cur_song, Game.cur_diff): #もしmodchartファイルが存在するなら
 		# modchart.gdのonCreate関数を実行
 		var modchartPath = Paths.p_modchart(Game.cur_song, Game.cur_diff)
 		
 		# TODO lua対応
-		#if modchartPath.get_extension() == "lua":
-			#lua_to_gd(File.f_read(modchartPath, ".lua"))
+		if modchartPath.get_extension() == "lua":
+			File.f_save(modchartPath.get_basename(), ".gd", File.lua_2_gd(File.f_read(modchartPath, ".lua")))
+			modchartPath = modchartPath.get_basename() + ".gd"
 		
 		var scr: Script = load(modchartPath)
 		mNode = $/root/Gameplay/ModchartScript
@@ -60,21 +63,6 @@ func loadModchart():
 		print("no modchart")
 	
 	emit_signal("modchart_ready")
-
-var conv_lua: Dictionary = {
-	"local function": "func",
-	"function": "func",
-	"local": "var",
-	"end": ""
-}
-
-# 途中
-func lua_to_gd(content):
-	for i in conv_lua:
-		content = content.replace()
-	
-	#File.f_save("Mods/songs/" + Game.cur_song + "/modchart", ".gd", content)
-	return content
 
 func _process(delta):
 	if is_modchart:
@@ -203,3 +191,21 @@ func setMissDamage(value = 0.1):
 # 未実装
 func keyToMove(where = "debug", key = "7"):
 	modcharts["keyToMove"] = [where, key]
+
+func makeLuaSprite(tag: String, path: String, x = 0.0, y = 0.0):
+	var spr
+	var image_path = Paths.p_image(path, true)
+	if image_path:
+		if image_path.get_extension() == "xml":
+			spr = Game.load_XMLSprite(image_path)
+		elif image_path.get_extension() == "png":
+			spr = Sprite2D.new()
+			spr.texture = Game.load_image(image_path)
+		spr.position = Vector2(x * -2, y * -2)
+		spr.scale = Vector2(1, 1)
+		spr.centered = true
+		spr.name = tag
+		stages.add_child(spr)
+
+func addLuaSprite(tag: String, front):
+	pass

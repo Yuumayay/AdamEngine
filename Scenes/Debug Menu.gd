@@ -48,6 +48,8 @@ func _process(_delta):
 					i.accepted(false)
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_cancel()
+			Audio.a_stop("Debug Menu")
+			Audio.a_title()
 			Trans.t_trans("Main Menu")
 	update_position()
 

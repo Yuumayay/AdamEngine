@@ -1,0 +1,31 @@
+{
+	"songs": [
+		[
+			"gkbr",
+			"gkbr",
+			[
+				246,
+				182,
+				4
+			]
+		]
+	],
+	"hideFreeplay": false,
+	"weekBackground": "tank",
+	"weekCharacters": [
+		"tankman",
+		"bf",
+		"gf"
+	],
+	"storyName": "I feel a sign of something...",
+	"storyNameJPN": "「ヤツ」との戦い",
+	"weekName": "Week 8",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"hideStoryMode": false,
+	"weekBefore": "week7",
+	"startUnlocked": true
+}

@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 @onready var strum_group: CanvasLayer = get_node("Strums")
 @onready var note_group: CanvasLayer = get_node("Notes")
@@ -22,7 +22,11 @@ func _ready():
 	Game.setup(song_data)
 	
 	cam_zoom = Game.defaultZoom
-	$Camera.zoom = Vector2(cam_zoom, cam_zoom)
+	var cam = $Camera
+	if Game.is3D:
+		$Camera.fov = cam_zoom * 75
+	else:
+		$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
 	if Paths.p_song(Game.cur_song, "Voices"):
 		Audio.a_set("Voices", Paths.p_song(Game.cur_song, "Voices"), Audio.bpm)
@@ -404,7 +408,6 @@ func quit():
 	else:
 		await Trans.t_trans("Freeplay")
 	reset_property()
-
 
 func moveSong(what):
 	reset_dict_and_array()

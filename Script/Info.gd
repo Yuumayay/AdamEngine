@@ -99,16 +99,17 @@ func _process(delta):
 		var fc_state: String = fc_state_check()
 		var rating_text: String = rating_text_check()
 		
-		#if Setting.eng():
-		if Modchart.mGet("defeat", 2):
-			info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " / " + str(Modchart.mGet("defeat", 0) - 1) + " | Rating: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
-		else:
-			info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " | Rating: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
-		#elif Setting.lang == "japanese":
-		#	if Modchart.mGet("defeat", 2):
-		#		info1.text = "Score: " + str(Game.score) + " | Miss: " + str(Game.rating_total[Game.MISS]) + " / " + str(Modchart.mGet("defeat", 0) - 1) + " | Rank: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
-		#	else:
-		#		info1.text = "Score: " + str(Game.score) + " | Miss: " + str(Game.rating_total[Game.MISS]) + " | Rank: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+		if Setting.eng():
+			if Modchart.mGet("defeat", 2):
+				info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " / " + str(Modchart.mGet("defeat", 0) - 1) + " | Rating: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+			else:
+				info1.text = "Score: " + str(Game.score) + " | Misses: " + str(Game.rating_total[Game.MISS]) + " | Rating: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+				
+		elif Setting.jpn():
+			if Modchart.mGet("defeat", 2):
+				info1.text = "Score: " + str(Game.score) + " | Miss: " + str(Game.rating_total[Game.MISS]) + " / " + str(Modchart.mGet("defeat", 0) - 1) + " | Rank: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
+			else:
+				info1.text = "Score: " + str(Game.score) + " | Miss: " + str(Game.rating_total[Game.MISS]) + " | Rank: " + Setting.translate(rating_text) + " (" + str(floor(Game.accuracy * 10000.0) / 100.0) + "%) " + fc_state
 		
 		updateComboInfo()
 		

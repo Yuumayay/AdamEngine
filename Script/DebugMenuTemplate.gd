@@ -32,7 +32,7 @@ func accepted(selected: bool):
 			await get_tree().create_timer(0.05).timeout
 			modulate = Color(1, 1, 1, 1)
 			await get_tree().create_timer(0.05).timeout
-		Trans.t_trans("Editors/" + name)
+		Trans.t_trans(name)
 	else:
 		t.tween_property(self, "position", Vector2(position.x + 100, position.y), 0.25)
 		t.tween_property(self, "position", Vector2(-2000, position.y), 0.25)

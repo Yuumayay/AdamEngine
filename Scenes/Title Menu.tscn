@@ -42,6 +42,7 @@ hframes = 2
 vframes = 2
 script = ExtResource("4_6ltcd")
 bumpin_scale = Vector2(1.1, 1.1)
+load_img = "Assets/Images/Title Menu/logoBumpin.png"
 
 [node name="Enter" type="RichTextLabel" parent="Logo"]
 modulate = Color(0, 1, 1, 1)

@@ -1,0 +1,6 @@
+{
+    "front": ["stagefront.png", [640, 600, -4], [1, 1]],
+    "back": ["stageback.png", [640, 100, -5], [1, 1]],
+    "curtains": ["stagecurtains.png", [640, 100, -3], [1, 1]],
+    "light": ["stage_light.png", [100, 100, -2], [1, 1]]
+}

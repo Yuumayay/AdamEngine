@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=31 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://ge1x4us6wtvp" path="res://Assets/Images/Stages/stagecurtains.png" id="4_ftvk0"]
 [ext_resource type="Script" path="res://Script/Countdown.gd" id="6_7pr8o"]
 [ext_resource type="Texture2D" uid="uid://mecxcewe4tas" path="res://Assets/Images/Skins/FNF/Bars/healthBar.png" id="6_ggca7"]
+[ext_resource type="Texture2D" uid="uid://qpvwxpjkesw5" path="res://Assets/Images/Stages/stage_light.png" id="6_nviql"]
 [ext_resource type="Script" path="res://Script/HealthBar.gd" id="7_a67nu"]
 [ext_resource type="Texture2D" uid="uid://dclghcld50src" path="res://Assets/Images/Icons/icon-dad.png" id="8_nygbt"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="9_hks2i"]
@@ -73,19 +74,33 @@ script = ExtResource("1_ble4j")
 script = ExtResource("2_ym0k6")
 
 [node name="Sprite2D2" type="Sprite2D" parent="Stages"]
+visible = false
 z_index = -2
 position = Vector2(640, 100)
 texture = ExtResource("2_aef0f")
 
 [node name="Sprite2D3" type="Sprite2D" parent="Stages"]
+visible = false
 z_index = -2
 position = Vector2(640, 600)
 texture = ExtResource("3_48ojs")
 
 [node name="Sprite2D" type="Sprite2D" parent="Stages"]
+visible = false
 z_index = -2
 position = Vector2(640, 100)
 texture = ExtResource("4_ftvk0")
+
+[node name="Sprite2D4" type="Sprite2D" parent="Stages"]
+visible = false
+position = Vector2(-80, -300)
+texture = ExtResource("6_nviql")
+
+[node name="Sprite2D5" type="Sprite2D" parent="Stages"]
+visible = false
+position = Vector2(1350, -300)
+texture = ExtResource("6_nviql")
+flip_h = true
 
 [node name="Characters" type="Node2D" parent="."]
 
@@ -262,6 +277,8 @@ position = Vector2(638, 363)
 script = ExtResource("13_k8e81")
 
 [node name="ModchartScript" type="Node" parent="."]
+
+[node name="StageScript" type="Node" parent="."]
 
 [node name="Gameover" type="CanvasLayer" parent="."]
 layer = 2

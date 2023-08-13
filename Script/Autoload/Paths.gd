@@ -12,17 +12,20 @@ var character_data_path_list: Array = ["Assets/Data/characters/", "Mods/data/cha
 var character_image_path_list: Array = ["Assets/Images/characters/", "Mods/images/characters/"]
 var stage_data_path_list: Array = ["Assets/Data/Stages/", "Mods/data/stages/", "Mods/stages/"]
 var stage_image_path_list: Array = ["Assets/Images/Stages/", "Mods/images/stages/", "Mods/images/"]
+var images_path_list: Array = ["Assets/Images/", "Mods/images/"]
 
-var modchart_extensions: Array = [".gd", ".lua"]
+var modchart_extensions: Array = [".lua", ".gd"]
 var modchart_filenames: Array = ["modchart", "script"]
 
 var load_assets_song: bool
 
 func _ready():
 	# Mods/songsが存在する場合、MODが読み込まれる。
-	if FileAccess.file_exists("Mods/songs"):
+	if DirAccess.dir_exists_absolute("Mods/songs"):
+		print("MOD MODE-------------------------")
 		load_assets_song = false
 	else:
+		print("ORIGINAL MODE-------------------------")
 		load_assets_song = true
 		
 	load_masterdata()
@@ -37,7 +40,9 @@ func load_masterdata():
 			Game.difficulty = json.difficulty
 			Game.difficulty_color.clear()
 			for diffColor in json.color:
-				Game.difficulty_color.append(Color8(diffColor[0], diffColor[1], diffColor[2]))
+				Game.difficulty_color.append(Color8(int(diffColor[0]), int(diffColor[1]), int(diffColor[2])))
+			
+			Game.diff = int(json.difficulty.size() /2)
 
 func p_offset(path: String):
 	return "Assets/Data/Settings and Offsets/" + path
@@ -228,6 +233,17 @@ func p_stage_data(path: String):
 	printerr("paths stage data: invalid path")
 	return null
 
+func p_stage_script(path: String):
+	for i in stage_data_path_list:
+		for ext in modchart_extensions:
+			if FileAccess.file_exists(i + path + ext):
+				return i + path + ext
+			elif FileAccess.file_exists(i + path.to_lower() + ext):
+				return i + path.to_lower() + ext
+	Audio.a_play("Error")
+	printerr("paths stage script: invalid path")
+	return null
+
 func p_icon(path: String):
 	var icon: Texture2D
 	for i in icon_path_list:
@@ -261,3 +277,12 @@ func p_icon_credits(path: String):
 	printerr("icon: icon not found")
 	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon
+
+func p_image(path: String, xml = false):
+	for i in images_path_list:
+		if FileAccess.file_exists(i + path + ".png"):
+			if xml and FileAccess.file_exists(i + path + ".xml"):
+				return i + path + ".xml"
+			return i + path + ".png"
+	print("path image: image not found")
+	return null

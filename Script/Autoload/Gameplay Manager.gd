@@ -50,6 +50,7 @@ var song_data: Dictionary
 
 var difficulty: Array = ["easy", "normal", "hard"]
 var difficulty_color: Array = [Color(0, 1, 0), Color(1, 1, 0), Color(1, 0, 0)]
+var diff := 1 #現在の難易度
 
 ## GAMEPLAY CONSTS ##
 const rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
@@ -94,8 +95,17 @@ var isPixel: bool
 
 ## SONG JSON ##
 var cur_song: String = "bopeebo"
-var cur_diff: String = "normal"
-
+var cur_diff: String = "normal": #現在の難易度（文字列
+	set(v): # クソコード
+		cur_diff = v
+		var n = 0
+		for i in difficulty:
+			if v == i:
+				diff = n
+			n += 1
+	get:
+		return difficulty[diff]
+		
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
@@ -179,7 +189,7 @@ func setup(data):
 	if song.has("stage"):
 		cur_stage = song.stage
 	else:
-		cur_stage = "tank"
+		cur_stage = "stage"
 	if Paths.p_stage_data(cur_stage):
 		stage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
 		defaultZoom = stage.defaultZoom
@@ -459,13 +469,15 @@ func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, c
 		frames.add_frame("default", Game.load_image("Assets/Images/UI/Missing.png"))
 		sprite.frames = frames
 		return sprite
+		
+	print("load xml sprite:", path)
 	
 	var sprite_data:AnimatedSprite3D = AnimatedSprite3D.new() 
 	
 	var base_path:StringName = path.get_basename()
 	#var file_name:StringName = path.get_file()
 	
-	var texture:Texture = load(base_path + ".png")
+	var texture:Texture = Game.load_image(base_path + ".png")
 	
 	var xml:XMLParser = XMLParser.new()
 	xml.open(base_path + ".xml")

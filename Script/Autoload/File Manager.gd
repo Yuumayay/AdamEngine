@@ -1,6 +1,6 @@
 extends Node
 
-const SUPPORTED_FORMATS: Array = [".json", ".txt"]
+const SUPPORTED_FORMATS: Array = [".json", ".txt", ".gd"]
 
 func f_save(savepath: String, type: String, content):
 	if SUPPORTED_FORMATS.has(type):
@@ -25,7 +25,7 @@ func f_save(savepath: String, type: String, content):
 		else:
 			jsoncontent = JSON.stringify(content, "\t", false)
 		file.store_string(jsoncontent)
-	elif type == ".txt":
+	elif type == ".txt" or type == ".gd":
 		var txtcontent
 		txtcontent = str(content)
 		file.store_string(txtcontent)
@@ -46,7 +46,40 @@ func f_read(path: String, type: String):
 	file.close()
 	return data
 
+var conv_lua = [
+	["local function", "func"],
+	["function", "func"],
+	["local", "var"],
+	[" then", ":"],
+	["elseif", "elif"],
+	["else", "else:"],
+	["onCreate()", "onCreate():"],
+	["goodNoteHit()", "goodNoteHit():"],
+	["noteMiss()", "noteMiss():"],
+	["onUpdate()", "onUpdate():"],
+	["onBeatHit()", "onBeatHit():"],
+	["onStepHit()", "onStepHit():"],
+	["opponentNoteHit()", "opponentNoteHit():"],
+	["makeLuaSprite", "Modchart.makeLuaSprite"],
+	["addLuaSprite", "Modchart.addLuaSprite"],
+	["makeGraphic", "Modchart.makeGraphic"],
+	["setObjectCamera", "Modchart.setObjectCamera"],
+	["setObjectOrder", "Modchart.setObjectOrder"],
+	["setProperty", "Modchart.setProperty"],
+	["getProperty", "Modchart.getProperty"],
+	["end", ""]
+]
+
+func lua_2_gd(content: String):
+	for i in conv_lua:
+		if content.contains(i[0]):
+			content = content.replace(i[0], i[1])
+	content = content.insert(0, "extends Node\n")
+	print(content)
+	return content
+
 func _ready():
+	lua_2_gd(f_read("res://Mods/stages/hjoim.lua", ".lua"))
 	if FileAccess.file_exists("user://ae_options_data.json"):
 		#f_save("user://ae_options_data", ".json", Setting.setting)
 		Setting.setting = f_read("user://ae_options_data.json", ".json")

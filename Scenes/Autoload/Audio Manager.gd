@@ -82,7 +82,7 @@ func a_set(key: String, path: String, BPM : float = 100, loop = false, bars = 4)
 		target.stream = null
 	else:
 		if FileAccess.file_exists(path):
-			var soundfile: AudioStreamOggVorbis = load(path)
+			var soundfile: AudioStreamOggVorbis = AudioStreamOggVorbis.load_from_file(path) #load(path)
 			soundfile.bpm = BPM
 			soundfile.loop = loop
 			soundfile.bar_beats = bars
@@ -110,7 +110,7 @@ func se_set(key: String, path: String):
 		target.stream = null
 	else:
 		if FileAccess.file_exists(path):
-			var soundfile: AudioStreamOggVorbis = load(path)
+			var soundfile: AudioStreamOggVorbis = AudioStreamOggVorbis.load_from_file(path) #load(path)
 			soundfile.loop = false
 			target.stream = soundfile
 			print("se_set: load @ "+ path)

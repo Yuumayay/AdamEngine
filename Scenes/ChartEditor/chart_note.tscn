@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://caes1okbjsg3n"]
+
+[ext_resource type="Script" path="res://Script/CharterNote.gd" id="1_6bv0v"]
+
+[node name="Note" type="Node2D"]
+script = ExtResource("1_6bv0v")
+
+[node name="Button" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_right = 50.0
+offset_bottom = 50.0
+focus_mode = 0
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
