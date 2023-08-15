@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://duyo8gehsmlgn"]
+
+[ext_resource type="Texture2D" uid="uid://4gjmwwexsduy" path="res://Assets/Images/Icons/icon-bf.png" id="1_45457"]
+[ext_resource type="Script" path="res://Scenes/ChartEditor/sec_icon.gd" id="2_b25dd"]
+
+[node name="sec_icon" type="Sprite2D"]
+position = Vector2(0.00012207, 1.00006)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("1_45457")
+centered = false
+hframes = 2
+script = ExtResource("2_b25dd")
+
+[node name="button" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = 21.0
+offset_top = 21.0
+offset_right = 129.0
+offset_bottom = 113.0
+focus_mode = 0
+
+[connection signal="button_down" from="button" to="." method="_on_button_button_down"]

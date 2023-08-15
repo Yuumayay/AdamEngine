@@ -4,7 +4,7 @@ const SUPPORTED_FORMATS: Array = [".json", ".txt", ".gd"]
 
 func f_save(savepath: String, type: String, content):
 	if SUPPORTED_FORMATS.has(type):
-		print("savepath: ", savepath, ", type: ", type, ", content: ", content)
+		print("savepath: ", savepath, ", type: ", type)
 	else:
 		printerr("this format is not supported")
 	var file
@@ -35,6 +35,7 @@ func f_read(path: String, type: String):
 	var file
 	var filepath = path
 	var data
+	print("load path:", filepath)
 	file = FileAccess.open(filepath, FileAccess.READ)
 	if type == ".json":
 		var content = file.get_as_text()
@@ -53,6 +54,10 @@ var conv_lua = [
 	[" then", ":"],
 	["elseif", "elif"],
 	["else", "else:"],
+	["for", "for i in range(1): #"],
+	["..", "+"],
+	["--", "#"],
+	["math.pi", "PI"],
 	["onCreate()", "onCreate():"],
 	["goodNoteHit()", "goodNoteHit():"],
 	["noteMiss()", "noteMiss():"],
@@ -60,6 +65,7 @@ var conv_lua = [
 	["onBeatHit()", "onBeatHit():"],
 	["onStepHit()", "onStepHit():"],
 	["opponentNoteHit()", "opponentNoteHit():"],
+	["onSongStart()", "onSongStart():"],
 	["makeLuaSprite", "Modchart.makeLuaSprite"],
 	["addLuaSprite", "Modchart.addLuaSprite"],
 	["makeGraphic", "Modchart.makeGraphic"],
@@ -67,6 +73,8 @@ var conv_lua = [
 	["setObjectOrder", "Modchart.setObjectOrder"],
 	["setProperty", "Modchart.setProperty"],
 	["getProperty", "Modchart.getProperty"],
+	
+	["math.", ""],
 	["end", ""]
 ]
 
@@ -74,6 +82,7 @@ func lua_2_gd(content: String):
 	for i in conv_lua:
 		if content.contains(i[0]):
 			content = content.replace(i[0], i[1])
+		
 	content = content.insert(0, "extends Node\n")
 	print(content)
 	return content

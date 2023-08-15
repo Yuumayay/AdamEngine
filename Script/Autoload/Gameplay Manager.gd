@@ -7,7 +7,8 @@ const PRELOAD_SEC = 2
 var can_input: bool = true
 var trans: bool = false
 var debug_mode: bool = false
-var key_count: int = 4
+var key_count : Array = [4,4,4]
+enum {KC_BF, KC_DAD, KC_GF}
 var cur_multi: float = 1.0
 var cur_speed: float = 1.0
 
@@ -73,10 +74,14 @@ var fc_state: String = "N/A"
 
 var rating_total: Array = [0, 0, 0, 0, 0, 0]
 
-var is_story: bool
+#var is_story: bool
+enum {TITLE, FREEPLAY, STORY}
+var game_mode: int = TITLE
+var edit_jsonpath : String = "" #曲をエディットしている場合。
 var saveScore: bool
 var songList: Array
 var cur_song_index: int
+var skipCountdown := false
 
 ## GAMEPLAY WEEK PROPERTY ##
 var cur_week: String
@@ -94,7 +99,10 @@ var defaultZoom: float
 var isPixel: bool
 
 ## SONG JSON ##
-var cur_song: String = "bopeebo"
+const DEFAULT_SONG = "bopeebo"
+var cur_song: String = DEFAULT_SONG
+var cur_song_path: String
+var cur_song_data_path: String
 var cur_diff: String = "normal": #現在の難易度（文字列
 	set(v): # クソコード
 		cur_diff = v
@@ -109,7 +117,7 @@ var cur_diff: String = "normal": #現在の難易度（文字列
 var cur_stage: String = "stage"
 var player1: String = "bf"
 var player2: String = "dad"
-var player3: String = "gf"
+var player3 = "gf"
 
 var is3D: bool = false
 
@@ -121,12 +129,16 @@ var gf_json: Dictionary
 var iconBF: String:
 	set(v):
 		iconBF = v
+		if v == "":
+			return
 		var healthBarBG = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
 		if healthBarBG:
 			healthBarBG.iconUpdate()
 var iconDAD: String:
 	set(v):
 		iconDAD = v
+		if v == "":
+			return
 		var healthBarBG2 = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
 		if healthBarBG2:
 			healthBarBG2.iconUpdate()
@@ -172,7 +184,31 @@ func sort_ascending(a, b):
 	if a[0] < b[0]:
 		return true
 	return false
+
+func get_json_keycount(song):
+	var ret : Array = [4, 4, 4]
+	if song.has("mania"):
+		if song.mania == 0:
+			ret = [4, 4, 4]
+		if song.mania == 1:
+			ret = [6, 6, 6]
+		if song.mania == 2:
+			ret = [9, 9, 9]
+			
+	if song.has("keyCount"):
+		ret = [song.keyCount,song.keyCount,song.keyCount]
+		
+	#Adam仕様keycount
+	if song.has("player1KeyCount"): 
+		ret[0] = song.player1KeyCount
+	if song.has("player2KeyCount"): 
+		ret[1] = song.player2KeyCount
+	if song.has("player3KeyCount"): 
+		ret[2] = song.player3KeyCount
 	
+	print("load keycount", ret)
+	return ret
+
 # json load
 func setup(data):
 	data = JSON.stringify(data)
@@ -184,7 +220,7 @@ func setup(data):
 	notes.append(song.notes)
 	cur_speed = song.speed / cur_multi
 	Audio.bpm = song.bpm * cur_multi
-	key_count = 4
+	key_count = [4, 4, 4]
 	
 	if song.has("stage"):
 		cur_stage = song.stage
@@ -202,7 +238,10 @@ func setup(data):
 	player1 = song.player1
 	player2 = song.player2
 	if song.has("player3"):
-		player3 = song.player3
+		if song.player3:
+			player3 = song.player3
+		else:
+			player3 = "gf"
 	elif song.has("gfVersion"):
 		player3 = song.gfVersion
 	else:
@@ -232,15 +271,7 @@ func setup(data):
 	if song.has("is3D"):
 		is3D = song.is3D
 	
-	if song.has("mania"):
-		if song.mania == 0:
-			key_count = 4
-		if song.mania == 1:
-			key_count = 6
-		if song.mania == 2:
-			key_count = 9
-	if song.has("keyCount"):
-		key_count = song.keyCount
+	key_count = get_json_keycount(song)
 		
 	for i in notes[0]:
 		var sectionNotes : Array= i.sectionNotes
@@ -252,15 +283,16 @@ func setup(data):
 			who_sing.append(i.mustHitSection)
 			ms.append(ind[0])
 			note_property.append(ind)
-			if i.mustHitSection:
-				if ind[1] >= key_count:
-					#dir.append(randi_range(0, key_count * 2 -1))
-					dir.append(ind[1] - key_count)
-				else:
-					#dir.append(randi_range(0, key_count * 2 -1))
-					dir.append(ind[1] + key_count)
-			else:
-				#dir.append(randi_range(0, key_count * 2 -1))
+			if i.mustHitSection: # BF---------------
+				if ind[1] >= key_count[KC_BF] + key_count[KC_DAD]: # GF
+					dir.append(ind[1])
+					
+				elif ind[1] >= key_count[KC_BF]: #DAD
+					dir.append(ind[1] - key_count[KC_BF])
+					
+				else: #BF
+					dir.append(ind[1] + key_count[KC_BF])
+			else:# DAD-----------------
 				dir.append(ind[1])
 			
 			sus.append(ind[2])
@@ -376,7 +408,8 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 							animation_name = "idle"
 							
 					if character != 0: #キャラクターだったら　アニメ名を正規化
-						for i in Game.note_anim:
+						for anim in Game.note_anim:
+							var i = anim.replace("2", "")
 							if animation_name.contains(i):
 								if animation_name.contains("dance"):
 									animation_name = "dance" + i
@@ -459,7 +492,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 	return sprite_data
 
 
-# XML load 3D
+# XML load 3D kuso kuso kuso　コード　TODO 2Dから sprite.framesだけコピーすればいい
 func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
 	if !FileAccess.file_exists(path):
 		Audio.a_play("Error")
@@ -475,7 +508,6 @@ func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, c
 	var sprite_data:AnimatedSprite3D = AnimatedSprite3D.new() 
 	
 	var base_path:StringName = path.get_basename()
-	#var file_name:StringName = path.get_file()
 	
 	var texture:Texture = Game.load_image(base_path + ".png")
 	
@@ -605,6 +637,13 @@ func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, c
 	
 	return sprite_data
 
+const gf_key_case := ["gfVersion", "player3"]
+
+func get_gf_name(json):
+	for i in gf_key_case:
+		if json.has(i):
+			return json[i]
+	return "none"
 
 func getColor(t: Texture2D, r1: int, r2: int) -> Color:
 	var colorArray: Array = []

@@ -369,7 +369,6 @@ var mouse_scroll_speed: float = 1
 @export var playing: bool = false
 
 var cur_song: String
-var cur_diff: String
 var songSpeed := 1.0
 
 # ？
@@ -397,9 +396,6 @@ var chart_zoom := 1.0
 var fileName : String
 var loadPath : String
 var songPath: String
-var jsonPathChara := ["","",""]
-var jsonChara := [{},{},{}]
-var iconPath := ["","",""]
 
 # チャートエディタの現在位置　→　秒数にコンバートする
 func position_to_time():
@@ -449,8 +445,6 @@ func _ready():
 		var json = File.f_read(Game.edit_jsonpath, ".json")
 		loadJson(json)
 
-
-
 func init():
 	data[EVENT].icon_name = TYPE_ICON[EVENT]
 	data[EVENT].key_count = 1
@@ -461,7 +455,7 @@ func init():
 	data[SECTION_INFO].icon_name = TYPE_ICON[EVENT]
 	data[SECTION_INFO].key_count = 1
 	
-	set_key_count_all()
+	set_key_count_all(get_key_count_from_data())
 	
 	$Menu/Line.position.y = MASS_OFFSET_Y
 	var song = get_difficulty_and_songname(fileName)[0]
@@ -475,11 +469,9 @@ func init():
 				convSong += i + "-"
 		song = convSong
 	print(diff)
-	cur_diff = diff
 	songPath = ""
 	var dataFilePaths := ["data/" + song + "/" + fileName,
 	"songs/" + song + "/" + fileName,
-	"data/songs/" + song + "/" + fileName,
 	"data/song data/" + song + "/" + fileName,
 	"data/song charts/" + song + "/" + fileName,
 	"data/charts/" + fileName]
@@ -487,27 +479,7 @@ func init():
 		print(i + song)
 		print(loadPath.replacen(i, "songs/" + song), " conv ", fileName)
 		songPath = loadPath.replacen(i, "songs/" + song)
-		var songData := {"song": {"player1": "bf", "player2": "dad", "player3": "gf"}}
-		if FileAccess.file_exists(loadPath + ".json"):
-			songData = File.f_read(loadPath + ".json", ".json")
-		var gf_name = Game.get_gf_name(songData)
-		for j in range(3):
-			if j == 2:
-				if gf_name == "none":
-					jsonPathChara[j] = Paths.p_chara(gf_name)
-				else:
-					jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song[gf_name] + ".json")
-			else:
-				jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song["player" + str(j + 1)] + ".json")
-			if !FileAccess.file_exists(jsonPathChara[j]):
-				jsonPathChara[j] = jsonPathChara[j].replacen("mods/", "assets/")
-			if FileAccess.file_exists(jsonPathChara[j]):
-				print("!!")
-				jsonChara[j] = File.f_read(jsonPathChara[j], ".json")
-				iconPath[j] = songPath.replacen("songs/" + song, "images/icons/icon-" + jsonChara[j].healthicon.to_lower() + ".png")
-				data[j].icon_name = jsonChara[j].healthicon.to_lower()
 		if FileAccess.file_exists(songPath + "/Inst.ogg"):
-			cur_song = song
 			break
 	if !cur_song:
 		Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", bpm)
@@ -541,11 +513,10 @@ func draw_all():
 	# remove all child
 	for i in mass.get_children():
 		mass.remove_child(i)
-		i.queue_free()
 	
 	# append empty section
-	if cur_section >= chartData.notes.size()-2:
-		for i in cur_section - (chartData.notes.size() - 2):
+	if cur_section >= chartData.notes.size() - 1:
+		for i in cur_section - (chartData.notes.size() - 1):
 			chartData.notes.append(empty_section.duplicate(true))
 	
 	var offset_y = cur_section * ONE_SECTION_H * chart_zoom
@@ -561,9 +532,9 @@ func draw_all():
 		# 合計xを50増やして空白を開ける
 		total_x += space
 		if cur_section != 0:
-			draw_mass_texture(total_x, MASS_OFFSET_Y - ONE_SECTION_H * chart_zoom + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 0.5, type, cur_section -1)
-		data[type].texture_mass = draw_mass_texture(total_x, MASS_OFFSET_Y + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 1.0, type, cur_section)
-		draw_mass_texture(total_x, MASS_OFFSET_Y + ONE_SECTION_H * chart_zoom + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 0.5, type, cur_section + 1)
+			draw_mass_texture(total_x, MASS_OFFSET_Y - ONE_SECTION_H * chart_zoom + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 0.5, type)
+		data[type].texture_mass = draw_mass_texture(total_x, MASS_OFFSET_Y + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 1.0, type)
+		draw_mass_texture(total_x, MASS_OFFSET_Y + ONE_SECTION_H * chart_zoom + offset_y, MASS_SIZE * keycount, MASS_SIZE * 16 * chart_zoom, 0.5, type)
 		# 合計xを(マスサイズ * キー数)ずつ増やす
 		total_x += (MASS_SIZE * keycount)
 		
@@ -603,7 +574,7 @@ func draw_mass(og_x, og_y, column, row, _alpha, type, _section, player, p_ind):
 			mass.add_child(new_rect)
 			index += 1
 
-func draw_mass_texture(x, y, w, h, a, type, sec_id):
+func draw_mass_texture(x, y, w, h, a, type):
 	var mass_texture = tex_mass.instantiate()
 	mass_texture.position.x = x
 	mass_texture.position.y = y
@@ -612,7 +583,6 @@ func draw_mass_texture(x, y, w, h, a, type, sec_id):
 	mass_texture.modulate.a = a
 	mass_texture.show()
 	mass_texture.type = type
-	mass_texture.section = sec_id
 	mass.add_child(mass_texture)
 	return mass_texture
 
@@ -625,84 +595,75 @@ func draw_beat_line(honsuu, start_line_n):
 		new_beat.position.y = (i + start_line_n) * (MASS_SIZE * 4 * chart_zoom) + MASS_OFFSET_Y
 		mass.add_child(new_beat)
 
-# アイコン再描画。　既にあれば生成しない。
 func draw_icon(x, icon_name, p_type : int ):
-	var objname = "icon-"+str(p_type)
-	
-	var new_icon = icons.get_node_or_null(objname)
-	var new_f = false
-	if !new_icon:
-		new_f = true
-		new_icon = Sprite2D.new()
-		new_icon.set_script(iconScript)
-		new_icon.name = objname
-	if Paths.p_icon(icon_name):
-		new_icon.texture = Paths.p_icon(icon_name)
-	else:
-		if FileAccess.file_exists(iconPath[p_type]):
-			new_icon.texture = Game.load_image(iconPath[p_type])
-		else:
-			new_icon.texture = Paths.p_icon(icon_name)
+	for i in icons.get_children():
+		i.queue_free()
+		icons.remove_child(i)
+		print(i)
+		
+	var new_icon = Sprite2D.new()
+	new_icon.texture = Paths.p_icon(icon_name)
 	new_icon.position.x = x + 50
 	new_icon.position.y = 50
 	new_icon.hframes = floor(new_icon.texture.get_width() / 150.0)
 	new_icon.scale = Vector2(0.5, 0.5)
 	
+	new_icon.set_script(iconScript)
 	new_icon.icon_name = icon_name
 	
 	new_icon.key_count = data[p_type].key_count
 	new_icon.p_type = p_type
 	
-	if new_f:
-		new_icon.init()
-		#icons.add_child.call_deferred(new_icon)
-		icons.add_child(new_icon)
+	new_icon.init()
+	
+	icons.add_child.call_deferred(new_icon)
 
 func erase_all_notes():
 	for i in notes.get_children():
 		notes.remove_child(i)
 		i.queue_free()
 
+func get_key_count_from_data():
+	if chartData.has("mania"):
+		if chartData.mania == 0:
+			return 4
+		elif chartData.mania == 1:
+			return 6
+		elif chartData.mania == 2:
+			return 9
+	if chartData.has("keyCount"):
+		return chartData.keyCount
+	return 4
 
-func set_key_count_all():
-	var ret = Game.get_json_keycount(chartData)
-	data[BF].key_count = ret[0]
-	data[DAD].key_count = ret[1]
-	data[GF].key_count = ret[2]
-	
-	draw_all()
-#	for j in range(1, 4):
-#		chartData["player" + str(j) + "KeyCount"] = value
-#		data[j].key_count = value
-#	draw_all()
+func set_key_count_all(value):
+	for j in range(1, 4):
+		chartData["player" + str(j) + "KeyCount"] = value
+		data[j].key_count = value
 
 func set_all_notes():
+	var keycount: int = get_key_count_from_data()
+			
 	for section in chartData.notes:
 		for i in section["sectionNotes"]:
 			var ms = i[0]
 			var dir: int = i[1]
 
 			var type: int = DAD
-			
-			if dir >= data[BF].key_count+ data[DAD].key_count:
-				type = GF
-				dir -= data[BF].key_count+ data[DAD].key_count
-				
-			elif section.mustHitSection:
+			if section.mustHitSection:
 				type = BF
-				if dir >= data[BF].key_count:
-					type = DAD
-					dir -= data[BF].key_count
+			if dir >= keycount*2:
+				type = GF
+			elif dir >= keycount:
+				if section.mustHitSection:
+					type = 2
+				else:
+					type = 1
 			
-			else:
-				type = DAD
-				if dir >= data[DAD].key_count:
-					type = BF
-					dir -= data[DAD].key_count
+			dir = dir % keycount
 			
 			var sus = i[2]
 			
-			var note = set_note_line_ms(type, ms, sus, dir, data[type].key_count)
+			var note = set_note_line_ms(type, ms, sus, dir, keycount)
 			if i.size() == 3:
 				i.append(0)
 			if i.size() == 4:
@@ -717,17 +678,14 @@ func set_note_line_ms(type, ms, susms, dir, keycount):
 	return set_note_and_line(x, y, susy, dir, keycount)
 
 # ノート生成
-func set_note_and_line(noteX, noteY, lineY, dir: int, keycount):
+func set_note_and_line(noteX, noteY, lineY, dir, keycount):
 	var note_parent = note_tscn.instantiate()
 	var note = note_parent.get_node("sprite")
 	note.sprite_frames = note_pr.sprite_frames
 	note_parent.position = Vector2(noteX, noteY)
 	note.centered = false
 	note.scale = Vector2(0.3, 0.3)
-	if keycount > 18:
-		note.animation = View.keys["18k"][dir % 18]
-	else:
-		note.animation = View.keys[str(keycount) + "k"][dir]
+	note.animation = View.keys[str(keycount) + "k"][dir]
 	note.position += Vector2(2, 2)
 	note.z_index = 2
 	notes.add_child(note_parent)
@@ -745,7 +703,6 @@ func set_character(type, value):
 func set_key_count(type, value):
 	chartData["player" + str(type) + "KeyCount"] = value
 	data[type].key_count = value
-	print(chartData["player" + str(type) + "KeyCount"])
 	draw_all()
 
 func set_note_skin(type, value):
@@ -895,7 +852,7 @@ func generateJson() -> Dictionary:
 	for section in chartData.notes:
 		section.sectionNotes.sort_custom(sort_ascending) #整列
 		for i in section.sectionNotes:
-			#if note.player_type == 0: # EVENT kuso イベントはイベントでループする TODO
+			#if note.player_type == 0: # EVENT kuso イベントはイベントでループするTODO
 			#	jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type ])
 			i.erase(UID)
 			sectionNotes_n += 1
@@ -950,24 +907,16 @@ func key_check():
 		Audio.a_stop("Debug Menu")
 		Audio.a_volume_set("Debug Menu", 0)
 		Trans.t_trans("Debug Menu")
-	
-	if !shortCut:
-		return
-	
 	if Input.is_action_just_pressed("game_pause"):
 		stop_audio()
 		Audio.a_stop("Debug Menu")
 		Audio.a_volume_set("Debug Menu", 0)
 		var diffandfile = get_difficulty_and_songname(cur_song)
 		Game.cur_song = diffandfile[0]
-		Game.cur_diff = cur_diff
+		Game.cur_diff = diffandfile[1]
 		Audio.bpm = bpm
 		if !Paths.p_song(Game.cur_song, "Inst"):
 			Game.cur_song_path = songPath
-			Game.cur_song_data_path = loadPath
-			Game.p1_json = jsonChara[0]
-			Game.p2_json = jsonChara[1]
-			Game.gf_json = jsonChara[2]
 		Game.edit_jsonpath = "user://ae_chart_temp" + ".json"
 		File.f_save("user://ae_chart_temp", ".json", generateJson())
 		Trans.t_trans("Gameplay")
@@ -1050,83 +999,24 @@ func updateZoom():
 				line.show()
 
 
-# FNFのキモいデータ形式fnfdirへ変換
-func calc_fnfdir(mustHit, type, dir):
-	if (type == DAD and mustHit):
-		dir += data[BF].key_count
-	elif (type == BF and !mustHit):
-		dir += data[DAD].key_count
-	elif (type == GF):
-		dir += data[BF].key_count + data[DAD].key_count
-	return dir
-
-# TODO keycount変更時にchartDataが更新されてないぞ
-
-# FNFのキモいデータ形式fnfdirをtypeとdirに分解
-func rev_type_fnfdir(mustHit, dir):
-	var type = 0
-	if mustHit:
-		type = BF #mustHitはdir0からがBF側
-	else:
-		type = DAD #mustHitはdir0からがBF側
-	
-	if (dir >= data[BF].key_count + data[DAD].key_count):
-		dir -= data[BF].key_count + data[DAD].key_count
-		type = GF
-	elif (mustHit and dir >= data[BF].key_count): #BF側で、DAD
-		dir -= data[BF].key_count
-		type = DAD
-	elif (!mustHit and dir >= data[DAD].key_count): #DAD側で、BF
-		dir -= data[DAD].key_count
-		type = BF
-	# TODO GF
-		
-	return type
-
-func rev_dir_fnfdir(mustHit, dir):
-	var type = 0
-	if mustHit:
-		type = BF #mustHitはdir0からがBF側
-	else:
-		type = DAD #mustHitはdir0からがBF側
-		
-	if (dir >= data[BF].key_count + data[DAD].key_count):
-		dir -= data[BF].key_count + data[DAD].key_count
-		type = GF
-	elif (mustHit and dir >= data[BF].key_count): #BF側で、DAD
-		dir -= data[BF].key_count
-		type = DAD
-	elif (!mustHit and dir >= data[DAD].key_count): #DAD側で、BF
-		dir -= data[DAD].key_count
-		type = BF
-	# TODO GF
-	
-	return dir
-
 # ノートを置く
 func on_mouse_down_set_note( texturemass ):
-	var t = texturemass.type
-	if t != SECTION_INFO:
+	if texturemass.type != SECTION_INFO:
 		# ms　へのコンバート
 		var i = texturemass
-		var type = i.type
 	
 		var x = fix_grid(get_local_mouse_position().x)
 		var dir = (x - i.position.x)  / MASS_SIZE
-		if dir >= data[type].key_count: #範囲外から押される（決定ボタンでこのイベントが送られたパターン
-			return 
-		var mustHit = chartData.notes[cur_section].mustHitSection
-		
 		var y = fix_grid(get_local_mouse_position().y, grid)
 		
 		print(x, y)
 		Audio.a_play("Place")
+		var type = i.type
 		var sus := 0
 		var distance := 0.0
 		var key = data[type].key_count
 		# ボタンとラインおく
 		var note = set_note_and_line(x, y, sus, dir, key)
-		var sec_id = texturemass.section
 		
 		if type != EVENT:
 			var line = note.line
@@ -1135,8 +1025,6 @@ func on_mouse_down_set_note( texturemass ):
 				print(distance)
 				if not line:
 					break
-				if not note:
-					return
 				if distance <= 0:
 					sus = 0
 					line.set_point_position(1, Vector2(0, sus))
@@ -1148,9 +1036,11 @@ func on_mouse_down_set_note( texturemass ):
 		var ms = y_to_ms(y) 
 		var susms = susy_to_ms(sus)
 		
-		chartData.notes[sec_id]["sectionNotes"].append([ms, calc_fnfdir(mustHit, t, dir), susms, 0, note.uid])
+		# ↓＊＊＊＊セクションが違うところを押した場合、バグる！　texturemassにセクションをいれるべき!!
+		chartData.notes[cur_section]["sectionNotes"].append([ms, dir, susms, 0, note.uid])
 		print([ms, dir, susms])
 		
+		print(i.position.y, " ",y)
 		updateZoom()
 	else:
 		# section iconの場合、何もせずリドロー
@@ -1229,12 +1119,3 @@ func _on_load_json_window_file_selected(path):
 		var json = File.f_read(path, "." + extension)
 		loadJson(json)
 		Game.edit_jsonpath = basename+ "." + extension
-
-var shortCut = true
-# チャート画面をマウスオーバーしたらショートカットオン
-func _on_button_mouse_entered():
-	shortCut = true
-
-func _on_button_mouse_exited():
-	shortCut = false
-	

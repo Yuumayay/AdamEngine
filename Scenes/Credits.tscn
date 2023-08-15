@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cti80rhuvkjyv"]
+[gd_scene load_steps=8 format=3 uid="uid://cti80rhuvkjyv"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_a8amy"]
 [ext_resource type="Script" path="res://Scenes/Credits.gd" id="1_vl0tp"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_jf7dg"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_ar5sf"]
+[ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="4_afifm"]
 [ext_resource type="Script" path="res://Script/Credit Template.gd" id="5_dkbdt"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="6_5p6us"]
 
@@ -16,6 +17,14 @@ texture = ExtResource("1_a8amy")
 script = ExtResource("2_jf7dg")
 bumpin_scale = Vector2(1.02, 1.02)
 
+[node name="Alphabet" parent="." instance=ExtResource("4_afifm")]
+
+[node name="Icon" type="Sprite2D" parent="Alphabet"]
+offset = Vector2(70, 45)
+hframes = 3
+script = ExtResource("2_jf7dg")
+bumpin_scale = Vector2(0.95, 0.95)
+
 [node name="Template" type="RichTextLabel" parent="."]
 visible = false
 clip_contents = false
@@ -27,12 +36,6 @@ text = "TEST"
 scroll_active = false
 autowrap_mode = 0
 script = ExtResource("5_dkbdt")
-
-[node name="Icon" type="Sprite2D" parent="Template"]
-offset = Vector2(70, 45)
-hframes = 3
-script = ExtResource("2_jf7dg")
-bumpin_scale = Vector2(0.95, 0.95)
 
 [node name="Selectable" type="Node2D" parent="."]
 

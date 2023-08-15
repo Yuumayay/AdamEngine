@@ -4,6 +4,10 @@ extends CanvasLayer
 @onready var root = $/root
 
 var cur_scene = "Title Menu"
+var last_scene = "Title Menu"
+
+func _ready():
+	cur_scene = get_tree().current_scene.name
 
 func t_trans(change_to) -> void:
 	Game.trans = true
@@ -20,10 +24,14 @@ func t_trans(change_to) -> void:
 	
 	await get_tree().create_timer(0.25).timeout
 	
-	root.remove_child(root.get_node(NodePath(cur_scene)))
-	root.add_child(next_scene)
-	
+	var removenode = root.get_node(NodePath(cur_scene))
+	if removenode:
+		root.remove_child(removenode)
+		
+	last_scene = cur_scene
 	cur_scene = change_to
+	
+	root.add_child(next_scene)
 	
 	var t2 = create_tween()
 	t2.tween_property(sprite, "position", Vector2(sprite.position.x, 1440), 0.25)

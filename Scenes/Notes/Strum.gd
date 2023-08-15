@@ -2,22 +2,46 @@ extends AnimatedSprite2D
 
 signal bf_hit
 
-@export var dir: int
+@export var dir: int # fnfdir 0,1,2,3  ,4...
 
-enum {AUTO_DAD, PLAYER, AUTO_PLAYER}
+enum {AUTO_DAD, PLAYER, AUTO_PLAYER, GF}
 @export var type: int
 
 var rating = preload("res://Scenes/Rating.tscn")
 var splash_path = "Assets/Images/Notes/Default/Note_Splashes.xml"
 var hit: String
+var ndir := 0 # dir
+var keys_anim : Array 
+var kc := 0
 
 func _ready():
 	hit = Setting.setting.category["gameplay"]["hit sound"]["metadata"][Setting.s_get("gameplay", "hit sound")]
 	Audio.a_volume_set(hit, 10)
-	if Game.note_anim[dir - type * Game.key_count].contains("2"):
-		animation = Game.note_anim[dir - type * Game.key_count].replace("2", "") + " static"
+	
+	ndir = dir
+	if type == 1 or type == 2: #bf strum
+		kc = Game.KC_BF
+		ndir -= Game.key_count[Game.KC_DAD]
+	elif type == 0: # dad strum
+		kc = Game.KC_DAD
 	else:
-		animation = Game.note_anim[dir - type * Game.key_count] + " static"
+		kc = Game.KC_GF
+		ndir -= Game.key_count[Game.KC_DAD]
+	
+	if Game.key_count[kc] > 18:
+		var n = kc / 18
+		var n2 = kc % 18
+		for i in n:
+			keys_anim.append_array(View.keys["18k"])
+		if n2 != 0:
+			keys_anim.append_array(View.keys[str(n2) + "k"])
+	else:
+		keys_anim = View.keys[str(Game.key_count[kc]) + "k"]
+	
+	if keys_anim[ndir].contains("2"):
+		animation = keys_anim[ndir].replace("2", "") + " static"
+	else:
+		animation = keys_anim[ndir] + " static"
 	var splash = Game.load_XMLSprite(splash_path, "", false)
 	splash.name = "splash"
 	splash.modulate.a = 0
@@ -39,6 +63,9 @@ func _process(delta):
 	elif type == AUTO_PLAYER:
 		playerbot_strum()
 		strum_anim_player()
+	elif type == GF:
+		bot_strum()
+		strum_anim_dad()
 
 func hide_note(i):
 	# 消去フラグをオンにして、ノートを非表示
@@ -54,31 +81,44 @@ func calc_sus_time(note):
 	#return Audio.cur_ms - note.ms - note.sus + Game.sus_tolerance
 
 func strum_anim_player():
-	if Game.cur_input[dir - type * Game.key_count] == 0:
-		if Game.note_anim[dir - type * Game.key_count].contains("2"):
-			animation = Game.note_anim[dir - type * Game.key_count].replace("2", "") + " static"
+	if Game.cur_input[ndir] == 0:
+		if keys_anim[ndir].contains("2"):
+			animation = keys_anim[ndir].replace("2", "") + " static"
 		else:
-			animation = Game.note_anim[dir - type * Game.key_count] + " static"
+			animation = keys_anim[ndir] + " static"
 	else:
 		if animation.contains("confirm"):
 			frame += 1
 		else:
 			if type == PLAYER:
-				animation = Game.note_anim[dir - type * Game.key_count] + " press"
+				animation = keys_anim[ndir] + " press"
 
 func strum_anim_dad():
-	if Game.dad_input[dir] == 0:
-		if Game.note_anim[dir].contains("2"):
-			animation = Game.note_anim[dir].replace("2", "") + " static"
+	var input: Array
+	if type == AUTO_DAD:
+		input = Game.dad_input
+	elif type == GF:
+		input = Game.gf_input
+	if input[dir] == 0:
+		if keys_anim[dir].contains("2"):
+			animation = keys_anim[dir].replace("2", "") + " static"
 		else:
-			animation = Game.note_anim[dir] + " static"
+			animation = keys_anim[dir] + " static"
 	else:
 		if animation.contains("confirm"):
 			frame += 1
 
 func bot_strum():
+	var input: Array
+	var pType: int
+	if type == AUTO_DAD:
+		input = Game.dad_input
+		pType = 0
+	elif type == GF:
+		input = Game.gf_input
+		pType = 2
 	for i in Game.notes_data.notes:
-		if !i or i.free_f or dir != i.dir:
+		if !i or i.free_f or dir != i.dir or i.player != pType:
 			continue
 		var msdiff = Audio.cur_ms - i.ms
 		if msdiff < -1*Game.get_preload_sec()*1000:
@@ -87,25 +127,25 @@ func bot_strum():
 		# strumを通りすぎたとき (現在の曲のmsがノーツのmsを超えた）
 		if Audio.cur_ms >= i.ms:
 			if i.sus == 0: # 単押しだったら
-				animation = Game.note_anim[dir] + " confirm"
+				animation = keys_anim[dir] + " confirm"
 				Audio.a_volume_set("Voices", 0)
-				Game.dad_input[dir] = 2
+				input[dir] = 2
 				hide_note(i)
 				dad_hit()
 			else: # 長押しだったら
 				# ノーツだけを透明にし、長押しラインのポイント0の位置をstrumに合わさるように変える
 				if i.self_modulate.a != 0:
-					animation = Game.note_anim[dir] + " confirm"
+					animation = keys_anim[dir] + " confirm"
 					Audio.a_volume_set("Voices", 0)
-					Game.dad_input[dir] = 2
+					input[dir] = 2
 					i.self_modulate.a = 0
 					dad_hit()
 					break
-				Game.dad_input[dir] = 1
+				input[dir] = 1
 				i.update_linelen()
 				
 				if calc_sus_time(i) <= 0:
-					Game.dad_input[dir] = 0
+					input[dir] = 0
 					hide_note(i)
 
 func playerbot_strum():
@@ -118,25 +158,25 @@ func playerbot_strum():
 					
 		if Audio.cur_ms >= i.ms:
 			if i.sus == 0:# 単押しだったら
-				animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
-				Game.cur_input[dir - type * Game.key_count] = 2
+				animation = keys_anim[ndir] + " confirm"
+				Game.cur_input[ndir] = 2
 				hide_note(i)
 				i.hit_ms = 0.0
 				Game.kps.append(1.0)
 				judge(i.hit_ms, i.type)
 			else:# 長押しだったら
 				if i.self_modulate.a != 0:
-					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
-					Game.cur_input[dir - type * Game.key_count] = 2
+					animation = keys_anim[ndir] + " confirm"
+					Game.cur_input[ndir] = 2
 					i.self_modulate.a = 0
 					i.hit_ms = 0.0
 					Game.kps.append(1.0)
 					judge(i.hit_ms, i.type)
 					break
-				Game.cur_input[dir - type * Game.key_count] = 1
+				Game.cur_input[ndir] = 1
 				i.update_linelen()
 				if calc_sus_time(i) <= 0:
-					Game.cur_input[dir - type * Game.key_count] = 0
+					Game.cur_input[ndir] = 0
 					hide_note(i)
 
 func player_strum():
@@ -149,8 +189,8 @@ func player_strum():
 		
 		if Audio.cur_ms >= i.ms - Game.rating_offset[Game.MISS] * Game.cur_multi:
 			if i.sus == 0:
-				if Game.cur_input[dir - type * Game.key_count] == 2:
-					animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
+				if Game.cur_input[ndir] == 2:
+					animation = keys_anim[ndir] + " confirm"
 					hide_note(i)
 					i.hit_ms = msdiff / Game.cur_multi
 					judge(i.hit_ms, i.type)
@@ -160,7 +200,7 @@ func player_strum():
 					i.modulate.a = 0.5
 			else:
 				if i.self_modulate.a == 0:
-					if Game.cur_input[dir - type * Game.key_count] == 1:
+					if Game.cur_input[ndir] == 1:
 						i.self_modulate.a = 0
 						if msdiff >= 0:
 							i.update_linelen()
@@ -177,8 +217,8 @@ func player_strum():
 							i.free_f = true
 							i.modulate.a = 0.5
 				else:
-					if Game.cur_input[dir - type * Game.key_count] == 2:
-						animation = Game.note_anim[dir - type * Game.key_count] + " confirm"
+					if Game.cur_input[ndir] == 2:
+						animation = keys_anim[ndir] + " confirm"
 						i.self_modulate.a = 0
 						i.hit_ms = msdiff / Game.cur_multi
 						judge(i.hit_ms, i.type)
@@ -210,7 +250,7 @@ func judge(hit_ms, notetype):
 	elif ms <= Game.rating_offset[Game.PERF + 1]:
 		$splash.modulate.a = 1
 		$splash.stop()
-		$splash.play("note splash " + Game.note_anim[dir - Game.key_count])
+		$splash.play("note splash " + keys_anim[ndir])
 		new_rating.frame = Game.PERF
 		Game.add_rating(Game.PERF)
 		Game.add_health(Game.health_gain[Game.PERF])
@@ -218,7 +258,7 @@ func judge(hit_ms, notetype):
 	elif ms <= Game.rating_offset[Game.SICK + 1]:
 		$splash.modulate.a = 1
 		$splash.stop()
-		$splash.play("note splash " + Game.note_anim[dir - Game.key_count])
+		$splash.play("note splash " + keys_anim[ndir])
 		new_rating.frame = Game.SICK
 		Game.add_rating(Game.SICK)
 		Game.add_health(Game.health_gain[Game.SICK])

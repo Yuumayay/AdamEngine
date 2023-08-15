@@ -70,8 +70,8 @@ func _ready():
 			print(scriptPath)
 			
 			if scriptPath.get_extension() == "lua":
-				File.f_save(scriptPath.get_basename(), ".gd", File.lua_2_gd(File.f_read(scriptPath, ".lua")))
-				scriptPath = scriptPath.get_basename() + ".gd"
+				File.f_save("user://ae_stage_script_temp", ".gd", File.lua_2_gd(File.f_read(scriptPath, ".lua")))
+				scriptPath = "user://ae_stage_script_temp" + ".gd"
 			
 			var scr: Script = load(scriptPath)
 			sNode = $/root/Gameplay/StageScript

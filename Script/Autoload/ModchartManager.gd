@@ -10,6 +10,7 @@ var lyricslabel: Label
 var ui: CanvasLayer
 var info: CanvasLayer
 var stages
+var luasprites
 var scoretext
 
 var has_onUpdate: bool = false
@@ -20,6 +21,8 @@ var has_onDestroy: bool = false
 var modcharts: Dictionary = {}
 
 func loadModchart():
+	if Game.cur_song.to_lower() == "defeat" or Game.cur_song.to_lower() == "defeated":
+		setDefeatModchart()
 	if Game.is3D:
 		gameplay = $/root/Gameplay3D
 	else:
@@ -29,15 +32,22 @@ func loadModchart():
 	ui = gameplay.get_node("UI")
 	info = gameplay.get_node("Info")
 	stages = gameplay.get_node("Stages")
+	luasprites = gameplay.get_node("LuaSprites")
 	scoretext = info.get_node("Label1")
-	if Paths.p_modchart(Game.cur_song, Game.cur_diff): #もしmodchartファイルが存在するなら
+	var modchartPath
+	if Paths.p_modchart(Game.cur_song, Game.cur_diff):
+		modchartPath = Paths.p_modchart(Game.cur_song, Game.cur_diff)
+	else:
+		print(Game.cur_song + "-" + Game.cur_diff)
+		print(Game.cur_song_data_path.replacen(Game.cur_song + "-" + Game.cur_diff, ""))
+		modchartPath = Paths.p_modchart(Game.cur_song_data_path.replacen(Game.cur_song + "-" + Game.cur_diff, ""), Game.cur_diff)
+	if modchartPath: #もしmodchartファイルが存在するなら
 		# modchart.gdのonCreate関数を実行
-		var modchartPath = Paths.p_modchart(Game.cur_song, Game.cur_diff)
 		
 		# TODO lua対応
 		if modchartPath.get_extension() == "lua":
-			File.f_save(modchartPath.get_basename(), ".gd", File.lua_2_gd(File.f_read(modchartPath, ".lua")))
-			modchartPath = modchartPath.get_basename() + ".gd"
+			File.f_save("user://ae_modchart_temp", ".gd", File.lua_2_gd(File.f_read(modchartPath, ".lua")))
+			modchartPath = "user://ae_modchart_temp" + ".gd"
 		
 		var scr: Script = load(modchartPath)
 		mNode = $/root/Gameplay/ModchartScript
@@ -139,21 +149,6 @@ func eraseDraw(tag: String):
 	
 	target.queue_free()
 
-func camZoomDad(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	var cam = gameplay.get_node("Camera")
-	cam.camMove(cam.dad.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
-
-func camZoomBF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	var cam = gameplay.get_node("Camera")
-	cam.camMove(cam.bf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
-
-func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
-	var cam = gameplay.get_node("Camera")
-	cam.camMove(cam.gf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
-
-func camReset():
-	gameplay.get_node("Camera").state = 0
-
 func hideUI():
 	ui.hide()
 	info.hide()
@@ -201,11 +196,64 @@ func makeLuaSprite(tag: String, path: String, x = 0.0, y = 0.0):
 		elif image_path.get_extension() == "png":
 			spr = Sprite2D.new()
 			spr.texture = Game.load_image(image_path)
-		spr.position = Vector2(x * -2, y * -2)
-		spr.scale = Vector2(1, 1)
 		spr.centered = true
-		spr.name = tag
-		stages.add_child(spr)
+	else:
+		spr = ColorRect.new()
+	spr.position = Vector2(x * -2, y * -2)
+	spr.scale = Vector2(1, 1)
+	spr.name = tag
+	var layer = CanvasLayer.new()
+	layer.follow_viewport_enabled = true
+	layer.add_child(spr)
+	luasprites.add_child(layer)
+
+func makeGraphic(tag, w, h, color):
+	var target = luasprites.get_node_or_null(tag)
+	if (target) and (target is ColorRect):
+		target.get_child(0).size = Vector2(w, h)
+		target.get_child(0).color = color
 
 func addLuaSprite(tag: String, front):
 	pass
+
+func setProperty(key: String, value):
+	var sp = key.split(".")
+	var target = sp[0]
+	var set
+	for i in sp.size() - 1:
+		if i == sp.size() - 1:
+			set += sp[i + 1]
+		else:
+			set += sp[i + 1] + "/"
+	if sp.size() != 0:
+		if Game[target]:
+			Game[target] = value
+		elif luasprites.get_node_or_null(target):
+			luasprites.get_node_or_null(target).set(set, value)
+
+############### CAMERA ###############
+
+func setObjectCamera(tag, cam):
+	var target = luasprites.get_node_or_null(tag)
+	if target:
+		if cam == "HUD":
+			target.follow_viewport_enabled = false
+		elif cam == "other":
+			target.follow_viewport_enabled = false
+		elif cam == "game":
+			target.follow_viewport_enabled = true
+
+func camZoomDad(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.dad.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
+
+func camZoomBF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.bf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
+
+func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, offset = Vector2.ZERO):
+	var cam = gameplay.get_node("Camera")
+	cam.camMove(cam.gf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
+
+func camReset():
+	gameplay.get_node("Camera").state = 0

@@ -46,6 +46,7 @@ func _ready():
 func setup2D():
 	var spr : AnimatedSprite2D
 	var cam = $/root/Gameplay/Camera
+	var gameplay = $/root/Gameplay
 	
 	if type == PLAYER: # BF側
 		json = Game.p1_json # jsonにbfのjsonをいれる
@@ -66,6 +67,7 @@ func setup2D():
 		
 		position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1])
 		cam.gf = self
+		gameplay.gf_strum_set(position)
 		json_load_fail = Game.gf_load_fail
 		
 	if json.has("gf_special_anim"):
@@ -119,6 +121,7 @@ func setup2D():
 func setup3D():
 	var spr : AnimatedSprite3D
 	var cam = $/root/Gameplay3D/Camera
+	var gameplay = $/root/Gameplay3D
 	
 	if type == PLAYER: # BF側
 		json = Game.p1_json # jsonにbfのjsonをいれる
@@ -138,6 +141,7 @@ func setup3D():
 		gf_beatanim_flag = true
 		position = (Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1]))
 		cam.gf = self
+		gameplay.gf_strum_set(position)
 		json_load_fail = Game.gf_load_fail
 	
 	if json.has("gf_special_anim"):
@@ -299,7 +303,8 @@ func run_anim(delta):
 	else:
 		if not Game.cur_state == Game.PAUSE:
 			animRemain -= delta
-	for i in range(Game.key_count):
+			
+	for i in range(Game.key_count[type]):
 		if input[i] == 2:
 			# BOTやプレイヤー以外のときは入力を0に
 			if type != PLAYER or (type == PLAYER and Setting.s_get("gameplay", "botplay")):

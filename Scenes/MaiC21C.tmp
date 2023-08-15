@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://xin33k5nvo15"]
+
+[ext_resource type="Texture2D" uid="uid://dihi2qx63mvbl" path="res://Assets/Images/UI/menuBG.png" id="1_fmid5"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_t8xj5"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="3_q8xqn"]
+[ext_resource type="Script" path="res://Scenes/Main Menu Selector.gd" id="3_wrgma"]
+[ext_resource type="Script" path="res://Script/VersionText.gd" id="4_g0x1x"]
+[ext_resource type="Script" path="res://Script/Main Menu Selectable.gd" id="5_ota4b"]
+[ext_resource type="Texture2D" uid="uid://b6fikjs35k4eu" path="res://Assets/Images/UI/AdamEngineLogo.png" id="7_pstdg"]
+
+[node name="Main Menu" type="Node2D"]
+
+[node name="BG" type="Sprite2D" parent="."]
+position = Vector2(641, 358)
+texture = ExtResource("1_fmid5")
+script = ExtResource("2_t8xj5")
+bumpin_scale = Vector2(1.02, 1.02)
+load_img = "Assets/Images/UI/menuBG.png"
+
+[node name="Version" type="Label" parent="."]
+visible = false
+offset_left = 5.0
+offset_top = 677.0
+offset_right = 134.0
+offset_bottom = 698.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_q8xqn")
+theme_override_font_sizes/font_size = 20
+text = "Adam Engine"
+script = ExtResource("4_g0x1x")
+
+[node name="Version2" type="Label" parent="."]
+offset_left = 5.0
+offset_top = 698.0
+offset_right = 134.0
+offset_bottom = 719.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_q8xqn")
+theme_override_font_sizes/font_size = 20
+text = "Friday Night Funkin' v0.2.8"
+
+[node name="Template" type="Node2D" parent="."]
+visible = false
+position = Vector2(963, 109)
+scale = Vector2(0.75, 0.75)
+script = ExtResource("5_ota4b")
+
+[node name="List" type="Node2D" parent="."]
+script = ExtResource("3_wrgma")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(119, 647)
+texture = ExtResource("7_pstdg")

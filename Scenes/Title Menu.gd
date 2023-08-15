@@ -28,6 +28,9 @@ func _ready():
 	#discord_sdk.large_image_text = "Try it now!"
 	#discord_sdk.refresh() 
 	
+	Game.game_mode = Game.TITLE
+	Game.edit_jsonpath = ""
+		
 	if Audio.a_check("Freaky Menu"):
 		introend()
 	else:

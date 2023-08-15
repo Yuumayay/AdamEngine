@@ -8,6 +8,7 @@ const version_text_color: Color = Color("ffb7ce")
 
 ## VARIABLES ##
 var strum_pos: Array
+var gf_strum_pos: Array
 
 # Gameplay Managerに移動
 var keys: Dictionary

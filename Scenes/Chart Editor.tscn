@@ -1,8 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://bn6j7ish2vl78"]
+[gd_scene load_steps=5 format=3 uid="uid://bn6j7ish2vl78"]
 
 [ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_ccrr2"]
-[ext_resource type="Texture2D" uid="uid://dogt0qqtgjbjw" path="res://eAssets/mass.png" id="3_hu1yl"]
-[ext_resource type="Script" path="res://Scenes/TextureMass.gd" id="4_eo7is"]
 [ext_resource type="Script" path="res://Scenes/Chart Editor.gd" id="4_taosd"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="6_o2uja"]
 
@@ -28,27 +26,6 @@ modulate = Color(0.796078, 0.698039, 0.988235, 1)
 z_index = -1
 position = Vector2(639, 360)
 texture = ExtResource("1_ccrr2")
-
-[node name="TextureMass" type="TextureRect" parent="."]
-visible = false
-offset_left = 136.0
-offset_top = 222.0
-offset_right = 390.0
-offset_bottom = 589.0
-texture = ExtResource("3_hu1yl")
-expand_mode = 1
-stretch_mode = 1
-script = ExtResource("4_eo7is")
-
-[node name="Button" type="Button" parent="TextureMass"]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 0
 
 [node name="Rect" type="ColorRect" parent="."]
 visible = false
@@ -77,21 +54,23 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
 
+[node name="Notes" type="Node2D" parent="."]
+
 [node name="Mass" type="Node2D" parent="."]
 
-[node name="Notes" type="Node2D" parent="."]
+[node name="Secs" type="Node2D" parent="."]
 
 [node name="Beat" type="Line2D" parent="."]
 visible = false
-points = PackedVector2Array(-1000, 300, 2000, 300)
+points = PackedVector2Array(-1000, 0, 2000, 0)
 width = 2.5
 default_color = Color(1, 0, 0, 1)
 
 [node name="Label" type="Label" parent="Beat"]
 offset_left = 751.0
-offset_top = 282.0
+offset_top = -18.0
 offset_right = 791.0
-offset_bottom = 323.0
+offset_bottom = 23.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("6_o2uja")
@@ -103,7 +82,8 @@ vertical_alignment = 1
 [node name="Menu" type="CanvasLayer" parent="."]
 
 [node name="Line" type="Line2D" parent="Menu"]
-points = PackedVector2Array(-1000, 300, 2000, 300)
+position = Vector2(0, 250)
+points = PackedVector2Array(-1000, 0, 2000, 0)
 width = 5.0
 
 [node name="Container" type="TabContainer" parent="Menu"]
@@ -1302,7 +1282,8 @@ position = Vector2(640, 360)
 
 [node name="Icons" type="CanvasLayer" parent="."]
 
-[connection signal="button_down" from="TextureMass/Button" to="TextureMass" method="_on_button_button_down"]
+[connection signal="mouse_entered" from="CanvasLayer/button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/button" to="." method="_on_button_mouse_exited"]
 [connection signal="button_down" from="Rect/Button" to="Rect" method="_on_button_button_down"]
 [connection signal="file_selected" from="Menu/SaveJSONWindow" to="." method="_on_save_json_window_file_selected"]
 [connection signal="file_selected" from="Menu/LoadJSONWindow" to="." method="_on_load_json_window_file_selected"]

@@ -27,6 +27,8 @@ func _ready():
 	var ind := 0
 	
 	diffselect = Game.diff
+	Game.game_mode = Game.STORY
+	Game.edit_jsonpath = ""
 	
 	for index in Paths.week_path_list:
 		
@@ -114,11 +116,11 @@ func _process(_delta):
 			$arrow2.play("arrow")
 		if Input.is_action_just_pressed("ui_accept"):
 			accept()
-			Game.is_story = true
+			Game.game_mode = Game.STORY
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_cancel()
 			Trans.t_trans("Main Menu")
-			Game.is_story = false
+			Game.game_mode = Game.TITLE
 	update_position()
 
 var lastScore := 0.0

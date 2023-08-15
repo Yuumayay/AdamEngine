@@ -5,6 +5,8 @@ extends Node2D
 @export_enum("Left", "Center", "Right") var grow_direction_h := 2
 @export var width: float
 @export var value: int
+@export var string: String
+@export var color: Color
 
 var conv_name: Dictionary = {">": "GREATER", "<": "LESS"}
 

@@ -1,6 +1,8 @@
 extends Node
 
+@onready var gf_strum_group: CanvasLayer = get_node("GFStrums")
 @onready var strum_group: CanvasLayer = get_node("Strums")
+@onready var gf_note_group: CanvasLayer = get_node("GFNotes")
 @onready var note_group: CanvasLayer = get_node("Notes")
 @onready var gameover: CanvasLayer = $Gameover
 
@@ -18,7 +20,22 @@ func _ready():
 	countDownTimer.name = "countDownTimer"
 	
 	Audio.a_stop("Freaky Menu")
-	var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+	
+	print(Trans.last_scene, Trans.cur_scene)
+	reset_property()
+	reset_dict_and_array()
+	var song_data
+	if Game.edit_jsonpath != "":
+		print("playmode from chart editor")
+		song_data = File.f_read(Game.edit_jsonpath, ".json")
+	else:
+		if Paths.p_chart(Game.cur_song, Game.cur_diff):
+			song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+		elif File.f_read(Game.edit_jsonpath, ".json"):
+			song_data = File.f_read(Game.edit_jsonpath, ".json")
+		else:
+			printerr("bug!!!!!!!!!!!!")
+	
 	Game.setup(song_data)
 	
 	cam_zoom = Game.defaultZoom
@@ -28,16 +45,28 @@ func _ready():
 	else:
 		$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
+	# DANGER 関数にまとめる
 	if Paths.p_song(Game.cur_song, "Voices"):
 		Audio.a_set("Voices", Paths.p_song(Game.cur_song, "Voices"), Audio.bpm)
 	else:
 		Audio.a_set("Voices", "", Audio.bpm)
-	Audio.a_set("Inst", Paths.p_song(Game.cur_song, "Inst"), Audio.bpm)
+	if Paths.p_song(Game.cur_song, "Inst"):
+		Audio.a_set("Inst", Paths.p_song(Game.cur_song, "Inst"), Audio.bpm)
+	else:
+		if Paths.p_song(Game.cur_song_path, "Inst"):
+			if Paths.p_song(Game.cur_song_path, "Voices"):
+				Audio.a_set("Voices", Paths.p_song(Game.cur_song_path, "Voices"), Audio.bpm)
+			else:
+				Audio.a_set("Voices", "", Audio.bpm)
+			Audio.a_set("Inst", Paths.p_song(Game.cur_song_path, "Inst"), Audio.bpm)
+		else:
+			Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", Audio.bpm)
+			Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", Audio.bpm)
 	
-	keybind(Game.key_count)
+	keybind()
 	strum_set()
 	character_set()
-	#note_set()
+	
 	countdown()
 	Modchart.loadModchart()
 	modchartCheck()
@@ -65,12 +94,12 @@ func _process(delta):
 					Audio.beat_hit_event = true
 		
 		for i in range(20000):
-			if Game.spawn_end or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
+			if Game.spawn_end or Game.ms.size() == 0 or !(Game.ms[note_count] - Game.get_preload_sec() * 1000 <= Audio.cur_ms):
 				break
 			note_spawn_load()
 	else:  #Game.spawn_end
 		if !Audio.a_check("Inst") and Game.cur_state != Game.PAUSE and Game.cur_state != Game.GAMEOVER:
-			if Game.is_story:
+			if Game.game_mode == Game.STORY:
 				Game.cur_song_index += 1
 				Game.week_fc_state.append(Game.fc_state)
 				if Game.cur_song_index < Game.songList.size():
@@ -98,6 +127,14 @@ func _process(delta):
 			add_child(pause.instantiate())
 			Audio.a_pause("Inst")
 			Audio.a_pause("Voices")
+		if Input.is_action_just_pressed("game_debug"):
+			Game.cur_state = Game.NOT_PLAYING
+			reset_dict_and_array()
+			reset_property()
+			if timer:
+				timer.paused = true
+				countDownTimer.paused = true
+			Trans.t_trans("Chart Editor")
 	elif Game.cur_state == Game.GAMEOVER: #ゲームオーバーだったら
 		if Input.is_action_just_pressed("ui_cancel"):
 			if Audio.a_check("Gameover"):
@@ -134,7 +171,6 @@ func scoreSave(case: String, song_or_week: String):
 						else:
 							print("not high score")
 						break
-				print(json)
 		elif case == "story":
 				var json: Dictionary = File.f_read("user://ae_week_score_data.json", ".json")
 				var songpath = song_or_week.to_lower() + "-" + Game.cur_diff
@@ -157,7 +193,6 @@ func scoreSave(case: String, song_or_week: String):
 						else:
 							print("not high score")
 						break
-				print(json)
 
 func killBF():
 	if Game.cur_state == Game.COUNTDOWN:
@@ -190,12 +225,12 @@ func modchartCheck():
 	if Modchart.modcharts.has("middleScroll"):
 		var strumCount := 0
 		for i in strum_group.get_children():
-			if strumCount < Game.key_count:
+			if i.type == 0:
 				i.position = Vector2(-9999, 550)
 				View.strum_pos[strumCount] = Vector2(-9999, 550)
 			else:
-				i.position.x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
-				View.strum_pos[strumCount].x = 115.0 * (4.0 / Game.key_count) * strumCount + 10
+				i.position.x = 115.0 * (4.0 / Game.key_count[Game.KC_BF]) * strumCount + 10
+				View.strum_pos[strumCount].x = 115.0 * (4.0 / Game.key_count[Game.KC_BF]) * strumCount + 10
 			strumCount += 1
 
 func scoreSaveCheck():
@@ -209,6 +244,7 @@ func scoreSaveCheck():
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():
 	var psec = Game.get_preload_sec()
+	
 	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
 		var new_note = note_scn.instantiate()
 		new_note.ind = note_count
@@ -219,10 +255,18 @@ func note_spawn_load():
 			new_note.up_or_down = 1
 		else:
 			new_note.up_or_down = -1
-		#new_note.visible = true
-		if Game.dir[note_count] >= Game.key_count:
+		if Game.dir[note_count] >= Game.key_count[Game.KC_DAD] and Game.dir[note_count] < Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD]:
+			# BF
 			new_note.player = 1
-		note_group.add_child(new_note)
+			note_group.add_child(new_note)
+		elif Game.dir[note_count] < Game.key_count[Game.KC_DAD]:
+			# DAD
+			new_note.player = 0
+			note_group.add_child(new_note)
+		else:
+			# GF
+			new_note.player = 2
+			gf_note_group.add_child(new_note)
 		if note_count == Game.ms.size() - 1:
 			Game.spawn_end = true
 		else:
@@ -243,26 +287,57 @@ func strum_set():
 		for i in strum_group.get_children():
 			strum_group.remove_child(i)
 	View.strum_pos.clear()
-	for i in Game.key_count * 2:
+	
+	var startpos : Vector2
+	if Setting.s_get("gameplay", "downscroll"):
+		startpos = View.strum_pos_og[0]
+	else:
+		startpos = View.strum_pos_og[1]
+			
+	for i in Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD]:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
+		var dad_f := 1
 		new_strum.dir = i
-		if Setting.s_get("gameplay", "downscroll"):
-			new_strum.position = View.strum_pos_og[0]
-		else:
-			new_strum.position = View.strum_pos_og[1]
-		new_strum.scale = Vector2(0.75 * (4.0 / Game.key_count), 0.75 * (4.0 / Game.key_count))
-		if i >= Game.key_count:
+			
+		if i >= Game.key_count[Game.KC_DAD]: # BF Strum
+			dad_f = 0
 			if Setting.s_get("gameplay", "botplay"):
 				new_strum.type = 2
 			else:
 				new_strum.type = 1
-			new_strum.position.x += 250.0 * (0.7 * 4.0 / Game.key_count)
-		else:
+			
+			if i == Game.key_count[Game.KC_DAD]: # 空白 はさむ
+				startpos.x += 250.0 * (0.7 * 4.0 / Game.key_count[Game.KC_BF])
+			
+		else: # DAD Strum
 			new_strum.type = 0
-		new_strum.position.x += 115.0 * (4.0 / Game.key_count) * i
+			
+		new_strum.scale = Vector2(0.75 * (4.0 / Game.key_count[dad_f]), 0.75 * (4.0 / Game.key_count[dad_f]))
+		new_strum.position = startpos
 		View.strum_pos.append(new_strum.position)
+		startpos.x += 115.0 * (4.0 / Game.key_count[dad_f])
 		strum_group.add_child(new_strum)
+		
 	modchartCheck()
+
+func gf_strum_set(gfPos):
+	if gf_strum_group.get_child_count() != 0:
+		for i in gf_strum_group.get_children():
+			gf_strum_group.remove_child(i)
+	View.gf_strum_pos.clear()
+	
+	var startpos : Vector2 = gfPos + Vector2(250, 300)
+			
+	for i in Game.key_count[Game.KC_GF]:
+		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
+		#var dad_f := 1
+		new_strum.dir = i
+		new_strum.type = 3
+		new_strum.scale = Vector2(0.5 * (4.0 / Game.key_count[Game.KC_GF]), 0.5 * (4.0 / Game.key_count[Game.KC_GF]))
+		new_strum.position = startpos
+		View.gf_strum_pos.append(new_strum.position)
+		startpos.x += 75.0 * (4.0 / Game.key_count[Game.KC_GF])
+		gf_strum_group.add_child(new_strum)
 
 func note_pos_set():
 	for i in Game.notes_data.notes:
@@ -279,72 +354,109 @@ func character_set():
 		character.type = i
 		$Characters.add_child(character)
 
-#func note_set():
-#	var ind := 0
-#	for i in Game.dir:
-#		var new_note = note_scn.instantiate()
-#		new_note.ind = ind
-#		new_note.dir = Game.dir[ind]
-#		new_note.ms = Game.ms[ind]
-#		new_note.sus = Game.sus[ind]
-#		new_note.name = str(ind)
-#		if Game.dir[ind] >= Game.key_count:
-#			new_note.player = 1
-#		note_group.add_child(new_note)
-#		ind += 1
+# 高速化のためのobject cache pool-----------------
+var note_pool : Array = []
+func init_pool(max_note : int):
+	for i in max_note:
+		var a = note_scn.instantiate()
+		note_pool.append(a)
 
-func keybind(key):
+var note_pool_i: int = 0
+func new_note():
+	var a = note_pool[note_pool_i]
+	note_pool_i += 1
+	return a
+#-----------------------------------------------
+
+# dadとgfのinput
+func keybind():
+	var key: int = Game.key_count[Game.KC_BF]
+	
+	# keybind (playerの入力)　
 	if key <= 18:
 		Setting.sub_input = Setting.keybind_default_sub[str(key) + "k"]
-		Game.note_anim = View.keys[str(key) + "k"]
+		
+		# キーバインド設定（キーカウント別）の読み出し。　なければ
 		if Setting.setting.category.keybind.has(str(key) + "k bind"):
 			Setting.input = Setting.setting.category.keybind[str(key) + "k bind"]["cur"]
 		else:
 			Setting.input = Setting.keybind_default[str(key) + "k"]
-	else:
+			
+	else: # プレイヤーキーカウントが18を超えた
 		var n = floor(key / 18.0)
 		var n2 = key % 18
 		print(n)
 		print(n2)
-		for i in n:
-			Game.note_anim.append_array(View.keys["18k"])
-			Setting.input.append_array(Setting.keybind_default["18k"])
-		if n2 != 0:
-			Game.note_anim.append_array(View.keys[str(n2) + "k"])
-			Setting.input.append_array(Setting.keybind_default[str(n2) + "k"])
-	for i in key:
+		if Setting.setting.category.keybind.has(str(key) + "k bind"):
+			Setting.input = Setting.setting.category.keybind[str(key) + "k bind"]["cur"]
+		else:
+			for i in n: # 18k以上は、また、端数キーのキーバインドを合成
+				Setting.input.append_array(Setting.keybind_default["18k"])
+			if n2 != 0:
+				Setting.input.append_array(Setting.keybind_default[str(n2) + "k"])
+		
+	# ここから、キー入力の状態の配列の初期化-----------------
+	for i in range(Game.key_count[Game.KC_BF]):
 		Game.cur_input.append(0)
 		Game.cur_input_sub.append(0)
-		Game.dad_input.append(0)
-		Game.gf_input.append(0)
 		Game.bf_miss.append(0)
+	
+	for i in range(Game.key_count[Game.KC_DAD]):
+		Game.dad_input.append(0)
+		
+	for i in range(Game.key_count[Game.KC_GF]):
+		Game.gf_input.append(0)
+	
+	# noteのfnfdir別のアニメーションデータをキャッシュ---------------
+	Game.note_anim = get_note_anim(Game.KC_DAD)
+	Game.note_anim.append_array( get_note_anim(Game.KC_BF) )
+	Game.note_anim.append_array( get_note_anim(Game.KC_GF)  )
+	
+	
+# 無限Keycount用のノートアニメ取得
+func get_note_anim(kc):
+	var key: int = Game.key_count[kc]
+	
+	if key <= 18:
+		return View.keys[str(key) + "k"].duplicate(true)
+	
+	# 18k以上は、端数キーのアニメーションを合成
+	var ret = []
+	var n = floor(key / 18.0)
+	var n2 = key % 18
+	for i in n:
+		ret.append_array(View.keys["18k"].duplicate(true))
+	if n2 != 0:
+		ret.append_array(View.keys[str(n2) + "k"].duplicate(true))
+	return ret
 
 func countdown():
 	Game.cur_state = Game.COUNTDOWN
-	add_child(timer)
-	timer.start((60.0 / Audio.bpm) * 5)
-				
-	add_child(countDownTimer)
-	countDownTimer.start(60.0 / Audio.bpm)
-	await countDownTimer.timeout
-	Audio.a_play("Three")
-	countDownTimer.start(60.0 / Audio.bpm)
-	await countDownTimer.timeout
-	$Countdown/Sprite.texture = countdowns[0]
-	$Countdown/Sprite.modulate.a = 1
-	Audio.a_play("Two")
-	countDownTimer.start(60.0 / Audio.bpm)
-	await countDownTimer.timeout
-	$Countdown/Sprite.texture = countdowns[1]
-	$Countdown/Sprite.modulate.a = 1
-	Audio.a_play("One")
-	countDownTimer.start(60.0 / Audio.bpm)
-	await countDownTimer.timeout
-	$Countdown/Sprite.texture = countdowns[2]
-	$Countdown/Sprite.modulate.a = 1
-	Audio.a_play("Go")
-	countDownTimer.start(60.0 / Audio.bpm)
-	await timer.timeout
+	if not Game.skipCountdown:
+		add_child(timer)
+		timer.start((60.0 / Audio.bpm) * 5)
+					
+		add_child(countDownTimer)
+		countDownTimer.start(60.0 / Audio.bpm)
+		await countDownTimer.timeout
+		Audio.a_play("Three")
+		countDownTimer.start(60.0 / Audio.bpm)
+		await countDownTimer.timeout
+		$Countdown/Sprite.texture = countdowns[0]
+		$Countdown/Sprite.modulate.a = 1
+		Audio.a_play("Two")
+		countDownTimer.start(60.0 / Audio.bpm)
+		await countDownTimer.timeout
+		$Countdown/Sprite.texture = countdowns[1]
+		$Countdown/Sprite.modulate.a = 1
+		Audio.a_play("One")
+		countDownTimer.start(60.0 / Audio.bpm)
+		await countDownTimer.timeout
+		$Countdown/Sprite.texture = countdowns[2]
+		$Countdown/Sprite.modulate.a = 1
+		Audio.a_play("Go")
+		countDownTimer.start(60.0 / Audio.bpm)
+		await timer.timeout
 	start()
 	
 func start():
@@ -366,6 +478,7 @@ func reset_property():
 	Game.iconBF = ""
 	Game.iconDAD = ""
 	Audio.songLength = 0
+	Game.skipCountdown = false
 
 func reset_week_property():
 	Game.cur_week = ""
@@ -401,18 +514,25 @@ func reset_dict_and_array():
 	Modchart.modcharts.clear()
 
 func quit():
-	reset_dict_and_array()
-	Audio.a_title()
-	if Game.is_story:
+	Game.cur_song_path = ""
+	Game.cur_song_data_path = ""
+	if Game.game_mode == Game.TITLE:
+		await Trans.t_trans("Chart Editor")
+	elif Game.game_mode == Game.STORY:
+		Audio.a_title()
 		await Trans.t_trans("Story Mode")
 	else:
+		Audio.a_title()
 		await Trans.t_trans("Freeplay")
-	reset_property()
 
 func moveSong(what):
-	reset_dict_and_array()
 	Game.cur_song = what
-	var song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+	var song_data
+	if Paths.p_chart(Game.cur_song, Game.cur_diff):
+		song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+	else:
+		printerr("bug!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		song_data = File.f_read(Paths.p_chart("test", Game.cur_diff), ".json")
 	if song_data.song.has("is3D"):
 		if song_data.song.is3D:
 			Game.is3D = true
@@ -423,5 +543,4 @@ func moveSong(what):
 	else:
 		Game.is3D = false
 		Trans.t_trans("Gameplay")
-	await get_tree().create_timer(0.25).timeout
-	reset_property()
+

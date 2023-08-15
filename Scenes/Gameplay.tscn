@@ -102,6 +102,8 @@ position = Vector2(1350, -300)
 texture = ExtResource("6_nviql")
 flip_h = true
 
+[node name="LuaSprites" type="Node2D" parent="."]
+
 [node name="Characters" type="Node2D" parent="."]
 
 [node name="Countdown" type="CanvasLayer" parent="."]
@@ -110,7 +112,13 @@ script = ExtResource("6_7pr8o")
 [node name="Sprite" type="Sprite2D" parent="Countdown"]
 position = Vector2(641, 365)
 
+[node name="GFStrums" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
 [node name="Strums" type="CanvasLayer" parent="."]
+
+[node name="GFNotes" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
 
 [node name="Notes" type="CanvasLayer" parent="."]
 
@@ -214,9 +222,9 @@ horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="Info"]
 offset_left = 12.0
-offset_top = 306.0
+offset_top = 288.0
 offset_right = 153.0
-offset_bottom = 432.0
+offset_bottom = 474.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5

@@ -1,9 +1,22 @@
 {
-    "comment": ["0 = name, 1 = desc, 2 = selfdesc, 3 = color, 4 = url"],
     "peoples": [
-        ["Yuumayay", "Main Creator", "I had a lot of fun developing the Adam Engine!", [255, 255, 0], "https://twitter.com/yuumayay"]
+        ["Adam Engine"],
+        ["Yuumayay", "Main Creator", "I had a lot of fun developing the Adam Engine!", [220, 220, 0], "https://twitter.com/yuumayay"],
+
+        ["Funkin' Crew"],
+        ["ninjamuffin99", "Programmer of FNF", "", [220, 0, 0], "https://twitter.com/ninja_muffin99"],
+        ["PhantomArcade", "Artist of FNF", "", [220, 220, 0], "https://twitter.com/PhantomArcade3K"],
+        ["evilsk8r", "Artist of FNF", "", [20, 200, 20], "https://twitter.com/evilsk8r"],
+        ["kawaisprite", "Composer of FNF", "", [20, 20, 200], "https://twitter.com/kawaisprite"]
     ],
     "peoplesJPN": [
-        ["Yuumayay", "メインクリエイター", "アダムエンジン開発、楽しめたぞー！", [255, 255, 0], "https://twitter.com/yuumayay"]
+        ["Adam Engine"],
+        ["Yuumayay", "アダムを作った人", "アダムエンジン開発、楽しめたぞー！", [255, 255, 0], "https://twitter.com/yuumayay"],
+
+        ["Funkin' Crew"],
+        ["ninjamuffin99", "FNFのプログラマー", "", [220, 0, 0], "https://twitter.com/ninja_muffin99"],
+        ["PhantomArcade", "FNFのアーティスト", "", [220, 220, 0], "https://twitter.com/PhantomArcade3K"],
+        ["evilsk8r", "FNFのアーティスト", "", [20, 200, 20], "https://twitter.com/evilsk8r"],
+        ["kawaisprite", "FNFのコンポーザー", "", [20, 20, 200], "https://twitter.com/kawaisprite"]
     ]
 }

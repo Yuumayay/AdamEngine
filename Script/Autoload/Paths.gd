@@ -42,7 +42,8 @@ func load_masterdata():
 			for diffColor in json.color:
 				Game.difficulty_color.append(Color8(int(diffColor[0]), int(diffColor[1]), int(diffColor[2])))
 			
-			Game.diff = int(json.difficulty.size() /2)
+			# diffculty の　半分
+			Game.diff = clamp(int(floor((json.difficulty.size()-1.0) /2.0)),0, json.difficulty.size()-1)
 
 func p_offset(path: String):
 	return "Assets/Data/Settings and Offsets/" + path
@@ -67,6 +68,23 @@ func p_song(path: String, path2: String):
 			
 		elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"):
 			return p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"
+	if FileAccess.file_exists(path + "/" + path2 + ".ogg"):
+		return path + "/" + path2 + ".ogg"
+		
+	elif FileAccess.file_exists(path.to_lower() + "/" + path2 + ".ogg"):
+		return path.to_lower() + "/" + path2 + ".ogg"
+		
+	elif FileAccess.file_exists(path.replace(" ", "-") + "/" + path2 + ".ogg"):
+		return path.replace(" ", "-") + "/" + path2 + ".ogg"
+		
+	elif FileAccess.file_exists(path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"):
+		return path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"
+		
+	elif FileAccess.file_exists(path.replace("-", " ") + "/" + path2 + ".ogg"):
+		return path.replace("-", " ") + "/" + path2 + ".ogg"
+		
+	elif FileAccess.file_exists(path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"):
+		return path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"	
 
 	#print("paths song: invalid path")
 	return null
@@ -121,6 +139,8 @@ func p_modchart(path: String, diff: String):
 		for ind in modchart_extensions:
 			for index in modchart_filenames:
 				var p = i
+				if FileAccess.file_exists(path + index + ind):
+					return path + index + ind
 				if diff == "normal":
 					if FileAccess.file_exists(p + path + "/" + index + ind):
 						return p + path + "/" + index + ind

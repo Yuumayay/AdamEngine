@@ -25,6 +25,8 @@ func _ready():
 	var ind = 0
 	
 	diffselect = Game.diff
+	Game.game_mode = Game.FREEPLAY
+	Game.edit_jsonpath = ""
 	
 	for indexi in Paths.week_path_list:
 		if !DirAccess.dir_exists_absolute(indexi): continue
