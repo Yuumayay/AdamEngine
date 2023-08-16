@@ -35,7 +35,7 @@ var setting: Dictionary = {
 		"language": {
 			"language": {
 				"type": "array",
-				"cur": 1,
+				"cur": 0,
 				"array": ["english", "japanese"]
 			},
 		},
@@ -49,7 +49,7 @@ var setting: Dictionary = {
 		"gameplay": {
 			"downscroll": {
 				"type": "bool",
-				"cur": false
+				"cur": true
 			},
 			"middlescroll": {
 				"type": "bool",
@@ -91,11 +91,19 @@ var setting: Dictionary = {
 			},
 			"show kps": {
 				"type": "bool",
-				"cur": false
+				"cur": true
 			},
 			"syobon-kun": {
 				"type": "bool",
 				"cur": false
+			},
+		},
+		"visuals and ui": {
+			"info text type": {
+				"type": "array",
+				"cur": 0,
+				"array": ["Adam Engine", "Psych Engine", "Kade Engine 1.2", "Kade Engine 1.4", "Kade Engine 1.8", "Leather Engine", "Denpa Engine", "Other A"],
+				"metadata": ["adam", "psych", "kade12", "kade14", "kade18", "leather", "denpa", "other a"]
 			}
 		}
 	}
@@ -128,6 +136,9 @@ func _ready():
 
 func s_get(category: String, key: String):
 	return setting.category[category][key].cur
+
+func s_get_array(category: String, key: String):
+	return setting.category[category][key].metadata[s_get(category, key)]
 
 func s_set(category: String, key: String, value):
 	setting.category[category][key].cur = value
@@ -171,6 +182,7 @@ var conv_jpn := [
 	["language", "ゲンゴ"],
 	["gameplay", "ゲームプレイ"],
 	["graphics", "グラフィック"],
+	["visuals and ui", "ユーアイ"],
 	["upscroll", "ウエスクロール"],
 	["downscroll", "シタスクロール"],
 	["middlescroll", "チュウオウスクロール"],
@@ -203,6 +215,13 @@ var conv_jpn := [
 	["syobon-kun", "ショボン ヒョウジ"],
 	["english", "エイゴ"],
 	["japanese", "ニホンゴ"],
+	["info text type", "キョクジョウホウ ヒョウジタイプ"],
+	["adam engine", "アダムエンジン"],
+	["psych engine", "サイコエンジン"],
+	["kade engine 1.2", "ケイドエンジン 1.2"],
+	["kade engine 1.4", "ケイドエンジン 1.4"],
+	["kade engine 1.8", "ケイドエンジン 1.8"],
+	["leather engine", "レザーエンジン"],
 	["resume", "サイカイ"],
 	["restart", "リスタート"],
 	["difficulty", "ナンイド"],
@@ -238,6 +257,9 @@ func eng():
 
 func jpn():
 	return lang == JPN
+
+func engine():
+	return Setting.s_get_array("visuals and ui", "info text type")
 
 # dynamic fontを使うか？
 func dfont():

@@ -76,6 +76,9 @@ func setup2D():
 	if Paths.p_chara_xml(json.image): # キャラクターのxmlが存在していたら
 		spr = Game.load_XMLSprite(Paths.p_chara_xml(json.image), idle_anim, false, 24, 2)
 		
+	elif Game.chara_image_path:
+		spr = Game.load_XMLSprite(Game.chara_image_path[type].replace(".png", ".xml"), idle_anim, false, 24, 2)
+		
 	else: # キャラクターのxmlが存在しない
 		# エラー回避のためデフォルトを入れる
 		spr = Game.load_XMLSprite(DEFAULT_XML[type], idle_anim, false, 24, 2)

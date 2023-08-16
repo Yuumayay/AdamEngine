@@ -58,6 +58,8 @@ var conv_lua = [
 	["..", "+"],
 	["--", "#"],
 	["math.pi", "PI"],
+	["boyfriend", "bf"],
+	
 	["onCreate()", "onCreate():"],
 	["goodNoteHit()", "goodNoteHit():"],
 	["noteMiss()", "noteMiss():"],
@@ -66,6 +68,8 @@ var conv_lua = [
 	["onStepHit()", "onStepHit():"],
 	["opponentNoteHit()", "opponentNoteHit():"],
 	["onSongStart()", "onSongStart():"],
+	["onTimerCompleted", "onTimerCompleted(tag, loops, loopsLeft): #"],
+	
 	["makeLuaSprite", "Modchart.makeLuaSprite"],
 	["addLuaSprite", "Modchart.addLuaSprite"],
 	["makeGraphic", "Modchart.makeGraphic"],
@@ -73,6 +77,21 @@ var conv_lua = [
 	["setObjectOrder", "Modchart.setObjectOrder"],
 	["setProperty", "Modchart.setProperty"],
 	["getProperty", "Modchart.getProperty"],
+	["noteTweenX", "Modchart.noteTweenX"],
+	["noteTweenY", "Modchart.noteTweenY"],
+	["doTweenX", "Modchart.doTweenX"],
+	["doTweenY", "Modchart.doTweenY"],
+	["doTweenAngle", "Modchart.doTweenAngle"],
+	["doTweenAlpha", "Modchart.doTweenAlpha"],
+	["playSound", "Modchart.playSound"],
+	["getSongPosition", "Modchart.getSongPosition"],
+	["setLuaSpriteScrollFactor", "Modchart.setLuaSpriteScrollFactor"],
+	["cameraFlash", "Modchart.cameraFlash"],
+	["characterPlayAnim", "Modchart.characterPlayAnim"],
+	["cameraShake", "Modchart.cameraShake"],
+	["runTimer", "Modchart.runTimer"],
+	
+	["curBeat", "Audio.cur_beat"],
 	
 	["math.", ""],
 	["end", ""]
@@ -88,11 +107,13 @@ func lua_2_gd(content: String):
 	return content
 
 func _ready():
-	lua_2_gd(f_read("res://Mods/stages/hjoim.lua", ".lua"))
 	if FileAccess.file_exists("user://ae_options_data.json"):
-		#f_save("user://ae_options_data", ".json", Setting.setting)
+		f_save("user://ae_options_data", ".json", Setting.setting)
 		Setting.setting = f_read("user://ae_options_data.json", ".json")
 	else:
+		var user_lang = OS.get_locale_language()
+		if user_lang == "ja":
+			Setting.s_set("language", "language", Setting.JPN)
 		f_save("user://ae_options_data", ".json", Setting.setting)
 	
 	if not FileAccess.file_exists("user://ae_score_data.json"):

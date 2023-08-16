@@ -40,7 +40,8 @@ const MASS_OFFSET_Y = MASS_SIZE * 5
 const BEAT_LINE_QUANTITY = 8
 enum {MS, DIR, SUS, NOTE_TYPE, UID}
 
-var chartData: Dictionary = {"notes": [{"sectionBeats":4,"mustHitSection":false,"sectionNotes":[]}]}
+var chartData: Dictionary = {"notes": [{"sectionBeats":4,"mustHitSection":false,"sectionNotes":[]}],
+"song": "Test", "bpm": 150, "player1": "bf", "player2": "dad", "speed": 1.0}
 
 # {"notes": [{"lengthInSteps":16,"mustHitSection":false,"sectionNotes":[]}]}
 
@@ -400,6 +401,8 @@ var songPath: String
 var jsonPathChara := ["","",""]
 var jsonChara := [{},{},{}]
 var iconPath := ["","",""]
+var charaImagePath := ["","",""]
+var jsonStage := {}
 
 # チャートエディタの現在位置　→　秒数にコンバートする
 func position_to_time():
@@ -421,7 +424,6 @@ func _ready():
 	data[BF].key_count = 4
 	data[DAD].key_count = 4
 	data[GF].key_count = 4
-	init()
 	Audio.a_volume_set("Debug Menu", -80)
 	#for i in range(80):
 	#	Audio.a_volume_set("Debug Menu", -i)
@@ -436,19 +438,31 @@ func _ready():
 		loadjsonwindow.show()
 		)
 	
-	if 	Game.game_mode == Game.FREEPLAY: # フリープレイから来た
+	songname.text_changed.connect(songname_changed)
+	bpm_label.value_changed.connect(bpm_changed)
+	speed.value_changed.connect(speed_changed)
+	bfname.text_changed.connect(bfname_changed)
+	dadname.text_changed.connect(dadname_changed)
+
+	
+	if Game.game_mode == Game.FREEPLAY: # フリープレイから来た
 		print("CHART FROM FREE PLAY")
 		var jsonpath = Paths.p_chart(Game.cur_song, Game.cur_diff)
 		var json = File.f_read(jsonpath, ".json")
 		loadJson(json)
-	
 		Game.game_mode = Game.TITLE
 	elif Game.edit_jsonpath != "": #何かしらエディットしている
-		print("LOAD FROM TEMPFILE")
-		
-		var json = File.f_read(Game.edit_jsonpath, ".json")
-		loadJson(json)
-
+		if Game.cur_song_data_path:
+			print("LOAD FROM ANOTHER MOD FILE")
+			
+			var json = File.f_read(Game.cur_song_data_path + ".json", ".json")
+			loadJson(json)
+		else:
+			print("LOAD FROM TEMPFILE")
+			
+			var json = File.f_read(Game.edit_jsonpath, ".json")
+			loadJson(json)
+	init()
 
 
 func init():
@@ -476,39 +490,62 @@ func init():
 		song = convSong
 	print(diff)
 	cur_diff = diff
-	songPath = ""
-	var dataFilePaths := ["data/" + song + "/" + fileName,
-	"songs/" + song + "/" + fileName,
-	"data/songs/" + song + "/" + fileName,
-	"data/song data/" + song + "/" + fileName,
-	"data/song charts/" + song + "/" + fileName,
-	"data/charts/" + fileName]
-	for i in dataFilePaths:
-		print(i + song)
-		print(loadPath.replacen(i, "songs/" + song), " conv ", fileName)
-		songPath = loadPath.replacen(i, "songs/" + song)
-		var songData := {"song": {"player1": "bf", "player2": "dad", "player3": "gf"}}
-		if FileAccess.file_exists(loadPath + ".json"):
-			songData = File.f_read(loadPath + ".json", ".json")
-		var gf_name = Game.get_gf_name(songData)
-		for j in range(3):
-			if j == 2:
-				if gf_name == "none":
-					jsonPathChara[j] = Paths.p_chara(gf_name)
+	print(cur_song)
+	if not Paths.p_song(cur_song, "Inst"):
+		#MOD（psych, adam)のアイコン、キャラクターの読み込み
+		songPath = ""
+		var dataFilePaths := ["data/" + song + "/" + fileName,
+		"songs/" + song + "/" + fileName,
+		"data/songs/" + song + "/" + fileName,
+		"data/song data/" + song + "/" + fileName,
+		"data/song charts/" + song + "/" + fileName,
+		"data/charts/" + fileName]
+		for i in dataFilePaths:
+			print(i + song)
+			print(loadPath.replacen(i, "songs/" + song), " conv ", fileName)
+			songPath = loadPath.replacen(i, "songs/" + song)
+			var songData := {"song": {"player1": "bf", "player2": "dad", "player3": "gf"}}
+			if FileAccess.file_exists(loadPath + ".json"):
+				songData = File.f_read(loadPath + ".json", ".json")
+			var gf_name = Game.get_gf_name(songData)
+			for j in range(3):
+				if j == 2:
+					if gf_name == "none":
+						jsonPathChara[j] = Paths.p_chara(gf_name)
+					else:
+						jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song[gf_name] + ".json")
 				else:
-					jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song[gf_name] + ".json")
-			else:
-				jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song["player" + str(j + 1)] + ".json")
-			if !FileAccess.file_exists(jsonPathChara[j]):
-				jsonPathChara[j] = jsonPathChara[j].replacen("mods/", "assets/")
-			if FileAccess.file_exists(jsonPathChara[j]):
-				print("!!")
-				jsonChara[j] = File.f_read(jsonPathChara[j], ".json")
-				iconPath[j] = songPath.replacen("songs/" + song, "images/icons/icon-" + jsonChara[j].healthicon.to_lower() + ".png")
-				data[j].icon_name = jsonChara[j].healthicon.to_lower()
-		if FileAccess.file_exists(songPath + "/Inst.ogg"):
-			cur_song = song
-			break
+					jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song["player" + str(j + 1)] + ".json")
+				if !FileAccess.file_exists(jsonPathChara[j]):
+					jsonPathChara[j] = jsonPathChara[j].replacen("mods/", "assets/")
+				if song and FileAccess.file_exists(jsonPathChara[j]):
+					print("!!")
+					jsonChara[j] = File.f_read(jsonPathChara[j], ".json")
+					iconPath[j] = Paths.p_get_icon_path(songPath.replacen("songs/" + song, "images/icons/"), jsonChara[j].healthicon.to_lower())
+					data[j].icon_name = jsonChara[j].healthicon.to_lower()
+					var folder = songPath.replacen("songs/" + song, "")
+					for cPath in DirAccess.get_directories_at(folder):
+						if cPath == "shared":
+							if FileAccess.file_exists(folder + cPath + "/images/" + jsonChara[j].image + ".png"):
+								charaImagePath[j] = folder + cPath + "/images/" + jsonChara[j].image + ".png"
+								break
+						else:
+							if FileAccess.file_exists(folder + cPath + "/" + jsonChara[j].image + ".png"):
+								charaImagePath[j] = folder + cPath + "/" + jsonChara[j].image + ".png"
+								break
+					var modfolder = folder.replacen("assets/", "mods/")
+					for cPath in DirAccess.get_directories_at(modfolder):
+						if cPath == "shared":
+							if FileAccess.file_exists(modfolder + cPath + "/images/" + jsonChara[j].image + ".png"):
+								charaImagePath[j] = modfolder + cPath + "/images/" + jsonChara[j].image + ".png"
+								break
+						else:
+							if FileAccess.file_exists(modfolder + cPath + "/" + jsonChara[j].image + ".png"):
+								charaImagePath[j] = modfolder + cPath + "/" + jsonChara[j].image + ".png"
+								break
+			if FileAccess.file_exists(songPath + "/Inst.ogg"):
+				cur_song = song
+				break
 	if !cur_song:
 		Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", bpm)
 		Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", bpm)
@@ -636,13 +673,15 @@ func draw_icon(x, icon_name, p_type : int ):
 		new_icon = Sprite2D.new()
 		new_icon.set_script(iconScript)
 		new_icon.name = objname
-	if Paths.p_icon(icon_name):
-		new_icon.texture = Paths.p_icon(icon_name)
-	else:
-		if FileAccess.file_exists(iconPath[p_type]):
-			new_icon.texture = Game.load_image(iconPath[p_type])
+	if p_type != SECTION_INFO and p_type != EVENT:
+		if iconPath[p_type - 1] != "" and FileAccess.file_exists(iconPath[p_type - 1]):
+			new_icon.texture = Game.load_image(iconPath[p_type - 1])
 		else:
+			print(icon_name)
 			new_icon.texture = Paths.p_icon(icon_name)
+	else:
+		new_icon.texture = Paths.p_icon("face")
+
 	new_icon.position.x = x + 50
 	new_icon.position.y = 50
 	new_icon.hframes = floor(new_icon.texture.get_width() / 150.0)
@@ -769,7 +808,6 @@ func _process(_delta):
 	#note_check()
 	
 	# 設定をチェック(仮)
-	setting_check_beta()
 
 var ind2: int = 0
 
@@ -851,20 +889,22 @@ func scroll():
 
 var lastBPM := 150.0
 
-func setting_check_beta():
-	if lastBPM != bpm_label.value:
-		lastBPM = bpm_label.value
-		bpm = bpm_label.value
-	songSpeed = speed.value
-	
-	data[BF].icon_name = bfname.text # kuso
-	data[DAD].icon_name = dadname.text
-	chartData["speed"] = songSpeed
-	chartData["player1"] = bfname.text
-	chartData["player2"] = dadname.text
-	chartData["bpm"] = bpm_label.value
+func songname_changed():
 	chartData["song"] = songname.text
 
+func bpm_changed():
+	chartData["bpm"] = bpm_label.value
+
+func speed_changed():
+	chartData["speed"] = speed.value
+
+func bfname_changed():
+	data[BF].icon_name = bfname.text
+	chartData["player1"] = bfname.text
+
+func dadname_changed():
+	data[DAD].icon_name = dadname.text
+	chartData["player2"] = dadname.text
 
 func reloadAudio():
 	if !Paths.p_song(songname.text, "Inst"):
@@ -905,6 +945,7 @@ func generateJson() -> Dictionary:
 
 func loadJson(json):
 	var song = json.song
+	
 	bpm_label.value = song.bpm
 	speed.value = song.speed
 	songname.text = song.song
@@ -938,8 +979,8 @@ func get_difficulty_and_songname(text : String):
 	var sp: Array = text.split("-")
 	var dif = sp[-1].to_lower()
 	print(sp, ", ", dif)
-	if Game.difficulty.has(dif):
-		sp.erase(dif)
+	if Game.difficulty_case.has(dif):
+		sp.erase(sp[-1])
 		return [sp, dif]
 	
 	return [text, "normal"]
@@ -965,9 +1006,10 @@ func key_check():
 		if !Paths.p_song(Game.cur_song, "Inst"):
 			Game.cur_song_path = songPath
 			Game.cur_song_data_path = loadPath
-			Game.p1_json = jsonChara[0]
-			Game.p2_json = jsonChara[1]
-			Game.gf_json = jsonChara[2]
+			Game.chara_image_path = charaImagePath
+			Game.chara_json = jsonChara
+			Game.iconBF = iconPath[0]
+			Game.iconDAD = iconPath[1]
 		Game.edit_jsonpath = "user://ae_chart_temp" + ".json"
 		File.f_save("user://ae_chart_temp", ".json", generateJson())
 		Trans.t_trans("Gameplay")
@@ -1132,7 +1174,6 @@ func on_mouse_down_set_note( texturemass ):
 			var line = note.line
 			while Input.is_action_pressed("game_click"):
 				distance = (floor(((y - get_local_mouse_position().y) ) / MASS_SIZE)+1) * -MASS_SIZE
-				print(distance)
 				if not line:
 					break
 				if not note:
@@ -1149,7 +1190,7 @@ func on_mouse_down_set_note( texturemass ):
 		var susms = susy_to_ms(sus)
 		
 		chartData.notes[sec_id]["sectionNotes"].append([ms, calc_fnfdir(mustHit, t, dir), susms, 0, note.uid])
-		print([ms, dir, susms])
+		print(chartData.notes[sec_id]["sectionNotes"][-1])
 		
 		updateZoom()
 	else:

@@ -134,6 +134,8 @@ func _process(delta):
 			if timer:
 				timer.paused = true
 				countDownTimer.paused = true
+			Audio.a_stop("Inst")
+			Audio.a_stop("Voices")
 			Trans.t_trans("Chart Editor")
 	elif Game.cur_state == Game.GAMEOVER: #ゲームオーバーだったら
 		if Input.is_action_just_pressed("ui_cancel"):
@@ -475,8 +477,6 @@ func reset_property():
 	Game.max_combo = 0
 	Game.fc_state = "N/A"
 	Game.rating_total = [0,0,0,0,0,0]
-	Game.iconBF = ""
-	Game.iconDAD = ""
 	Audio.songLength = 0
 	Game.skipCountdown = false
 
@@ -493,6 +493,7 @@ func reset_week_property():
 
 func reset_dict_and_array():
 	Game.cur_state = Game.NOT_PLAYING
+	Game.max_nps = 0
 	Game.spawn_end = false
 	Game.notes_data.notes.clear()
 	Game.ms.clear()
@@ -513,9 +514,16 @@ func reset_dict_and_array():
 	View.strum_pos.clear()
 	Modchart.modcharts.clear()
 
-func quit():
+func quit_reset():
 	Game.cur_song_path = ""
 	Game.cur_song_data_path = ""
+	Game.chara_image_path.clear()
+	Game.chara_json.clear()
+	Game.iconBF = ""
+	Game.iconDAD = ""
+
+func quit():
+	quit_reset()
 	if Game.game_mode == Game.TITLE:
 		await Trans.t_trans("Chart Editor")
 	elif Game.game_mode == Game.STORY:

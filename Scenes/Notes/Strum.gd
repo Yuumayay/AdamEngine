@@ -202,6 +202,7 @@ func player_strum():
 				if i.self_modulate.a == 0:
 					if Game.cur_input[ndir] == 1:
 						i.self_modulate.a = 0
+						Game.add_health(Game.health_gain[Game.LONG_NOTE])
 						if msdiff >= 0:
 							i.update_linelen()
 							
@@ -233,6 +234,8 @@ func judge(hit_ms, notetype):
 	var ms = abs(hit_ms)
 	var layer = rating.instantiate()
 	var new_rating = layer.get_node("Rating")
+	
+	Game.nps.append(1.0)
 	
 	Audio.a_volume_set("Voices", 0)
 	Audio.a_play(hit, 1.0, Setting.s_get("gameplay", "hit sound volume") * 0.5 - 50)

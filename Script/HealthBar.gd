@@ -3,12 +3,15 @@ extends TextureRect
 var last_health := 50.0
 
 @onready var health = $HealthBar
+@onready var healthgroup = $HealthBarGroup
 @onready var icon = $icons
 @onready var p1 = $icons/iconP1
 @onready var p2 = $icons/iconP2
 
 var styleboxbg: StyleBoxFlat
 var styleboxfill: StyleBoxFlat
+
+var denpa_health: Array
 
 var p1_win: int
 var p1_normal: int
@@ -32,6 +35,30 @@ func _ready():
 	
 	styleboxfill.bg_color = Color(healthcolor_p1[0] / 255.0, healthcolor_p1[1] / 255.0, healthcolor_p1[2] / 255.0) #Color8(int(healthcolor_p1[0]),int(healthcolor_p1[1]),int(healthcolor_p1[2]))
 	styleboxbg.bg_color = Color(healthcolor_p2[0] / 255.0, healthcolor_p2[1] / 255.0, healthcolor_p2[2] / 255.0) #Color8(int(healthcolor_p2[0]),int(healthcolor_p2[1]),int(healthcolor_p2[2]))
+	
+	if Setting.engine() == "denpa":
+		var bar_count = 3
+		for i in range(bar_count):
+			var denpa_healthbar: ProgressBar = ProgressBar.new()
+			var denpa_styleboxbg = StyleBoxFlat.new()
+			var denpa_styleboxfill = StyleBoxFlat.new()
+			
+			denpa_styleboxfill.bg_color = Color(healthcolor_p1[0] / 255.0, healthcolor_p1[1] / 255.0, healthcolor_p1[2] / 255.0) * ((-i * 0.3) + 1.2)
+			denpa_styleboxbg.bg_color = Color(healthcolor_p2[0] / 255.0, healthcolor_p2[1] / 255.0, healthcolor_p2[2] / 255.0) * ((-i * 0.3) + 1.2)
+			denpa_styleboxfill.bg_color.a = 1
+			denpa_styleboxbg.bg_color.a = 1
+			
+			denpa_healthbar.show_percentage = false
+			denpa_healthbar.set("theme_override_styles/background", denpa_styleboxbg)
+			denpa_healthbar.set("theme_override_styles/fill", denpa_styleboxfill)
+			denpa_healthbar.size = Vector2(591, 23 / float(bar_count))
+			denpa_healthbar.position = Vector2(5, (i + 1) * 8)
+			denpa_healthbar.fill_mode = denpa_healthbar.FILL_END_TO_BEGIN
+			denpa_healthbar.value = 50
+			
+			healthgroup.add_child(denpa_healthbar)
+			denpa_health.append(denpa_healthbar)
+	
 	iconUpdate()
 	health.set("theme_override_styles/background", styleboxbg)
 	health.set("theme_override_styles/fill", styleboxfill)
@@ -49,6 +76,13 @@ func health_tween():
 	t.tween_property(icon, "position", Vector2(600 - Game.health * 300, 20), 0.05)
 	t.set_ease(Tween.EASE_IN)
 	t.set_trans(Tween.TRANS_QUART)
+	if Setting.engine() == "denpa":
+		for i in denpa_health:
+			var t2 = create_tween()
+			t2.parallel()
+			t2.tween_property(i, "value", Game.health_percent, 0.05)
+			t2.set_ease(Tween.EASE_IN)
+			t2.set_trans(Tween.TRANS_QUART)
 
 
 func _process(_delta):

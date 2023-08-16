@@ -33,13 +33,15 @@ var mustHit: bool
 var cur_input: Array
 var cur_input_str: String
 var kps: Array
+var nps: Array
+var max_nps: float
 var cur_input_sub: Array
 var dad_input: Array
 var gf_input: Array
 var bf_miss: Array
 var bf_hit_bool: bool
 
-enum {PERF, SICK, GOOD, BAD, SHIT, MISS}
+enum {PERF, SICK, GOOD, BAD, SHIT, MISS, LONG_NOTE}
 var rating_offset: Array = [0.0, 20.0, 45.0, 75.0, 90.0, 135.0]
 
 var note_anim: Array # = ["left", "down", "up", "right"]
@@ -50,13 +52,14 @@ var language: String = "English"
 var song_data: Dictionary
 
 var difficulty: Array = ["easy", "normal", "hard"]
+var difficulty_case := ["easy", "normal", "hard", "hardcore", "insane", "harder", "canon", "mania", "voiid", "god"]
 var difficulty_color: Array = [Color(0, 1, 0), Color(1, 1, 0), Color(1, 0, 0)]
 var diff := 1 #現在の難易度
 
 ## GAMEPLAY CONSTS ##
 const rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
 #const health_gain: Array = [0.1, 0.08, 0.05, 0, -0.05]
-const health_gain: Array = [0.1, 0.08, 0.05, -0.05, -0.1]
+const health_gain: Array = [0.1, 0.08, 0.05, -0.05, -0.1, -0.2, 0.005]
 const score_gain: Array = [400, 350, 200, 100, 0, -10]
 #const difficulty: Array = ["easy", "normal", "hard"]
 const sus_tolerance: float = 200.0
@@ -103,6 +106,8 @@ const DEFAULT_SONG = "bopeebo"
 var cur_song: String = DEFAULT_SONG
 var cur_song_path: String
 var cur_song_data_path: String
+var chara_image_path: Array
+var chara_json: Array
 var cur_diff: String = "normal": #現在の難易度（文字列
 	set(v): # クソコード
 		cur_diff = v
@@ -131,17 +136,23 @@ var iconBF: String:
 		iconBF = v
 		if v == "":
 			return
-		var healthBarBG = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
-		if healthBarBG:
-			healthBarBG.iconUpdate()
+		elif FileAccess.file_exists(v):
+			return
+		else:
+			var healthBarBG = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
+			if healthBarBG:
+				healthBarBG.iconUpdate()
 var iconDAD: String:
 	set(v):
 		iconDAD = v
 		if v == "":
 			return
-		var healthBarBG2 = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
-		if healthBarBG2:
-			healthBarBG2.iconUpdate()
+		elif FileAccess.file_exists(v):
+			return
+		else:
+			var healthBarBG2 = get_node_or_null("/root/Gameplay/UI/HealthBarBG")
+			if healthBarBG2:
+				healthBarBG2.iconUpdate()
 
 var bf_load_fail: bool
 var dad_load_fail: bool
@@ -249,24 +260,43 @@ func setup(data):
 			player3 = "gf"
 		else:
 			player3 = "none"
-	if Paths.p_chara(player1):
-		p1_json = File.f_read(Paths.p_chara(player1), ".json")
-		bf_load_fail = false
+	
+	if chara_json:
+		var jsonlist := [p1_json, p2_json, gf_json]
+		var faillist := [bf_load_fail, dad_load_fail, gf_load_fail]
+		var default := ["bf", "dad", "gf"]
+		for j in range(3):
+			if chara_json[j] != {}:
+				jsonlist[j] = chara_json[j]
+				faillist[j] = false
+			else:
+				jsonlist[j] = File.f_read(Paths.p_chara(default[j]), ".json")
+				faillist[j] = true
+		p1_json = jsonlist[0]
+		p2_json = jsonlist[1]
+		gf_json = jsonlist[2]
+		bf_load_fail = faillist[0]
+		dad_load_fail = faillist[1]
+		gf_load_fail = faillist[2]
 	else:
-		p1_json = File.f_read(Paths.p_chara("bf"), ".json")
-		bf_load_fail = true
-	if Paths.p_chara(player2):
-		p2_json = File.f_read(Paths.p_chara(player2), ".json")
-		dad_load_fail = false
-	else:
-		p2_json = File.f_read(Paths.p_chara("dad"), ".json")
-		dad_load_fail = true
-	if Paths.p_chara(player3):
-		gf_json = File.f_read(Paths.p_chara(player3), ".json")
-		gf_load_fail = false
-	else:
-		gf_json = File.f_read(Paths.p_chara("gf"), ".json")
-		gf_load_fail = true
+		if Paths.p_chara(player1):
+			p1_json = File.f_read(Paths.p_chara(player1), ".json")
+			bf_load_fail = false
+		else:
+			p1_json = File.f_read(Paths.p_chara("bf"), ".json")
+			bf_load_fail = true
+		if Paths.p_chara(player2):
+			p2_json = File.f_read(Paths.p_chara(player2), ".json")
+			dad_load_fail = false
+		else:
+			p2_json = File.f_read(Paths.p_chara("dad"), ".json")
+			dad_load_fail = true
+		if Paths.p_chara(player3):
+			gf_json = File.f_read(Paths.p_chara(player3), ".json")
+			gf_load_fail = false
+		else:
+			gf_json = File.f_read(Paths.p_chara("gf"), ".json")
+			gf_load_fail = true
 	
 	if song.has("is3D"):
 		is3D = song.is3D

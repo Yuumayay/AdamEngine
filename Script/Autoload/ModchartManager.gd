@@ -231,6 +231,31 @@ func setProperty(key: String, value):
 		elif luasprites.get_node_or_null(target):
 			luasprites.get_node_or_null(target).set(set, value)
 
+func getProperty(key: String):
+	var sp = key.split(".")
+	var target = sp[0]
+	var set
+	for i in sp.size() - 1:
+		if i == sp.size() - 1:
+			set += sp[i + 1]
+		else:
+			set += sp[i + 1] + "/"
+	if sp.size() != 0:
+		if Game[target]:
+			return Game[target]
+		elif luasprites.get_node_or_null(target):
+			return luasprites.get_node_or_null(target)[set]
+
+func getSongPosition():
+	var inst: AudioStreamPlayer = Audio.get_node("Inst")
+	return inst.get_playback_position() * 1000.0
+
+func playSound(path: String):
+	var sound = load(Paths.p_sound(path))
+	var soundplayer = AudioStreamPlayer.new()
+	soundplayer.stream = sound
+	soundplayer.play()
+
 ############### CAMERA ###############
 
 func setObjectCamera(tag, cam):
@@ -257,3 +282,14 @@ func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, off
 
 func camReset():
 	gameplay.get_node("Camera").state = 0
+
+############### SHADER EFFECTS ###############
+
+func glitch(shake_power = 0.0, shake_rate = 1.0, shake_speed = 0.0, shake_block_size = 30.5, shake_color_rate = 0.001):
+	gameplay.get_node("Distortion").show()
+	var rect: ColorRect = gameplay.get_node("Distortion/Rect")
+	rect.material.set("shader_parameter/shake_power", shake_power)
+	rect.material.set("shader_parameter/shake_rate", shake_rate)
+	rect.material.set("shader_parameter/shake_speed", shake_speed)
+	rect.material.set("shader_parameter/shake_block_size", shake_block_size)
+	rect.material.set("shader_parameter/shake_color_rate", shake_color_rate)

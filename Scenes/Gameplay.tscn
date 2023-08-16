@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=37 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://Script/TimeBar.gd" id="12_fwr13"]
 [ext_resource type="Script" path="res://Script/VersionText.gd" id="13_3bbrj"]
 [ext_resource type="Script" path="res://Script/Camera.gd" id="13_k8e81"]
+[ext_resource type="Shader" path="res://Assets/Shader/Distortion.gdshader" id="16_4dswv"]
 [ext_resource type="Script" path="res://Script/Syobon-kun.gd" id="17_8jmrd"]
 [ext_resource type="Script" path="res://Script/Gameover.gd" id="17_c2dnk"]
 [ext_resource type="Texture2D" uid="uid://d2afi6iva3esg" path="res://Assets/Images/Syobon-kun/base.png" id="18_qq5ca"]
@@ -27,6 +28,8 @@
 [ext_resource type="Texture2D" uid="uid://co5dwerbx2dy5" path="res://Assets/Images/Syobon-kun/1100.png" id="24_en73d"]
 [ext_resource type="Texture2D" uid="uid://bwamhv6xf5gok" path="res://Assets/Images/Syobon-kun/lefthand.png" id="25_k1jj8"]
 [ext_resource type="Texture2D" uid="uid://dodcr1vniuevl" path="res://Assets/Images/Syobon-kun/righthand.png" id="26_wjaob"]
+[ext_resource type="Shader" path="res://Assets/Shader/Rain.gdshader" id="29_e88tq"]
+[ext_resource type="Shader" path="res://Assets/Shader/ChangeHSV.gdshader" id="30_16yvu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5t4ff"]
 bg_color = Color(0, 0, 0, 1)
@@ -66,6 +69,36 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l841d"]
+shader = ExtResource("16_4dswv")
+shader_parameter/shake_power = 0.0
+shader_parameter/shake_rate = 1.0
+shader_parameter/shake_speed = 0.0
+shader_parameter/shake_block_size = 30.5
+shader_parameter/shake_color_rate = 0.001
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_62wi3"]
+shader = ExtResource("29_e88tq")
+shader_parameter/rain_amount = 200.0
+shader_parameter/near_rain_length = 0.095
+shader_parameter/far_rain_length = 0.056
+shader_parameter/near_rain_width = 0.369
+shader_parameter/far_rain_width = 0.1
+shader_parameter/near_rain_transparency = 0.737
+shader_parameter/far_rain_transparency = 0.1
+shader_parameter/rain_color = Color(0.8, 0.8, 0.8, 1)
+shader_parameter/base_rain_speed = 1.0
+shader_parameter/additional_rain_speed = 1.0
+shader_parameter/slant = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nf8i2"]
+shader = ExtResource("30_16yvu")
+shader_parameter/circle_center = Vector2(0, 0)
+shader_parameter/time = 1.0
+shader_parameter/size = Vector2(64, 64)
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/margin = Vector2(0, 0)
 
 [node name="Gameplay" type="Node2D"]
 script = ExtResource("1_ble4j")
@@ -142,6 +175,9 @@ offset_bottom = 32.0
 value = 50.0
 fill_mode = 1
 show_percentage = false
+
+[node name="HealthBarGroup" type="Control" parent="UI/HealthBarBG"]
+anchors_preset = 0
 
 [node name="icons" type="Node2D" parent="UI/HealthBarBG"]
 position = Vector2(300, 20)
@@ -340,3 +376,38 @@ position = Vector2(188, 614)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_wnqfj")
 frame = 6
+
+[node name="Distortion" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Rect" type="ColorRect" parent="Distortion"]
+material = SubResource("ShaderMaterial_l841d")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Rain" type="CanvasLayer" parent="."]
+layer = 0
+visible = false
+
+[node name="Rect" type="ColorRect" parent="Rain"]
+material = SubResource("ShaderMaterial_62wi3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_nf8i2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

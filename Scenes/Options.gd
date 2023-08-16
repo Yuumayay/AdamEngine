@@ -131,6 +131,7 @@ func option():
 			_:
 				valuetext.text = str(current)
 		
+		new_item.scale = Vector2(0.5,0.5)
 		new_item.visible = true
 		list.add_child(new_item)
 		ind += 1

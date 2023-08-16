@@ -13,6 +13,7 @@ var character_image_path_list: Array = ["Assets/Images/characters/", "Mods/image
 var stage_data_path_list: Array = ["Assets/Data/Stages/", "Mods/data/stages/", "Mods/stages/"]
 var stage_image_path_list: Array = ["Assets/Images/Stages/", "Mods/images/stages/", "Mods/images/"]
 var images_path_list: Array = ["Assets/Images/", "Mods/images/"]
+var sound_path_list: Array = ["mods/sounds/"]
 
 var modchart_extensions: Array = [".lua", ".gd"]
 var modchart_filenames: Array = ["modchart", "script"]
@@ -200,6 +201,16 @@ func p_modchart(path: String, diff: String):
 	print("paths modchart: no modchart")
 	return null
 
+func p_sound(path: String):
+	for i in sound_path_list:
+		if FileAccess.file_exists(i + path + ".ogg"):
+			return i + path + ".ogg"
+		elif FileAccess.file_exists(i + path.to_lower() + ".ogg"):
+			return i + path.to_lower() + ".ogg"
+	Audio.a_play("Error")
+	printerr("paths sound: invalid path")
+	return null
+
 func p_chara(path: String):
 	for i in character_data_path_list:
 		if FileAccess.file_exists(i + path + ".json"):
@@ -264,8 +275,21 @@ func p_stage_script(path: String):
 	printerr("paths stage script: invalid path")
 	return null
 
+func p_get_icon_path(path: String, icon: String):
+	if FileAccess.file_exists(path + icon + ".png"):
+		return path + icon + ".png"
+	if FileAccess.file_exists(path + "icon-" + icon + ".png"):
+		return path + "icon-" + icon + ".png"
+	if FileAccess.file_exists(path + icon + "-icons.png"):
+		return path + icon + "-icons.png"
+	print("paths get icon path: invalid icon name")
+	return "Assets/images/icons/icon-none.png"
+
 func p_icon(path: String):
 	var icon: Texture2D
+	if FileAccess.file_exists(path):
+		icon = Game.load_image(path)
+		return icon
 	for i in icon_path_list:
 		var p = i
 		if FileAccess.file_exists(p + path + ".png"):
@@ -277,7 +301,7 @@ func p_icon(path: String):
 		elif FileAccess.file_exists(p + path + "-icons.png"):
 			icon = Game.load_image(p + path + "-icons.png")
 			return icon
-	printerr("icon: icon not found")
+	print("icon: icon not found")
 	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon
 

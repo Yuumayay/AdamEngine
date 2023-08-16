@@ -33,14 +33,15 @@ func _ready():
 			new_item.color = itemcolor
 			new_item.name = itemname
 			new_item.string = itemurl
-			desc.text = itemdesc + "\n" + " " + "\n" + itemdesc2
-			if itemdesc2 != "":
-				desc.text += "\n- " + itemname
+			new_item.array = [itemdesc, itemdesc2]
 		else:
 			new_item.type = 1
+			new_item.color = Color(1,1,1)
 			new_item.name = itemname
 			new_item.text = itemname.to_upper()
 			new_item.value = ind
+			new_item.array = ["", ""]
+			new_item.get_node("Icon").hide()
 		
 		var icon = Paths.p_icon_credits(itemname)
 		if icon.get_size() == Vector2(150, 150):
@@ -50,13 +51,15 @@ func _ready():
 		elif icon.get_size() == Vector2(450, 150):
 			new_item.get_node("Icon").hframes = 3
 		new_item.get_node("Icon").texture = icon
-		new_item.get_node("Icon").position.x += itemname.length() * 54.5
 		
 		new_item.visible = true
 		list.add_child(new_item)
 		ind += 1
+		await new_item.text_ready
+		new_item.get_node("Icon").position.x += new_item.width + 50
 	
 	child_count = list.get_child_count() - 1
+	update_desc()
 
 func _process(_delta):
 	if Game.can_input:
@@ -66,12 +69,14 @@ func _process(_delta):
 				select = child_count
 			else:
 				select -= 1
+			update_desc()
 		if Input.is_action_just_pressed("game_ui_down"):
 			Audio.a_scroll()
 			if select == child_count:
 				select = 0
 			else:
 				select += 1
+			update_desc()
 		if Input.is_action_just_pressed("ui_accept"):
 			Audio.a_scroll()
 			if list.get_child(select).string:
@@ -86,5 +91,14 @@ func update_position():
 		if i == list.get_child(select):
 			bg.modulate = lerp(bg.modulate, i.color, 0.05)
 		i.position.x = lerp(i.position.x, abs(select - i.value) * -25.0 + 225.0, 0.25)
-		i.position.y = lerp(i.position.y, -select * 150.0 + (300.0 + i.value * 150.0), 0.25)
+		i.position.y = lerp(i.position.y, -select * 200.0 + (300.0 + i.value * 200.0), 0.25)
 		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.value) / 5.0, 0.25)
+
+func update_desc():
+	var i = list.get_child(select)
+	if i.array[0] != "":
+		desc.text = i.array[0] + "\n" + " " + "\n" + i.array[1]
+	else:
+		desc.text = ""
+	if i.array[1] != "":
+		desc.text += "\n- " + i.name

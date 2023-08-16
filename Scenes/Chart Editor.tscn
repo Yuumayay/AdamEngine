@@ -54,9 +54,9 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
 
-[node name="Notes" type="Node2D" parent="."]
-
 [node name="Mass" type="Node2D" parent="."]
+
+[node name="Notes" type="Node2D" parent="."]
 
 [node name="Secs" type="Node2D" parent="."]
 
