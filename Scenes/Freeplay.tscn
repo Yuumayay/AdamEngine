@@ -187,6 +187,6 @@ text = "x"
 uppercase = true
 
 [node name="Alphabet" parent="." instance=ExtResource("9_y07c1")]
-position = Vector2(168, 344)
+position = Vector2(155, 255)
 text = ">"
 type = 1
