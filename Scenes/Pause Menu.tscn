@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctx0chsaxufw2"]
+[gd_scene load_steps=4 format=3 uid="uid://ctx0chsaxufw2"]
 
 [ext_resource type="Script" path="res://Scenes/Pause Menu.gd" id="1_134xa"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="1_hh2s2"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="3_fdxoi"]
 
 [node name="Pause Menu" type="CanvasLayer"]
 layer = 2
@@ -23,6 +24,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="Tile" type="TextureRect" parent="Control"]
+modulate = Color(1, 1, 1, 0.156863)
+layout_mode = 0
+offset_right = 1396.0
+offset_bottom = 798.0
+expand_mode = 1
+stretch_mode = 1
 
 [node name="Selectable" type="Control" parent="Control"]
 anchors_preset = 0
@@ -97,3 +106,41 @@ offset_bottom = 689.0
 theme_override_fonts/font = ExtResource("1_hh2s2")
 text = "back"
 uppercase = true
+
+[node name="Mode" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 985.0
+offset_top = 669.0
+offset_right = 1275.0
+offset_bottom = 713.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_fdxoi")
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 2
+
+[node name="SongName" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 1006.0
+offset_top = 11.0
+offset_right = 1267.0
+offset_bottom = 55.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_fdxoi")
+theme_override_font_sizes/font_size = 50
+text = "ASDASDASD"
+horizontal_alignment = 2
+
+[node name="Difficulty" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 1006.0
+offset_top = 58.0
+offset_right = 1267.0
+offset_bottom = 102.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_fdxoi")
+theme_override_font_sizes/font_size = 30
+text = "HARD"
+horizontal_alignment = 2

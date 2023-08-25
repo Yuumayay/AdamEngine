@@ -30,13 +30,41 @@ var keybind_default_sub: Dictionary = {}
 enum {ENG, JPN}
 var lang = ENG
 
+var desc := {
+	"language": "Switch language.",
+	"language/language": "Select language :D",
+	"keybind": "Change the keybind.",
+	"bind": "What kind of bind do you want?"
+}
+
+var descJPN := {
+	"language": "言語の変更ができるよ。",
+	"language/language": "言語をえらんでね。",
+	"keybind": "操作の変更ができるよ。",
+	"4k bind": "何にするのかな？",
+	"gameplay": "ゲームプレイまわりの設定だよ。",
+	"downscroll": "オンにすると、スクロール方向が下になるよ。",
+	"middlescroll": "オンにすると、真ん中に\nノーツが降ってくるようになるよ。",
+	"hit sound": "ノーツを打ったときの音をカスタマイズできるよ。",
+	"hit sound volume": "ノーツを打ったときの音の音量を上げることができるよ。\n[wait][concern]上げすぎると、鼓膜が死ぬよ。",
+	"botplay": "全部オートプレイになるよ。\n[wait][angry]人生も全部自動で上手くいってくれればいいのにね。",
+	"practice": "HPが0になっても、ゲームオーバーにならなくなるよ。\n[wait][happy]さぁ、練習練習！",
+	"max fps": "FPSの最大値を変えられるよ。\n注意：上げすぎるとPCにとても負荷がかかるよ！！",
+	"show ms": "ms表示の切り替えができるよ。",
+	"show kps": "KPS表示の切り替えができるよ。\nスパム曲で試してみよう！",
+	"syobon-kun": "オンにすると、しょぼん君が画面に現れてキーボードを叩くよ。\n現在、4Kしか対応してないよ。",
+	"engine type": "FNF次元を自由自在に移動することができるよ。",
+	"visuals and ui": "見た目とかの設定だよ。\n[wait][concern]グラフィックとの違いは、いまいちわからん。",
+	"graphics": "見た目とかの設定だよ。\n[wait][concern]ユーアイとの違いは、いまいちわからん。"
+}
+
 var setting: Dictionary = {
 	"category": {
 		"language": {
 			"language": {
 				"type": "array",
 				"cur": 0,
-				"array": ["english", "japanese"]
+				"array": ["english", "japanese"],
 			},
 		},
 		"keybind": {
@@ -91,7 +119,7 @@ var setting: Dictionary = {
 			},
 			"show kps": {
 				"type": "bool",
-				"cur": true
+				"cur": false
 			},
 			"syobon-kun": {
 				"type": "bool",
@@ -99,11 +127,13 @@ var setting: Dictionary = {
 			},
 		},
 		"visuals and ui": {
-			"info text type": {
-				"type": "array",
+			"engine type": {
+				"type": "engineType",
 				"cur": 0,
-				"array": ["Adam Engine", "Psych Engine", "Kade Engine 1.2", "Kade Engine 1.4", "Kade Engine 1.8", "Leather Engine", "Denpa Engine", "Other A"],
-				"metadata": ["adam", "psych", "kade12", "kade14", "kade18", "leather", "denpa", "other a"]
+				"array": [{"name": "Engines", "data": ["Adam Engine", "Psych Engine", "Leather Engine", "Denpa Engine"], "metadata": ["adam", "psych", "leather", "denpa"]}, {"name": "Kade Engine", "data": ["KE 1.2", "KE 1.4", "KE 1.8"], "metadata": ["kade12", "kade14", "kade18"]}, {"name": "Mod Presets", "data": ["Human Impostor", "Strident Crisis", "Voiid Chronicles"], "metadata": ["other a", "other b", "voiid"]}],
+				"metadata": ["adam", "psych", "leather", "denpa", "kade12", "kade14", "kade18", "other a", "other b", "voiid"]
+				#"array": ["Adam Engine", "Psych Engine", "Kade Engine 1.2", "Kade Engine 1.4", "Kade Engine 1.8", "Leather Engine", "Denpa Engine", "Other A", "Other B"],
+				#"metadata": ["adam", "psych", "kade12", "kade14", "kade18", "leather", "denpa", "other a", "other b"]
 			}
 		}
 	}
@@ -142,6 +172,8 @@ func s_get_array(category: String, key: String):
 
 func s_set(category: String, key: String, value):
 	setting.category[category][key].cur = value
+	if key.contains("engine type"):
+		Audio.refresh()
 	
 	setting_refresh() #設定項目の特殊更新
 
@@ -158,7 +190,7 @@ func s_set_array(category: String, key: String, value):
 	else:
 		metadata = array
 	var set_value = ind + value
-	if array.size() <= set_value:
+	if metadata.size() <= set_value:
 		set_value = 0
 	if set_value == -1:
 		set_value = array.size() - 1
@@ -166,10 +198,15 @@ func s_set_array(category: String, key: String, value):
 	if key.contains("hit sound"):
 		Audio.a_stop("Scroll")
 		Audio.a_play(metadata[set_value], 1.0, s_get("gameplay", "hit sound volume") * 0.5 - 50)
+	if key.contains("engine type"):
+		Audio.refresh()
 		
 	setting_refresh() #設定項目の特殊更新
 
 var conv_jpn := [
+	["adam", "アダム"],
+	["adamized", "アダムった"],
+	["tutorial", "チュートリアル"],
 	["daddy dearest", "親愛なるパパ"],
 	["spooky month", "コワーい ヤツら"],
 	["pico", "ピコ"],
@@ -215,13 +252,16 @@ var conv_jpn := [
 	["syobon-kun", "ショボン ヒョウジ"],
 	["english", "エイゴ"],
 	["japanese", "ニホンゴ"],
-	["info text type", "キョクジョウホウ ヒョウジタイプ"],
+	["engine type", "エンジンタイプ"],
 	["adam engine", "アダムエンジン"],
 	["psych engine", "サイコエンジン"],
 	["kade engine 1.2", "ケイドエンジン 1.2"],
 	["kade engine 1.4", "ケイドエンジン 1.4"],
 	["kade engine 1.8", "ケイドエンジン 1.8"],
 	["leather engine", "レザーエンジン"],
+	["denpa engine", "デンパエンジン"],
+	["other a", "ソノタ エー"],
+	["other b", "ソノタ ビー"],
 	["resume", "サイカイ"],
 	["restart", "リスタート"],
 	["difficulty", "ナンイド"],
@@ -229,6 +269,14 @@ var conv_jpn := [
 	["normal", "フツウ"],
 	["hard", "ムズカシイ"],
 	["insane", "ゲキヤバ"],
+	["hardcore", "ハードコア"],
+	["harder", "オニ"],
+	["old", "旧バージョン"],
+	["canon", "カノン"],
+	["mania", "マニア"],
+	["god", "ゴッド"],
+	["voiid", "ヴォイード"],
+	["hell", "ジゴク"],
 	["true", "オン"],
 	["false", "オフ"],
 	["save", "セーブ"],
@@ -246,6 +294,12 @@ var conv_jpn := [
 	["bad", "ダメ"],
 	["shit", "ダメダメ！"],
 	["you suck!", "下手くそ！"],
+	["haxxer!!", "ハッカーや！！"],
+	["cheater!", "チーターや！"],
+	["eh", "うごご"],
+	["it\'s not overcharted, you\'re just bad.", "これはチャートが酷いんじゃない、あなたがただ下手なだけ"],
+	["done for.", "よしとしてやろう"],
+	["cope harder", "出直してきな！"],
 	["chart editor", "フメン エディター"],
 	["stage editor", "ステージ エディター"],
 	["modchart editor", "モッドチャート エディター"],
@@ -259,7 +313,13 @@ func jpn():
 	return lang == JPN
 
 func engine():
-	return Setting.s_get_array("visuals and ui", "info text type")
+	return Setting.s_get_array("visuals and ui", "engine type")
+
+func bot():
+	return Setting.s_get("gameplay", "botplay")
+
+func practice():
+	return Setting.s_get("gameplay", "practice")
 
 # dynamic fontを使うか？
 func dfont():
@@ -281,7 +341,14 @@ func set_dfont_mini(new_item):
 		new_item.add_theme_color_override("font_outline_color", Color(0.5, 0.5, 0.5))
 		new_item.add_theme_constant_override("shadow_outline_size", 5)
 	return new_item
-	
+
+func set_dfont_strident(new_item):
+	new_item.add_theme_color_override("font_color", "green")
+	new_item.add_theme_color_override("font_outline_color", "black")
+	new_item.add_theme_constant_override("shadow_outline_size", 0)
+	new_item.add_theme_font_override("font", load("Assets/Fonts/comic.ttf"))
+	return new_item
+
 # ゲームの多言語化対応
 func translate(text: String):
 	if lang == JPN:

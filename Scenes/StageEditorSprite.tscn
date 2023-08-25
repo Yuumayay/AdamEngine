@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://bekl6mulu4r1f"]
+
+[ext_resource type="Script" path="res://Script/StageEditorSprite.gd" id="2_wk22w"]
+
+[node name="StageEditorSprite" type="TextureRect"]
+script = ExtResource("2_wk22w")
+
+[node name="PosLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 2.0
+offset_top = -26.0
+offset_right = 42.0
+offset_bottom = -3.0
+grow_vertical = 0
+
+[node name="icons" type="Node2D" parent="."]
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

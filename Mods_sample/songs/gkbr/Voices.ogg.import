@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://baxxems02ea1x"
-path="res://.godot/imported/Voices.ogg-d7a05c2ea1279e1c72749a0700d2bc08.oggvorbisstr"
+path="res://.godot/imported/Voices.ogg-2a09adc7d532601a57e0018067b3ff4b.oggvorbisstr"
 
 [deps]
 
-source_file="res://Mods_sample/songs/gkbr/Voices.ogg"
-dest_files=["res://.godot/imported/Voices.ogg-d7a05c2ea1279e1c72749a0700d2bc08.oggvorbisstr"]
+source_file="res://Mods/songs/gkbr/Voices.ogg"
+dest_files=["res://.godot/imported/Voices.ogg-2a09adc7d532601a57e0018067b3ff4b.oggvorbisstr"]
 
 [params]
 

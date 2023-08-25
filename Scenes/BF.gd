@@ -10,13 +10,16 @@ var DEFAULT_XML = [
 "Assets/Images/characters/DADDY_DEAREST.xml", 
 "Assets/Images/characters/GF_assets.xml"
 ]
-var SPR_NAME = ["bf", "dad", "gf"]
+const SPR_NAME = ["bf", "dad", "gf"]
 
 @onready var bf = $bf
 
-var note_anim: Array = ["singleft", "singdown", "singup", "singright"]
-var miss_anim: Array = ["singleftmiss", "singdownmiss", "singupmiss", "singrightmiss"]
+const note_anim: Array = ["singleft", "singdown", "singup", "singright"]
+const miss_anim: Array = ["singleftmiss", "singdownmiss", "singupmiss", "singrightmiss"]
 var idle_anim = "idle"
+
+const GF_SP_DANCE_LEFT = "danceleft"
+const GF_SP_DANCE_RIGHT = "danceright"
 
 enum {IDLE = -1, NOTE, MISS}
 var state: int = -1
@@ -26,7 +29,8 @@ var animLength = 4.0
 var animRemain: float = 0.0
 
 var json: Dictionary
-var offset_dic = {}
+var offset_dic := {}
+var loop_dic := {}
 
 var xml_load_fail: bool = false
 var json_load_fail: bool = false
@@ -42,7 +46,29 @@ func _ready():
 		setup3D()
 	else:
 		setup2D()
-	
+
+func setValue(setproperty, property, type = ""):
+	var characterProperty = Game.character_property[Game.song_engine_type][property]
+	if json.has(characterProperty):
+		match json[characterProperty]:
+			Game.SAME:
+				if type == "vector2":
+					setproperty = Vector2(json[property][0], json[property][1])
+					return
+				setproperty = json[property]
+				return
+			Game.NULL:
+				return
+			_:
+				if type == "vector2":
+					if json[characterProperty] is Array and json[characterProperty].size() == 1:
+						setproperty = Vector2(json[characterProperty][0], json[characterProperty][0])
+					else:
+						setproperty = Vector2(json[characterProperty][0], json[characterProperty][1])
+					return
+				setproperty = json[characterProperty]
+				return
+
 func setup2D():
 	var spr : AnimatedSprite2D
 	var cam = $/root/Gameplay/Camera
@@ -50,22 +76,25 @@ func setup2D():
 	
 	if type == PLAYER: # BF側
 		json = Game.p1_json # jsonにbfのjsonをいれる
+		
 		# 超絶分かりにくいfnfのpositionの仕様に仕方なく対応
-		position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		#position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
 		cam.bf = self # カメラの注視オブジェクトに自分をいれる
 		json_load_fail = Game.bf_load_fail #chara jsonの読み出し失敗
 		
 	elif type == DAD: # DAD側
 		json = Game.p2_json
-		position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		#position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
 		cam.dad = self
 		json_load_fail = Game.dad_load_fail
 		
 	elif type == GF: # GF側
 		gf_beatanim_flag = true
 		json = Game.gf_json
-		
-		position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1])
+		#position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
 		cam.gf = self
 		gameplay.gf_strum_set(position)
 		json_load_fail = Game.gf_load_fail
@@ -74,23 +103,26 @@ func setup2D():
 		gf_beatanim_flag = json.gf_special_anim
 		
 	if Paths.p_chara_xml(json.image): # キャラクターのxmlが存在していたら
-		spr = Game.load_XMLSprite(Paths.p_chara_xml(json.image), idle_anim, false, 24, 2)
+		spr = Game.load_XMLSprite(Paths.p_chara_xml(json.image), idle_anim, false, 24, type + 1)
 		
 	elif Game.chara_image_path:
-		spr = Game.load_XMLSprite(Game.chara_image_path[type].replace(".png", ".xml"), idle_anim, false, 24, 2)
+		spr = Game.load_XMLSprite(Game.chara_image_path[type].replace(".png", ".xml"), idle_anim, false, 24, type + 1)
 		
 	else: # キャラクターのxmlが存在しない
 		# エラー回避のためデフォルトを入れる
-		spr = Game.load_XMLSprite(DEFAULT_XML[type], idle_anim, false, 24, 2)
+		spr = Game.load_XMLSprite(DEFAULT_XML[type], idle_anim, false, 24, type + 1)
 		xml_load_fail = true
-		
-	animLength = json.sing_duration
-	spr.flip_h = json.flip_x
+	setAnimLoop()
+	setValue(animLength, "sing_dulation")
+	setValue(spr.flip_h, "flip_x")
 	spr.name = SPR_NAME[type]
 	name = SPR_NAME[type] + "pos"
-	spr.scale = Vector2(json.scale, json.scale)
+	setValue(spr.scale, "scale", "vector2")
+	spr.centered = true
 	
 	# イレギュラー処理-------
+	var atlastexture 
+	
 	if type == PLAYER:
 		spr.flip_h = !json.flip_x # bfはflip_xの逆をflip_hに適用(分かりにくいfnfの仕様)
 	if type == GF:
@@ -98,25 +130,35 @@ func setup2D():
 		
 	if not spr.sprite_frames.has_animation(idle_anim):
 		print("dont have idle name")
-		idle_anim = note_anim[0] # idleがない場合はsingleftとする?
+		idle_anim = "error"
+		#if spr.sprite_frames.has_animation(note_anim[0]):
+		#	idle_anim = note_anim[0] # idleがない場合はsingleftとする?
+		#elif spr.sprite_frames.has_animation(GF_SP_DANCE_LEFT):
+		#	idle_anim = GF_SP_DANCE_LEFT
+		atlastexture = spr.sprite_frames.get_frame_texture(GF_SP_DANCE_LEFT, 0)
+	else:
+		atlastexture = spr.sprite_frames.get_frame_texture(idle_anim, 0)
+		
 	#----------------------
 		
 	bf.replace_by(spr)
 	bf = spr
-	bf.play(idle_anim)
+	if spr.sprite_frames.has_animation(idle_anim):
+		bf.play(idle_anim)
 	
 	if json_load_fail or xml_load_fail: #キャラクターロード失敗
 		loadFail(SPR_NAME[type], [json_load_fail, xml_load_fail])
 		
-	var atlastexture = bf.sprite_frames.get_frame_texture(idle_anim, 0)
 	if atlastexture:
 		var s = atlastexture.get_size()
 		print("sp", atlastexture, s)
 		
-		bf.offset += Vector2(s.x / 2.0, s.y / 2.0)
+		#bf.offset += Vector2(s.x / 2.0, s.y / 2.0)
+		position += Vector2(s.x / 2.0, s.y / 2.0)
 	
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
+		#offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
 		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
 	#ResourceSaver.save(bf.sprite_frames, "Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
 	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
@@ -211,6 +253,11 @@ func getPosOffset3D():
 	#position + offsetを返す カメラの位置計算に使う
 	return Vector3((position.x + bf.offset.x) / offset3D.x, (position.y + bf.offset.y) / offset3D.y, 0.0)
 
+func getCamOffset():
+	if json.has("camera_position"):
+		return Vector2(json.camera_position[0], json.camera_position[1])
+	return Vector2.ZERO
+
 func setOffset(animname : String):
 	var offset3 := Vector2.ZERO
 	for i in json["animations"]:
@@ -225,6 +272,10 @@ func setOffset(animname : String):
 	else:
 		bf.position.x = 0 + offset3.x
 		bf.position.y = 0 + offset3.y
+
+func setAnimLoop():
+	for i in json["animations"]:
+		loop_dic[i.anim.to_lower()] = i.loop
 
 func animDirection(dir: int):
 	dir_2 = dir
@@ -281,6 +332,10 @@ func _process(delta):
 	else:
 		if !bf.is_playing():
 			bf.play()
+	if bf.frame >= bf.sprite_frames.get_frame_count(bf.animation) - 1:
+		if loop_dic.has(bf.animation):
+			if not loop_dic[bf.animation]:
+				bf.pause()
 			
 	#if type == PLAYER:
 	#	run_anim(delta)
@@ -306,7 +361,8 @@ func run_anim(delta):
 	else:
 		if not Game.cur_state == Game.PAUSE:
 			animRemain -= delta
-			
+	
+	#inputCheck(input)
 	for i in range(Game.key_count[type]):
 		if input[i] == 2:
 			# BOTやプレイヤー以外のときは入力を0に
@@ -322,18 +378,29 @@ func run_anim(delta):
 		if gf_beatanim_flag: #gfの特殊パターン!!!
 			if state != IDLE: 
 				state = IDLE
-				bf.play(idle_anim[beat], 1.0, true)  #????
-				setOffset(idle_anim[beat])			
+				#bf.play(idle_anim[beat], 1.0, true)  #????
+				#setOffset(idle_anim[beat])
 			else:
 				if Audio.beat_hit_event and Game.cur_state != Game.PAUSE:
 					bf.stop()
-					bf.play(idle_anim, 1.0, true)
-					setOffset(idle_anim)
-					bf.frame = beat % 2 * 15 #GFのみ、アニメフレームを強制的にいじるHACK
+					
+					if bf.sprite_frames.has_animation(idle_anim): #idleがある
+						bf.play(idle_anim, 1.0, true)
+						setOffset(idle_anim)
+						bf.frame = beat % 2 * 15 #GFのみ、アニメフレームを強制的にいじるHACK
+
+					else: #idleがない
+						if beat == 0:
+							bf.play(GF_SP_DANCE_LEFT, 1.0, true)
+						else:
+							bf.play(GF_SP_DANCE_RIGHT, 1.0, true)
+							var a : AnimatedSprite2D
+						
 					if beat == 0:
 						beat = 1
 					else:
-						beat = 0
+						beat = 0	
+						
 		else:
 			if state != IDLE: #アイドルアニメへ
 				state = IDLE
@@ -341,10 +408,30 @@ func run_anim(delta):
 				setOffset(idle_anim)
 			else:
 				if Audio.beat_hit_bool:
-					bf.stop()
-					bf.play(idle_anim)
-					setOffset(idle_anim)
+					if loop_dic.has(idle_anim):
+						if not loop_dic[idle_anim]:
+							bf.stop()
+							bf.play(idle_anim)
+							setOffset(idle_anim)
 
+var checking := false
+
+func inputCheck(input):
+	if checking: return
+	checking = true
+	for i in range(Game.key_count[type]):
+		if input[i] == 2 or input[i] == 1:
+			# BOTやプレイヤー以外のときは入力を0に
+			if type != PLAYER or (type == PLAYER and Setting.s_get("gameplay", "botplay")):
+				input[i] = 0
+			animDirection(i)
+		
+		if type == PLAYER and Game.bf_miss[i] == 1: #プレイヤーの場合ミスのアニメ
+			Game.bf_miss[i] = 0
+			animDirectionMiss(i)
+		await get_tree().create_timer(0).timeout
+	checking = false
+		
 
 func loadFail(p_type, case):
 	print(p_type, " load_fail ", case)

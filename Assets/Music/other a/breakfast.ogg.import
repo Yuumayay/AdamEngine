@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bm5k44r1aydro"
+path="res://.godot/imported/breakfast.ogg-3be078e65567b8dedc7433b599b86c5b.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Music/other a/breakfast.ogg"
+dest_files=["res://.godot/imported/breakfast.ogg-3be078e65567b8dedc7433b599b86c5b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bwxohcdsmj7jo"
+path="res://.godot/imported/cancelMenu.ogg-88f3412ddc8bd7331609b2dd69c1b1b3.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/other b/UI/cancelMenu.ogg"
+dest_files=["res://.godot/imported/cancelMenu.ogg-88f3412ddc8bd7331609b2dd69c1b1b3.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

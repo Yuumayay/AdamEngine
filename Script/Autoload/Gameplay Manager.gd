@@ -4,6 +4,9 @@ signal game_ready
 
 const PRELOAD_SEC = 2
 
+var progress := 0
+var gf_pet_total := 0.0
+
 var can_input: bool = true
 var trans: bool = false
 var debug_mode: bool = false
@@ -11,6 +14,46 @@ var key_count : Array = [4,4,4]
 enum {KC_BF, KC_DAD, KC_GF}
 var cur_multi: float = 1.0
 var cur_speed: float = 1.0
+
+enum {ADAM, PSYCH, LEATHER, KADE, DENPA, STRIDENT}
+var song_engine_type := 0
+
+enum {SAME, NULL}
+
+var character_property := [
+	{"animations": SAME,
+	"no_antialiasing": SAME,
+	"image": SAME,
+	"position": SAME,
+	"healthicon": SAME,
+	"flip_x": SAME,
+	"healthbar_colors": SAME,
+	"camera_position": SAME,
+	"sing_dulation": SAME,
+	"scale": SAME},
+	
+	{"animations": SAME,
+	"no_antialiasing": SAME,
+	"image": SAME,
+	"position": SAME,
+	"healthicon": SAME,
+	"flip_x": SAME,
+	"healthbar_colors": SAME,
+	"camera_position": SAME,
+	"sing_dulation": SAME,
+	"scale": SAME},
+	
+	{"animations": SAME,
+	"no_antialiasing": NULL,
+	"image": "imagePath",
+	"position": "positionOffset",
+	"healthicon": "healthIcon",
+	"flip_x": "defaultFlipX",
+	"healthbar_colors": "barColor",
+	"camera_position": "cameraOffset",
+	"sing_dulation": NULL,
+	"scale": "graphicSize"},
+]
 
 enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 var cur_state: int = 0
@@ -33,6 +76,7 @@ var mustHit: bool
 var cur_input: Array
 var cur_input_str: String
 var kps: Array
+var dad_kps: Array
 var nps: Array
 var max_nps: float
 var cur_input_sub: Array
@@ -52,9 +96,11 @@ var language: String = "English"
 var song_data: Dictionary
 
 var difficulty: Array = ["easy", "normal", "hard"]
-var difficulty_case := ["easy", "normal", "hard", "hardcore", "insane", "harder", "canon", "mania", "voiid", "god"]
-var difficulty_color: Array = [Color(0, 1, 0), Color(1, 1, 0), Color(1, 0, 0)]
-var diff := 1 #現在の難易度
+var difficulty_case := ["easy", "normal", "hard", "hardcore", "insane", "harder", "canon", "mania", "voiid", "god", "old", "hell", "adamized"]
+var difficulty_color := {"easy": Color(0, 1, 0), "normal": Color(1, 1, 0), "hard": Color(1, 0, 0),
+"hardcore": Color("ff00ff"), "insane": Color(0.9, 0.9, 0.9), "harder": Color(1, 0, 0),
+"canon": Color("74a5ff"), "mania": Color("74a539"), "voiid": Color("820094"), "god": Color("5cffff"),
+"old": Color(0.6,0.6,0.6), "hell": Color(0.7, 0, 0), "adamized": Color(1, 1, 1)}
 
 ## GAMEPLAY CONSTS ##
 const rating_value: Array = [1, 1, 0.75, 0.5, 0.25, 0]
@@ -64,18 +110,22 @@ const score_gain: Array = [400, 350, 200, 100, 0, -10]
 #const difficulty: Array = ["easy", "normal", "hard"]
 const sus_tolerance: float = 200.0
 
+
 ## GAMEPLAY PROPERTY ##
 var score: int
 var health: float = 1.0
 var health_percent: float = 50.0
 var accuracy: float
+var accuracy_percent: float
 var total_hit: float
 var hit: int
 var combo: int
 var max_combo: int
 var fc_state: String = "N/A"
 
+var rating_name := ["Marvelous", "Sick", "Good", "Bad", "Shit", "Misses"]
 var rating_total: Array = [0, 0, 0, 0, 0, 0]
+var cur_rating: String
 
 #var is_story: bool
 enum {TITLE, FREEPLAY, STORY}
@@ -85,6 +135,8 @@ var saveScore: bool
 var songList: Array
 var cur_song_index: int
 var skipCountdown := false
+var loadAudioByDifficulty := false
+var timeText: String
 
 ## GAMEPLAY WEEK PROPERTY ##
 var cur_week: String
@@ -102,24 +154,27 @@ var defaultZoom: float
 var isPixel: bool
 
 ## SONG JSON ##
-const DEFAULT_SONG = "bopeebo"
+const DEFAULT_SONG = "asdasdasd"
 var cur_song: String = DEFAULT_SONG
 var cur_song_path: String
 var cur_song_data_path: String
 var chara_image_path: Array
+var noteXML: String
 var chara_json: Array
-var cur_diff: String = "normal": #現在の難易度（文字列
+var diff := 2 #現在の難易度
+var cur_diff: String = "hard": #現在の難易度（文字列
 	set(v): # クソコード
 		cur_diff = v
 		var n = 0
-		for i in difficulty:
+		for i in difficulty_case:
 			if v == i:
 				diff = n
 			n += 1
 	get:
-		return difficulty[diff]
+		return difficulty_case[diff]
 		
 var cur_stage: String = "stage"
+var stage_json: Dictionary
 var player1: String = "bf"
 var player2: String = "dad"
 var player3 = "gf"
@@ -175,6 +230,7 @@ func set_health(value):
 	health_percent = health * 50
 
 func add_rating(value):
+	cur_rating = rating_name[value]
 	rating_total[value] += 1
 	week_rating_total[value] += 1
 	if value == MISS:
@@ -189,6 +245,7 @@ func add_rating(value):
 	hit += 1
 	week_hit += 1
 	accuracy = total_hit / hit
+	accuracy_percent = floor(accuracy * 10000.0) / 100.0
 	week_accuracy = week_total_hit / week_hit
 	
 func sort_ascending(a, b):
@@ -201,13 +258,16 @@ func get_json_keycount(song):
 	if song.has("mania"):
 		if song.mania == 0:
 			ret = [4, 4, 4]
-		if song.mania == 1:
+		elif song.mania == 1:
 			ret = [6, 6, 6]
-		if song.mania == 2:
+		elif song.mania == 2:
 			ret = [9, 9, 9]
-			
+		elif song.mania == 3:
+			ret = [9, 9, 9]
 	if song.has("keyCount"):
 		ret = [song.keyCount,song.keyCount,song.keyCount]
+		if song.has("playerKeyCount"):
+			ret[0] = song.playerKeyCount
 		
 	#Adam仕様keycount
 	if song.has("player1KeyCount"): 
@@ -219,6 +279,14 @@ func get_json_keycount(song):
 	
 	print("load keycount", ret)
 	return ret
+
+# songのプロパティチェックのテンプレート
+func check_property_and_set(dict, key):
+	if dict.has(key):
+		# keyがdictの中で見つかった場合、dict[key]を返す（プロパティに合わせる）
+		return dict[key]
+	# keyがdictの中で見つからない場合、Game[key]を返す（変えない）
+	return Game[key]
 
 # json load
 func setup(data):
@@ -232,19 +300,25 @@ func setup(data):
 	cur_speed = song.speed / cur_multi
 	Audio.bpm = song.bpm * cur_multi
 	key_count = [4, 4, 4]
+	loadAudioByDifficulty = check_property_and_set(song, "loadAudioByDifficulty")
 	
-	if song.has("stage"):
-		cur_stage = song.stage
-	else:
-		cur_stage = "stage"
-	if Paths.p_stage_data(cur_stage):
-		stage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
+	if stage_json:
+		stage = stage_json
 		defaultZoom = stage.defaultZoom
 		isPixel = stage.isPixelStage
 	else:
-		stage = File.f_read(Paths.p_stage_data("stage"), ".json")
-		defaultZoom = 1.0
-		isPixel = false
+		if song.has("stage"):
+			cur_stage = song.stage
+		else:
+			cur_stage = "stage"
+		if Paths.p_stage_data(cur_stage):
+			stage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
+			defaultZoom = stage.defaultZoom
+			isPixel = stage.isPixelStage
+		else:
+			stage = File.f_read(Paths.p_stage_data("stage"), ".json")
+			defaultZoom = 1.0
+			isPixel = false
 	
 	player1 = song.player1
 	player2 = song.player2
@@ -260,7 +334,7 @@ func setup(data):
 			player3 = "gf"
 		else:
 			player3 = "none"
-	
+	print("p1: ", player1, " p2: ", player2, " p3: ", player3)
 	if chara_json:
 		var jsonlist := [p1_json, p2_json, gf_json]
 		var faillist := [bf_load_fail, dad_load_fail, gf_load_fail]
@@ -321,7 +395,7 @@ func setup(data):
 					dir.append(ind[1] - key_count[KC_BF])
 					
 				else: #BF
-					dir.append(ind[1] + key_count[KC_BF])
+					dir.append(ind[1] + key_count[KC_DAD])
 			else:# DAD-----------------
 				dir.append(ind[1])
 			
@@ -378,7 +452,28 @@ func load_image(path):
 	return texture
 	
 # XML load
+var sprite_cache = {}
+var play_animation_name_cache = {}
+
 func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
+	if sprite_cache.has(path):
+		print("sprite xml on cache: ", path)
+		#var sprite_data:AnimatedSprite2D = AnimatedSprite2D.new()
+		#sprite_data.frames = sprite_cache[path].duplicate()
+		#if sprite_data.sprite_frames.has_animation(play_animation_name):
+		var sprite_data:AnimatedSprite2D = sprite_cache[path].duplicate()
+		if play_animation_name == "":
+		#	var anims : Array = sprite_data.sprite_frames.get_animation_names()
+		#	var i = anims.find("default")
+		#	if i > 0:
+		#		anims.remove_at(i)
+		#	play_animation_name = anims[-1]
+			play_animation_name = play_animation_name_cache[path]
+		
+		sprite_data.play(play_animation_name)
+		return sprite_data
+		
+	print("sprite xml load start: ", path)
 	if !FileAccess.file_exists(path):
 		Audio.a_play("Error")
 		printerr("invalid path. cannot load xml")
@@ -406,7 +501,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 	
 	var frames:SpriteFrames = SpriteFrames.new() # アニメーションを管理 add_animationで追加
 	
-	sprite_data.frames = frames
+	sprite_data.sprite_frames = frames
 	
 	var idle_f = false
 	while xml.read() == OK:
@@ -414,6 +509,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 			var node_name:StringName = xml.get_node_name()
 			
 			if node_name.to_lower() == "subtexture":
+				var anim_loop = loop_f
 				var frame_data:AtlasTexture
 				
 				var animation_name = xml.get_named_attribute_value("name")
@@ -421,6 +517,8 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 				animation_name = animation_name.to_lower()
 				
 				var convname = conv_anim_name(animation_name) #特殊なBF、GFなどのアニメ名は辞書で正規化
+				var json_anim = false
+				
 				if convname != animation_name:
 					animation_name = convname
 					
@@ -431,14 +529,21 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 							var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
 							if orginal_fnf_name == animation_name:
 								animation_name = i.anim.to_lower()
+								print(i.name, " -> ", orginal_fnf_name," -> ", animation_name)
 								no_anim = false
+								json_anim = true
+								anim_loop = i.loop
 								break
-					if (!json) or no_anim: # jsonがないか、jsonに対応するアニメがない
-						if not idle_f and animation_name.contains("idle"): # 特殊変換処理
-							animation_name = "idle"
+						
+					if !json_anim and((!json) or no_anim): # jsonがないか、jsonに対応するアニメがない
+						if animation_name.contains("idle"): # 特殊変換処理
+							if animation_name.contains("shaking"):
+								animation_name = "shaking"
+							else:
+								animation_name = "idle"
 							
-					if character != 0: #キャラクターだったら　アニメ名を正規化
-						for anim in Game.note_anim:
+					if !json_anim and character != 0: #キャラクターだったら　アニメ名を正規化
+						for anim in View.keys["4k"].duplicate():
 							var i = anim.replace("2", "")
 							if animation_name.contains(i):
 								if animation_name.contains("dance"):
@@ -447,10 +552,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 									animation_name = "sing" + i + "miss"
 								else:
 									animation_name = "sing" + i
-				
-				if animation_name == "idle": #アイドルは１つのみ
-					idle_f = true
-				
+									
 				var frame_rect:Rect2 = Rect2(
 					Vector2(
 						xml.get_named_attribute_value("x").to_float(),
@@ -508,161 +610,33 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 				
 				if not frames.has_animation(animation_name):
 					frames.add_animation(animation_name)
-					frames.set_animation_loop(animation_name, loop_f)
+					frames.set_animation_loop(animation_name, anim_loop)
 					frames.set_animation_speed(animation_name, fps)
+					print("new anim:", path, animation_name, anim_loop)
+					if !json_anim and character != 0:
+						print(xml.get_named_attribute_value("name"), " -> not found...", animation_name)
 				
 				frames.add_frame(animation_name, frame_data)
 				if play_animation_name == "":
 					play_animation_name = animation_name
 	
+	
 	#ResourceSaver.save(frames, base_path + ".res", ResourceSaver.FLAG_COMPRESS)
+	sprite_cache[path] = sprite_data
+	play_animation_name_cache[path] = play_animation_name
 	
-	sprite_data.play(play_animation_name)
-	
-	return sprite_data
-
-
-# XML load 3D kuso kuso kuso　コード　TODO 2Dから sprite.framesだけコピーすればいい
-func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
-	if !FileAccess.file_exists(path):
-		Audio.a_play("Error")
-		printerr("invalid path. cannot load xml")
-		var sprite = AnimatedSprite3D.new()
-		var frames:SpriteFrames = SpriteFrames.new()
-		frames.add_frame("default", Game.load_image("Assets/Images/UI/Missing.png"))
-		sprite.frames = frames
-		return sprite
+	var ret : AnimatedSprite2D = sprite_data.duplicate()
+	if ret.sprite_frames.has_animation(play_animation_name):
+		ret.play(play_animation_name)
 		
-	print("load xml sprite:", path)
-	
-	var sprite_data:AnimatedSprite3D = AnimatedSprite3D.new() 
-	
-	var base_path:StringName = path.get_basename()
-	
-	var texture:Texture = Game.load_image(base_path + ".png")
-	
-	var xml:XMLParser = XMLParser.new()
-	xml.open(base_path + ".xml")
-	
-	var json: Dictionary
-	if character == 1:
-		json = p1_json
-	elif character == 2:
-		json = p2_json
-	
-	var frames:SpriteFrames = SpriteFrames.new() # アニメーションを管理 add_animationで追加
-	
-	sprite_data.frames = frames
-	
-	var idle_f = false
-	while xml.read() == OK:
-		if xml.get_node_type() != XMLParser.NODE_TEXT:
-			var node_name:StringName = xml.get_node_name()
-			
-			if node_name.to_lower() == "subtexture":
-				var frame_data:AtlasTexture
-				
-				var animation_name = xml.get_named_attribute_value("name")
-				animation_name = animation_name.left(len(animation_name) - 4) #アニメ名の後ろ4つは連番
-				animation_name = animation_name.to_lower()
-				
-				var convname = conv_anim_name(animation_name) #特殊なBF、GFなどのアニメ名は辞書で正規化
-				if convname != animation_name:
-					animation_name = convname
-					
-				else: # 辞書にないパターン
-					var no_anim = true
-					if json: # jsonがあったらjsonのアニメ名を使う
-						for i in json.animations:
-							var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
-							if orginal_fnf_name == animation_name:
-								animation_name = i.anim.to_lower()
-								no_anim = false
-								break
-					if (!json) or no_anim: # jsonがないか、jsonに対応するアニメがない
-						if not idle_f and animation_name.contains("idle"): # 特殊変換処理
-							animation_name = "idle"
-							
-					if character != 0: #キャラクターだったら　アニメ名を正規化
-						for i in Game.note_anim:
-							if animation_name.contains(i):
-								if animation_name.contains("dance"):
-									animation_name = "dance" + i
-								elif animation_name.contains("miss"):
-									animation_name = "sing" + i + "miss"
-								else:
-									animation_name = "sing" + i
-				
-				if animation_name == "idle": #アイドルは１つのみ
-					idle_f = true
-				
-				var frame_rect:Rect2 = Rect2(
-					Vector2(
-						xml.get_named_attribute_value("x").to_float(),
-						xml.get_named_attribute_value("y").to_float()
-					),
-					Vector2(
-						xml.get_named_attribute_value("width").to_float(),
-						xml.get_named_attribute_value("height").to_float()
-					)
-				)
-				
-				frame_data = AtlasTexture.new()
-				frame_data.atlas = texture
-				frame_data.region = frame_rect
-				
-				if xml.has_attribute("frameX"): #offsetをマージン設定に変換
-					var margin:Rect2
-					
-					#var raw_frame_x:int
-					#var raw_frame_y:int
+	return ret
 
-					#raw_frame_x = xml.get_named_attribute_value("frameX").to_int()
-					#raw_frame_y = xml.get_named_attribute_value("frameY").to_int()
-				
-					var raw_frame_width:int = xml.get_named_attribute_value("frameWidth").to_int()
-					var raw_frame_height:int = xml.get_named_attribute_value("frameHeight").to_int()
-					
-					var frame_size_data:Vector2 = Vector2(
-						raw_frame_width,
-						raw_frame_height
-					)
-					
-					if frame_size_data == Vector2.ZERO:
-						frame_size_data = frame_rect.size
-					
-					margin = Rect2(#Vector2(-raw_frame_x, -raw_frame_y) ,
-						Vector2(
-							-int(xml.get_named_attribute_value("frameX")),
-							-int(xml.get_named_attribute_value("frameY"))
-						),
-						Vector2(
-							int(xml.get_named_attribute_value("frameWidth")) - frame_rect.size.x,
-							int(xml.get_named_attribute_value("frameHeight")) - frame_rect.size.y
-						)
-							#Vector2(raw_frame_width - frame_rect.size.x,
-									#raw_frame_height - frame_rect.size.y)
-					)					
-					if margin.size.x < abs(margin.position.x):
-						margin.size.x = abs(margin.position.x)
-					if margin.size.y < abs(margin.position.y):
-						margin.size.y = abs(margin.position.y)
-					
-					frame_data.margin = margin 
-				
-				frame_data.filter_clip = true
-				
-				if not frames.has_animation(animation_name):
-					frames.add_animation(animation_name)
-					frames.set_animation_loop(animation_name, loop_f)
-					frames.set_animation_speed(animation_name, fps)
-				
-				frames.add_frame(animation_name, frame_data)
-				if play_animation_name == "":
-					play_animation_name = animation_name
-	
-	#ResourceSaver.save(frames, base_path + ".res", ResourceSaver.FLAG_COMPRESS)
-	
+
+# XML load 3D
+func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
+	var ret = load_XMLSprite(path, play_animation_name, loop_f, fps, character)
+	var sprite_data:AnimatedSprite3D = AnimatedSprite3D.new() 
+	sprite_data.frames = ret.frames
 	sprite_data.play(play_animation_name)
 	
 	return sprite_data
@@ -735,8 +709,7 @@ func _input(event):
 				cur_input_sub[sub_input] = 1
 				cur_input[sub_input] = cur_input_sub[sub_input]#cur_inputを上書きする。
 				ghostTappingCheck(sub_input)
-				
-			
+
 func ghostTappingCheck(input):
 	if Modchart.mGet("ghostTapping"):
 		if bf_hit_bool:
@@ -747,3 +720,10 @@ func ghostTappingCheck(input):
 		if Modchart.mGet("ghostTapping", 2):
 			Game.bf_miss[input] = 1
 		Game.add_health(Modchart.mGet("ghostTapping", 0) * -1)
+
+func _process(_delta):
+	if Input.is_action_just_pressed("game_fullscreen"):
+		if get_window().mode == Window.MODE_FULLSCREEN:
+			get_window().mode = Window.MODE_WINDOWED
+		else:
+			get_window().mode = Window.MODE_FULLSCREEN

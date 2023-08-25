@@ -11,6 +11,7 @@ extends Node2D
 var arrow = "Assets/Images/Story Mode/ui_arrow.xml"
 
 var difficulty: Array = []
+var difficulties := {}
 
 var select: int = 0
 var child_count: int = 0
@@ -26,16 +27,19 @@ var json = File.f_read("user://ae_week_score_data.json", ".json")
 func _ready():
 	var ind := 0
 	
-	diffselect = Game.diff
 	Game.game_mode = Game.STORY
 	Game.edit_jsonpath = ""
 	
 	for index in Paths.week_path_list:
-		
 		#if !DirAccess.get_files_at(index): continue
 		if !DirAccess.dir_exists_absolute(index): continue
 		for i in DirAccess.get_files_at(index):
+			if i.get_extension() != "json":
+				continue
 			var week = File.f_read(index + "/" + i, ".json")
+			difficulties[week.weekName] = week.difficulties.replace(" ", "").split(",")
+			if week.hideStoryMode:
+				continue
 			var new_item: Node2D = $Template.duplicate()
 			var weekName = week.weekName
 			var storyName = Setting.get_translate(week, "storyName")
@@ -48,6 +52,7 @@ func _ready():
 			new_item.name = fileName
 			new_item.ind = ind
 			new_item.storyName = storyName
+			new_item.weekName = weekName
 			
 			var sprite: Sprite2D = new_item.get_node("Sprite")
 			var week_image_path = Paths.p_week_image(fileName)
@@ -72,13 +77,25 @@ func _ready():
 			new_arrow.name = "arrow2"
 		add_child(new_arrow)
 	
-	for i in Game.difficulty.size():
-		difficulty.append(Game.load_image("Assets/Images/Story Mode/Difficulties/" + Game.difficulty[i] + ".png"))
-	
 	child_count = list.get_child_count() - 1
-	diff_count = Game.difficulty.size() - 1
+	diffCheck()
 	update_tracks()
 	update_difficulty()
+
+func diffCheck():
+	Game.difficulty = difficulties[list.get_child(select).weekName]
+	difficulty = []
+	
+	for i in Game.difficulty.size():
+		difficulty.append(Game.load_image(Paths.p_diff(Game.difficulty[i])))
+	
+	if diff_count != Game.difficulty.size() - 1:
+		diff_count = Game.difficulty.size() - 1
+		if Game.difficulty.size() == 1:
+			diffselect = 0
+		else:
+			diffselect = floor(Game.difficulty.size() / 2.0)
+		update_difficulty()
 
 func _process(_delta):
 	if Game.can_input:
@@ -89,6 +106,7 @@ func _process(_delta):
 			else:
 				select -= 1
 			update_tracks()
+			diffCheck()
 		if Input.is_action_just_pressed("game_ui_down"):
 			Audio.a_scroll()
 			if select == child_count:
@@ -96,6 +114,7 @@ func _process(_delta):
 			else:
 				select += 1
 			update_tracks()
+			diffCheck()
 		if Input.is_action_just_pressed("game_ui_left"):
 			$arrow1.play("arrow push")
 			if diffselect == 0:
@@ -175,7 +194,10 @@ func update_difficulty():
 		diffLabel.scale = Vector2(1, 1)
 		diffLabel.position.y = 348
 		diffLabel.modulate.a = 0
-		diffLabel.add_theme_color_override("font_outline_color", Color(Game.difficulty_color[diffselect]))
+		if Game.difficulty_color.has(Game.difficulty[diffselect].to_lower()):
+			diffLabel.add_theme_color_override("font_outline_color", Color(Game.difficulty_color[Game.difficulty[diffselect].to_lower()]))
+		else:
+			diffLabel.add_theme_color_override("font_outline_color", Color(1, 1, 1))
 	diffSprite.scale = Vector2(1, 1)
 	diffSprite.position.y = 462
 	diffSprite.modulate.a = 0

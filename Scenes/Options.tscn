@@ -1,13 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://2nqcs4l4ibwt"]
+[gd_scene load_steps=11 format=3 uid="uid://2nqcs4l4ibwt"]
 
 [ext_resource type="Script" path="res://Scenes/Options.gd" id="1_40o4e"]
-[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_voa3y"]
+[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_voa3y"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_cbk1a"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_r2lco"]
 [ext_resource type="Script" path="res://Script/OptionTemplate.gd" id="5_ivfsk"]
 [ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="6_cih1e"]
 [ext_resource type="FontFile" uid="uid://clqfmqaltqtkq" path="res://Assets/Fonts/DarumadropOne-Regular.ttf" id="6_rd7ng"]
 [ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="7_odwoe"]
+[ext_resource type="Texture2D" uid="uid://b0833nl8a6yls" path="res://Assets/Images/Icons/icon-gf.png" id="9_hjr8t"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="10_76tf1"]
 
 [node name="Options" type="Node2D"]
 script = ExtResource("1_40o4e")
@@ -20,6 +22,7 @@ script = ExtResource("2_cbk1a")
 bumpin_scale = Vector2(1.02, 1.02)
 music_div = 2
 what_music = "Option Menu"
+load_img = "menuDesat"
 
 [node name="Template" type="Label" parent="."]
 visible = false
@@ -68,4 +71,32 @@ visible = false
 position = Vector2(612, 352)
 text = ">     <"
 type = 1
+grow_direction_h = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(172, 520)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("9_hjr8t")
+hframes = 2
+
+[node name="Layer" type="CanvasLayer" parent="."]
+
+[node name="Description" type="RichTextLabel" parent="Layer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -63.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("10_76tf1")
+theme_override_font_sizes/normal_font_size = 35
+bbcode_enabled = true
+fit_content = true
+
+[node name="Description2" parent="Layer" instance=ExtResource("6_cih1e")]
+position = Vector2(656, 635)
 grow_direction_h = 1

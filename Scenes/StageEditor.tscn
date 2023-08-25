@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://3twivjan5148"]
+
+[ext_resource type="Script" path="res://Scenes/StageEditor.gd" id="1_ahiuj"]
+[ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="1_gf10w"]
+[ext_resource type="Script" path="res://Script/StageEditorCam.gd" id="3_cwtra"]
+
+[node name="StageEditor" type="Node2D"]
+script = ExtResource("1_ahiuj")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="AddSprite" type="Button" parent="UI"]
+offset_left = 1080.0
+offset_top = 675.0
+offset_right = 1274.0
+offset_bottom = 708.0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_gf10w")
+theme_override_font_sizes/font_size = 20
+text = "Add Sprite"
+
+[node name="FileDialog" type="FileDialog" parent="UI"]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(1000, 600)
+ok_button_text = "開く"
+file_mode = 0
+access = 2
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="Cam" type="Camera2D" parent="."]
+offset = Vector2(640, 360)
+position_smoothing_enabled = true
+script = ExtResource("3_cwtra")
+
+[connection signal="pressed" from="UI/AddSprite" to="." method="_on_add_sprite_pressed"]
+[connection signal="close_requested" from="UI/FileDialog" to="." method="_on_file_dialog_close_requested"]
+[connection signal="file_selected" from="UI/FileDialog" to="." method="_on_file_dialog_file_selected"]

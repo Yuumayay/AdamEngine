@@ -2,11 +2,11 @@ extends CanvasLayer
 
 @onready var rect: ColorRect = $Rect
 
-func flash(color: Color, duration: float):
+func flash(color = Color(1, 1, 1, 1), duration = 0.5):
 	visible = true
-	rect.color = Color(1, 1, 1, 1)
+	rect.color = color
 	var t = get_tree().create_tween()
-	t.tween_property(rect, "modulate", color, duration)
+	t.tween_property(rect, "color", Color(color.r, color.g, color.b, 0), duration)
 	t.play()
 	t.tween_callback(func(): visible = false)
 

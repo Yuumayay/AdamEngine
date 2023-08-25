@@ -9,14 +9,19 @@ var modLayer: CanvasLayer
 var lyricslabel: Label
 var ui: CanvasLayer
 var info: CanvasLayer
+var strums: CanvasLayer
+var notes: CanvasLayer
 var stages
 var luasprites
 var scoretext
 
 var has_onUpdate: bool = false
+var has_onStepHit := false
 var has_onBeatHit: bool = false
 var has_onSectionHit: bool = false
 var has_onDestroy: bool = false
+var has_opponentNoteHit := false
+var has_goodNoteHit := false
 
 var modcharts: Dictionary = {}
 
@@ -31,9 +36,11 @@ func loadModchart():
 	lyricslabel = modLayer.get_node("LyricsLabel")
 	ui = gameplay.get_node("UI")
 	info = gameplay.get_node("Info")
+	strums = gameplay.get_node("Strums")
+	notes = gameplay.get_node("Notes")
 	stages = gameplay.get_node("Stages")
 	luasprites = gameplay.get_node("LuaSprites")
-	scoretext = info.get_node("Label1")
+	scoretext = info.get_node("ScoreTxt/Label1")
 	var modchartPath
 	if Paths.p_modchart(Game.cur_song, Game.cur_diff):
 		modchartPath = Paths.p_modchart(Game.cur_song, Game.cur_diff)
@@ -45,9 +52,9 @@ func loadModchart():
 		# modchart.gdのonCreate関数を実行
 		
 		# TODO lua対応
-		if modchartPath.get_extension() == "lua":
-			File.f_save("user://ae_modchart_temp", ".gd", File.lua_2_gd(File.f_read(modchartPath, ".lua")))
-			modchartPath = "user://ae_modchart_temp" + ".gd"
+		#if modchartPath.get_extension() == "lua":
+			#File.f_save("user://ae_modchart_temp", ".gd", File.lua_2_gd(File.f_read(modchartPath, ".lua")))
+			#modchartPath = "user://ae_modchart_temp" + ".gd"
 		
 		var scr: Script = load(modchartPath)
 		mNode = $/root/Gameplay/ModchartScript
@@ -55,10 +62,16 @@ func loadModchart():
 		
 		if mNode.has_method("onCreate"):
 			mNode.call("onCreate")
+		
+		if mNode.has_method("onCreatePost"):
+			mNode.call("onCreatePost")
 			
 		if mNode.has_method("onUpdate"):
 			has_onUpdate = true
-			
+		
+		if mNode.has_method("onStepHit"):
+			has_onStepHit = true
+		
 		if mNode.has_method("onBeatHit"):
 			has_onBeatHit = true
 			
@@ -67,6 +80,12 @@ func loadModchart():
 		
 		if mNode.has_method("onDestroy"):
 			has_onDestroy = true
+		
+		if mNode.has_method("goodNoteHit"):
+			has_goodNoteHit = true
+		
+		if mNode.has_method("opponentNoteHit"):
+			has_opponentNoteHit = true
 			
 		is_modchart = true
 	else: #存在しないなら何もしない
@@ -77,7 +96,10 @@ func loadModchart():
 func _process(delta):
 	if is_modchart:
 		if has_onUpdate:
-			mNode.call("onUpdate", delta)
+			mNode.call("onUpdate")
+		if Audio.step_hit_event:
+			if has_onStepHit:
+				mNode.call("onStepHit")
 		if Audio.beat_hit_event:
 			if has_onBeatHit:
 				mNode.call("onBeatHit")
@@ -92,9 +114,12 @@ func _process(delta):
 func reset():
 	is_modchart = false
 	has_onUpdate = false
+	has_onStepHit = false
 	has_onBeatHit = false
 	has_onDestroy = false
 	has_onSectionHit = false
+	has_goodNoteHit = false
+	has_opponentNoteHit = false
 	mNode = null
 
 func mGet(key: String, index = -1):
@@ -183,9 +208,8 @@ func setHealthGain(value = 0.1):
 func setMissDamage(value = 0.1):
 	modcharts["missDamage"] = value
 
-# 未実装
-func keyToMove(where = "debug", key = "7"):
-	modcharts["keyToMove"] = [where, key]
+func keyToMove(where = "debug", difficulty = "normal", key = "7"):
+	modcharts["keyToMove"] = [where, difficulty, key]
 
 func makeLuaSprite(tag: String, path: String, x = 0.0, y = 0.0):
 	var spr
@@ -283,9 +307,13 @@ func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, off
 func camReset():
 	gameplay.get_node("Camera").state = 0
 
+func cameraShake(intensity = 10, dulation = 0.1, camera = "camGame"):
+	var cam = gameplay.get_node("Camera")
+	cam.camShake(intensity, dulation)
+
 ############### SHADER EFFECTS ###############
 
-func glitch(shake_power = 0.0, shake_rate = 1.0, shake_speed = 0.0, shake_block_size = 30.5, shake_color_rate = 0.001):
+func glitch(shake_color_rate = 0.001, shake_power = 0.0, shake_rate = 1.0, shake_speed = 0.0, shake_block_size = 30.5):
 	gameplay.get_node("Distortion").show()
 	var rect: ColorRect = gameplay.get_node("Distortion/Rect")
 	rect.material.set("shader_parameter/shake_power", shake_power)
@@ -293,3 +321,98 @@ func glitch(shake_power = 0.0, shake_rate = 1.0, shake_speed = 0.0, shake_block_
 	rect.material.set("shader_parameter/shake_speed", shake_speed)
 	rect.material.set("shader_parameter/shake_block_size", shake_block_size)
 	rect.material.set("shader_parameter/shake_color_rate", shake_color_rate)
+
+############### TWEEN ###############
+
+func doTweenAngle(tag, vars, value = 0.0, dulation = 0.0, ease = "", trans = ""):
+	if tag and vars:
+		if ease == "":
+			ease = Tween.EASE_IN
+		if trans == "":
+			trans = Tween.TRANS_LINEAR
+		var t = create_tween()
+		t.set_ease(ease)
+		t.set_trans(trans)
+		if vars == "iconP1":
+			t.tween_property(gameplay.get_node("UI/HealthBarBG/icons/" + vars), "rotation_degrees", value, dulation)
+		elif vars == "iconP2":
+			t.tween_property(gameplay.get_node("UI/HealthBarBG/icons/" + vars), "rotation_degrees", value, dulation)
+		elif vars == "bf":
+			t.tween_property(gameplay.get_node("Characters/bfpos/bf"), "rotation_degrees", value, dulation)
+		elif vars == "dad":
+			t.tween_property(gameplay.get_node("Characters/dadpos/dad"), "rotation_degrees", value, dulation)
+		elif vars == "gf":
+			t.tween_property(gameplay.get_node("Characters/gfpos/gf"), "rotation_degrees", value, dulation)
+
+############### NOTES AND STRUMS ###############
+
+func noteTween(dir = 0, property = "position:x", value = 0, dulation = 0, ea = Tween.EASE_IN, tr = Tween.TRANS_LINEAR):
+	for i in notes.get_children():
+		if i.dir == dir:
+			var t = i.create_tween()
+			t.set_ease(ea)
+			t.set_trans(tr)
+			t.tween_property(i, property, value, dulation)
+	for i in strums.get_children():
+		if i.dir == dir:
+			var t = i.create_tween()
+			t.set_ease(ea)
+			t.set_trans(tr)
+			t.tween_property(i, property, value, dulation)
+
+func notePropertySet(dir = 0, property = "position:x", value = 0):
+	for i in notes.get_children():
+		if i.dir == dir:
+			i[property] = value
+	for i in strums.get_children():
+		if i.dir == dir:
+			i[property] = value
+
+func noteTweenDad(property = "position:x", value = 0, dulation = 0):
+	for i in range(0, Game.key_count[Game.KC_DAD]):
+		noteTween(i, property, value, dulation)
+
+func noteTweenBF(property = "position:x", value = 0, dulation = 0):
+	for i in range(Game.key_count[Game.KC_DAD], Game.key_count[Game.KC_DAD] + Game.key_count[Game.KC_BF]):
+		noteTween(i, property, value, dulation)
+
+func noteTweenBoth(property = "position:x", value = 0, dulation = 0):
+	for i in range(0, Game.key_count[Game.KC_DAD] + Game.key_count[Game.KC_BF]):
+		noteTween(i, property, value, dulation)
+
+############### TEXT ###############
+
+func stopUpdateText():
+	info.stopUpdateText()
+
+func resumeUpdateText():
+	info.resumeUpdateText()
+
+func setTextString(tag, text):
+	var target
+	match tag:
+		"scoreTxt":
+			target = info.get_node("ScoreTxt/Label1")
+		"timeTxt":
+			target = ui.get_node("ColorRect/TimeBar/Label")
+		"infoTxt":
+			target = info.get_node("Label2")
+		"engineTxt":
+			target = info.get_node("Label3")
+		"songTxt":
+			target = info.get_node("Label4")
+		"songDiffTxt":
+			target = info.get_node("Label4/Difficulty")
+		"kps":
+			target = info.get_node("KPS")
+		"kpsTxt":
+			target = info.get_node("KPS/kps")
+		"dadkps":
+			target = info.get_node("DADKPS")
+		"dadkpsTxt":
+			target = info.get_node("DADKPS/kps")
+		_:
+			target = gameplay.get_node_or_null(tag)
+	
+	if target:
+		target.text = text

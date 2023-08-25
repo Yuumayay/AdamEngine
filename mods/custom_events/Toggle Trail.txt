@@ -1,0 +1,10 @@
+Value 1: Set Dad's Color trail
+Value 2: Set BF's Color trail
+To set a color you have to use hex color format.
+Exp:96234f
+Exp:31B0D1
+To disable one of the trails leave it blank.
+To use the previous color use 1.
+To change color put another color.
+You can use: https://www.rgbtohex.net/
+To convert RGB to Hex.

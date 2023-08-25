@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="Placeholder.png">
+<SubTexture name="Placeholder down0000" x="873" y="0" width="391" height="735" frameX="-397" frameY="-174" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Placeholder idle0000" x="0" y="774" width="471" height="731" frameX="-325" frameY="-135" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Placeholder left0000" x="1264" y="0" width="451" height="733" frameX="-174" frameY="-142" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Placeholder right0000" x="450" y="0" width="423" height="744" frameX="-366" frameY="-139" frameWidth="1000" frameHeight="1000" />
+<SubTexture name="Placeholder up0000" x="0" y="0" width="450" height="774" frameX="-245" frameY="-127" frameWidth="1000" frameHeight="1000" />
+</TextureAtlas>

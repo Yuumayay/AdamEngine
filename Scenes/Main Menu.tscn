@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://xin33k5nvo15"]
 
-[ext_resource type="Texture2D" uid="uid://dihi2qx63mvbl" path="res://Assets/Images/UI/menuBG.png" id="1_fmid5"]
+[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuBG.png" id="1_fmid5"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_t8xj5"]
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="3_q8xqn"]
 [ext_resource type="Script" path="res://Scenes/Main Menu Selector.gd" id="3_wrgma"]
@@ -15,7 +15,7 @@ position = Vector2(641, 358)
 texture = ExtResource("1_fmid5")
 script = ExtResource("2_t8xj5")
 bumpin_scale = Vector2(1.02, 1.02)
-load_img = "Assets/Images/UI/menuBG.png"
+load_img = "menuBG"
 
 [node name="Version" type="Label" parent="."]
 visible = false

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="nanamin_3.png">
+	<!-- Created with Adobe Animate version 23.0.1.70 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="nanamin idle0000"  x="0" y="0" width="505" height="512" frameX="-74" frameY="-75" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0001"  x="505" y="0" width="506" height="511" frameX="-74" frameY="-76" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0002"  x="1011" y="0" width="506" height="512" frameX="-74" frameY="-76" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0003"  x="1517" y="0" width="506" height="511" frameX="-74" frameY="-77" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0004"  x="2023" y="0" width="506" height="511" frameX="-74" frameY="-77" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0005"  x="1517" y="0" width="506" height="511" frameX="-74" frameY="-77" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0006"  x="1011" y="0" width="506" height="512" frameX="-74" frameY="-76" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0007"  x="505" y="0" width="506" height="511" frameX="-74" frameY="-76" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin idle0008"  x="2529" y="0" width="506" height="512" frameX="-74" frameY="-75" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0000" x="3035" y="0" width="515" height="487" frameX="-95" frameY="-86" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0001" x="0" y="512" width="583" height="521" frameX="-56" frameY="-73" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0002" x="583" y="512" width="614" height="540" frameX="-73" frameY="-59" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0003" x="1197" y="512" width="603" height="531" frameX="-95" frameY="-65" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0004" x="1800" y="512" width="574" height="528" frameX="-132" frameY="-65" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0005" x="2374" y="512" width="527" height="525" frameX="-183" frameY="-65" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0006" x="2901" y="512" width="511" height="520" frameX="-167" frameY="-71" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0007" x="3412" y="512" width="525" height="513" frameX="-149" frameY="-77" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0008" x="0" y="1052" width="549" height="505" frameX="-127" frameY="-85" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin right0009" x="549" y="1052" width="567" height="499" frameX="-107" frameY="-93" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0000"  x="1116" y="1052" width="517" height="489" frameX="-96" frameY="-86" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0001"  x="1633" y="1052" width="582" height="505" frameX="-47" frameY="-65" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0002"  x="2215" y="1052" width="615" height="529" frameX="-8" frameY="-48" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0003"  x="2830" y="1052" width="608" height="526" frameX="-5" frameY="-47" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0004"  x="3438" y="1052" width="598" height="520" frameX="-3" frameY="-47" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0005"  x="0" y="1581" width="587" height="513" frameX="-1" frameY="-47" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0006"  x="587" y="1581" width="574" height="512" frameX="0" frameY="-48" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0007"  x="1161" y="1581" width="559" height="512" frameX="0" frameY="-48" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0008"  x="1720" y="1581" width="543" height="507" frameX="-18" frameY="-60" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin left0009"  x="2263" y="1581" width="567" height="493" frameX="-16" frameY="-81" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0000"  x="2830" y="1581" width="518" height="489" frameX="-96" frameY="-86" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0001"  x="3348" y="1581" width="655" height="500" frameX="-27" frameY="-125" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0002"  x="0" y="2094" width="577" height="499" frameX="-69" frameY="-129" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0003"  x="577" y="2094" width="513" height="499" frameX="-107" frameY="-132" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0004"  x="1090" y="2094" width="513" height="499" frameX="-107" frameY="-132" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0005"  x="1603" y="2094" width="513" height="499" frameX="-107" frameY="-132" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0006"  x="2116" y="2094" width="511" height="499" frameX="-107" frameY="-132" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0007"  x="2627" y="2094" width="527" height="498" frameX="-101" frameY="-117" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0008"  x="3154" y="2094" width="520" height="492" frameX="-96" frameY="-103" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin down0009"  x="0" y="2593" width="493" height="486" frameX="-92" frameY="-89" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0000"    x="493" y="2593" width="517" height="490" frameX="-95" frameY="-84" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0001"    x="1010" y="2593" width="521" height="501" frameX="-82" frameY="-48" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0002"    x="1531" y="2593" width="494" height="520" frameX="-50" frameY="0" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0003"    x="2025" y="2593" width="526" height="517" frameX="-57" frameY="-25" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0004"    x="2551" y="2593" width="647" height="521" frameX="-4" frameY="-51" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0005"    x="3198" y="2593" width="622" height="521" frameX="-24" frameY="-56" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0006"    x="0" y="3114" width="595" height="520" frameX="-46" frameY="-61" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0007"    x="595" y="3114" width="566" height="519" frameX="-68" frameY="-66" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0008"    x="1161" y="3114" width="559" height="517" frameX="-69" frameY="-71" frameWidth="710" frameHeight="631"/>
+	<SubTexture name="nanamin up0009"    x="1720" y="3114" width="552" height="514" frameX="-68" frameY="-76" frameWidth="710" frameHeight="631"/>
+</TextureAtlas>

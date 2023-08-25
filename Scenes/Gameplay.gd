@@ -15,11 +15,16 @@ var pause = preload("res://Scenes/Pause Menu.tscn")
 
 var countdowns: Array = View.countdowns
 
+var keytomove_move_to: String
+var keytomove_difficulty: String
+var keytomove_what_key: String
+
 func _ready():
 	timer.name = "timer"
 	countDownTimer.name = "countDownTimer"
 	
 	Audio.a_stop("Freaky Menu")
+	Audio.section_hit.connect(sectionHit)
 	
 	print(Trans.last_scene, Trans.cur_scene)
 	reset_property()
@@ -46,19 +51,24 @@ func _ready():
 		$Camera.zoom = Vector2(cam_zoom, cam_zoom)
 	
 	# DANGER 関数にまとめる
-	if Paths.p_song(Game.cur_song, "Voices"):
-		Audio.a_set("Voices", Paths.p_song(Game.cur_song, "Voices"), Audio.bpm)
+	var difftext: String
+	if Game.loadAudioByDifficulty:
+		difftext = "-"+Game.cur_diff.to_lower()
+	var voices = "Voices" + difftext
+	var inst = "Inst" + difftext
+	if Paths.p_song(Game.cur_song, voices):
+		Audio.a_set("Voices", Paths.p_song(Game.cur_song, voices), Audio.bpm)
 	else:
 		Audio.a_set("Voices", "", Audio.bpm)
-	if Paths.p_song(Game.cur_song, "Inst"):
-		Audio.a_set("Inst", Paths.p_song(Game.cur_song, "Inst"), Audio.bpm)
+	if Paths.p_song(Game.cur_song, inst):
+		Audio.a_set("Inst", Paths.p_song(Game.cur_song, inst), Audio.bpm)
 	else:
-		if Paths.p_song(Game.cur_song_path, "Inst"):
-			if Paths.p_song(Game.cur_song_path, "Voices"):
-				Audio.a_set("Voices", Paths.p_song(Game.cur_song_path, "Voices"), Audio.bpm)
+		if Paths.p_song(Game.cur_song_path, inst):
+			if Paths.p_song(Game.cur_song_path, voices):
+				Audio.a_set("Voices", Paths.p_song(Game.cur_song_path, voices), Audio.bpm)
 			else:
 				Audio.a_set("Voices", "", Audio.bpm)
-			Audio.a_set("Inst", Paths.p_song(Game.cur_song_path, "Inst"), Audio.bpm)
+			Audio.a_set("Inst", Paths.p_song(Game.cur_song_path, inst), Audio.bpm)
 		else:
 			Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", Audio.bpm)
 			Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", Audio.bpm)
@@ -73,6 +83,15 @@ func _ready():
 
 var beatCount := 5
 
+func _unhandled_key_input(event):
+	if Modchart.mGet("keyToMove"):
+		keytomove_move_to = Modchart.mGet("keyToMove", 0)
+		keytomove_difficulty = Modchart.mGet("keyToMove", 1)
+		keytomove_what_key = Modchart.mGet("keyToMove", 2)
+		if event.as_text() == keytomove_what_key:
+			Game.cur_diff = keytomove_difficulty.to_lower()
+			moveSong(keytomove_move_to)
+			
 func _process(delta):
 	# enum {NOT_PLAYING, COUNTDOWN, PLAYING, PAUSE, GAMEOVER}
 	if Game.cur_state == Game.NOT_PLAYING: return
@@ -98,7 +117,7 @@ func _process(delta):
 				break
 			note_spawn_load()
 	else:  #Game.spawn_end
-		if !Audio.a_check("Inst") and Game.cur_state != Game.PAUSE and Game.cur_state != Game.GAMEOVER:
+		if !Audio.a_check("Inst") and Game.cur_state == Game.PLAYING:
 			if Game.game_mode == Game.STORY:
 				Game.cur_song_index += 1
 				Game.week_fc_state.append(Game.fc_state)
@@ -113,7 +132,7 @@ func _process(delta):
 				scoreSave("freeplay", Game.cur_song)
 				
 				quit()
-	
+				
 	if Game.cur_state == Game.PLAYING or Game.cur_state == Game.COUNTDOWN: #プレイ中だったら
 		if Input.is_action_just_pressed("ui_cancel"):
 			Audio.a_stop("Inst")
@@ -127,7 +146,8 @@ func _process(delta):
 			add_child(pause.instantiate())
 			Audio.a_pause("Inst")
 			Audio.a_pause("Voices")
-		if Input.is_action_just_pressed("game_debug"):
+		
+		if !Modchart.mGet("keyToMove") and Input.is_action_just_pressed("game_debug"):
 			Game.cur_state = Game.NOT_PLAYING
 			reset_dict_and_array()
 			reset_property()
@@ -137,14 +157,10 @@ func _process(delta):
 			Audio.a_stop("Inst")
 			Audio.a_stop("Voices")
 			Trans.t_trans("Chart Editor")
+
 	elif Game.cur_state == Game.GAMEOVER: #ゲームオーバーだったら
 		if Input.is_action_just_pressed("ui_cancel"):
-			if Audio.a_check("Gameover"):
-				Audio.a_stop("Gameover")
-			if Audio.a_check("GameoverStart"):
-				Audio.a_stop("GameoverStart")
-			if Audio.a_check("GameoverEnd"):
-				Audio.a_stop("GameoverEnd")
+			Audio.a_stop_all()
 			quit()
 		if Input.is_action_just_pressed("ui_accept"):
 			gameover.accepted()
@@ -195,6 +211,19 @@ func scoreSave(case: String, song_or_week: String):
 						else:
 							print("not high score")
 						break
+
+func sectionHit():
+	if Audio.cur_section <= Game.song_data.song.notes.size() - 1:
+		var sectionNotes = Game.song_data.song.notes[Audio.cur_section]["sectionNotes"]
+		var gf_f := false
+		for i in sectionNotes:
+			if i[1] >= Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD]: # GF
+				gf_f = true
+				break
+		if gf_f:
+			gf_strum_group.show()
+		else:
+			gf_strum_group.hide()
 
 func killBF():
 	if Game.cur_state == Game.COUNTDOWN:
@@ -249,6 +278,9 @@ func note_spawn_load():
 	
 	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
 		var new_note = note_scn.instantiate()
+		if Game.noteXML:
+			var noteSkin = Game.load_XMLSprite(Game.noteXML)
+			new_note.sprite_frames = noteSkin.sprite_frames
 		new_note.ind = note_count
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
@@ -495,6 +527,7 @@ func reset_dict_and_array():
 	Game.cur_state = Game.NOT_PLAYING
 	Game.max_nps = 0
 	Game.spawn_end = false
+	Game.loadAudioByDifficulty = false
 	Game.notes_data.notes.clear()
 	Game.ms.clear()
 	Game.sus.clear()
@@ -515,8 +548,10 @@ func reset_dict_and_array():
 	Modchart.modcharts.clear()
 
 func quit_reset():
+	Game.cur_state = Game.NOT_PLAYING
 	Game.cur_song_path = ""
 	Game.cur_song_data_path = ""
+	Game.stage_json.clear()
 	Game.chara_image_path.clear()
 	Game.chara_json.clear()
 	Game.iconBF = ""
@@ -534,13 +569,21 @@ func quit():
 		await Trans.t_trans("Freeplay")
 
 func moveSong(what):
+	Game.cur_state = Game.NOT_PLAYING
 	Game.cur_song = what
 	var song_data
-	if Paths.p_chart(Game.cur_song, Game.cur_diff):
-		song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+	if not Game.cur_song_data_path:
+		if Paths.p_chart(Game.cur_song, Game.cur_diff):
+			song_data = File.f_read(Paths.p_chart(Game.cur_song, Game.cur_diff), ".json")
+		else:
+			printerr("bug!!!!!!!!!!!!!!!!!!!!!!!!!!")
+			song_data = File.f_read(Paths.p_chart(Game.DEFAULT_SONG, Game.cur_diff), ".json")
 	else:
-		printerr("bug!!!!!!!!!!!!!!!!!!!!!!!!!!")
-		song_data = File.f_read(Paths.p_chart("test", Game.cur_diff), ".json")
+		if FileAccess.file_exists(Game.cur_song_data_path + ".json"):
+			song_data = File.f_read(Game.cur_song_data_path + ".json", ".json")
+		else:
+			printerr("bug!!!!!!!!!!!!!!!!!!!!!!!!!!")
+			song_data = File.f_read(Paths.p_chart(Game.DEFAULT_SONG, Game.cur_diff), ".json")
 	if song_data.song.has("is3D"):
 		if song_data.song.is3D:
 			Game.is3D = true

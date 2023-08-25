@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://1qto3r3xcohq"
+path="res://.godot/imported/tea-time.ogg-f49b719bcfe8f5c0f9791129779e3bc5.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Music/other b/tea-time.ogg"
+dest_files=["res://.godot/imported/tea-time.ogg-f49b719bcfe8f5c0f9791129779e3bc5.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

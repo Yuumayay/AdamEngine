@@ -6,6 +6,11 @@ func _ready():
 	if not Setting.s_get("gameplay", "downscroll"):
 		get_parent().position.y = 700 - get_parent().position.y
 	value = 0.0
+	if Setting.engine() == "other b":
+		Setting.set_dfont_strident($Label)
+		var stylebox = StyleBoxFlat.new()
+		stylebox.bg_color = "green"
+		add_theme_stylebox_override("fill", stylebox)
 
 func updatePos():
 	if not Setting.s_get("gameplay", "downscroll"):
@@ -27,6 +32,7 @@ func _process(delta):
 			if Game.PLAYING and !$Label.visible:
 				$Label.visible = true
 			$Label.text = "%d:%02d" % [remain_min, remain_sec % 60]
+			Game.timeText = "%d:%02d" % [remain_min, remain_sec % 60]
 			if Setting.s_get("gameplay", "botplay"):
 				$Label.text += " (BOT)"
 			if Setting.s_get("gameplay", "practice"):

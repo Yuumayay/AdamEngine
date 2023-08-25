@@ -1,0 +1,2 @@
+Value1: Tween end value
+Value2: Zoom tween duration

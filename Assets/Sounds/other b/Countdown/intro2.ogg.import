@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://blsu67cpvm6wt"
+path="res://.godot/imported/intro2.ogg-9b5b5a39dc86e54b1ddb790a2395b0e3.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/other b/Countdown/intro2.ogg"
+dest_files=["res://.godot/imported/intro2.ogg-9b5b5a39dc86e54b1ddb790a2395b0e3.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

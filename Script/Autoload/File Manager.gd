@@ -122,9 +122,21 @@ func _ready():
 	if not FileAccess.file_exists("user://ae_week_score_data.json"):
 		File.f_save("user://ae_week_score_data", ".json", {"week": []})
 	
+	if not FileAccess.file_exists("user://ae_status.json"):
+		File.f_save("user://ae_status", ".json", {})
+	else:
+		var status = File.f_read("user://ae_status.json", ".json")
+		if status.has("progress"):
+			Game.progress = status.progress
+	
+	
 	Setting.setting_refresh()
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("end")
 		f_save("user://ae_options_data", ".json", Setting.setting)
+		var status := {
+			"progress": Game.progress
+		}
+		File.f_save("user://ae_status", ".json", status)

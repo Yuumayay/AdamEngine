@@ -2,6 +2,7 @@ extends RichTextLabel
 
 @export var ind: int
 @export var color: Color
+var week: String
 
 func accepted(selected: bool):
 	var t = get_tree().create_tween()

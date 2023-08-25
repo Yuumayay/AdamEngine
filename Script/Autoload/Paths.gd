@@ -7,7 +7,7 @@ var chart_path_list: Array = ["Assets/Songs/", "Mods/songs/", "Assets/Data/Song 
 var icon_path_list: Array = ["Assets/Images/Icons/", "Mods/images/icons/"]
 var icon_credits_path_list: Array = ["Assets/Images/Other Icons/Credits/", "Mods/images/other icons/credits/", "Mods/images/credits/"]
 var week_path_list: Array = ["Assets/Weeks/", "Mods/weeks/"]
-var week_image_path_list: Array = ["Assets/Images/Story Mode/Weeks/", "Mods/Images/Story Mode/Weeks/"]
+var week_image_path_list: Array = ["Assets/Images/Story Mode/Weeks/", "Mods/Images/Story Mode/Weeks/", "mods/images/storymenu/"]
 var character_data_path_list: Array = ["Assets/Data/characters/", "Mods/data/characters/", "Mods/characters/"]
 var character_image_path_list: Array = ["Assets/Images/characters/", "Mods/images/characters/"]
 var stage_data_path_list: Array = ["Assets/Data/Stages/", "Mods/data/stages/", "Mods/stages/"]
@@ -15,7 +15,7 @@ var stage_image_path_list: Array = ["Assets/Images/Stages/", "Mods/images/stages
 var images_path_list: Array = ["Assets/Images/", "Mods/images/"]
 var sound_path_list: Array = ["mods/sounds/"]
 
-var modchart_extensions: Array = [".lua", ".gd"]
+var modchart_extensions: Array = [".gd"]
 var modchart_filenames: Array = ["modchart", "script"]
 
 var load_assets_song: bool
@@ -36,167 +36,98 @@ func load_masterdata():
 	if not load_assets_song:
 		week_path_list = ["Mods/weeks"]
 		song_path_list = ["Mods/songs/"]
-		if FileAccess.file_exists("Mods/data/difficulty.json"):
-			var json = File.f_read("Mods/data/difficulty.json", ".json")
-			Game.difficulty = json.difficulty
-			Game.difficulty_color.clear()
-			for diffColor in json.color:
-				Game.difficulty_color.append(Color8(int(diffColor[0]), int(diffColor[1]), int(diffColor[2])))
-			
-			# diffculty の　半分
-			Game.diff = clamp(int(floor((json.difficulty.size()-1.0) /2.0)),0, json.difficulty.size()-1)
+		#if FileAccess.file_exists("Mods/data/difficulty.json"):
+		#	var json = File.f_read("Mods/data/difficulty.json", ".json")
+		#	Game.difficulty = json.difficulty
+		#	Game.difficulty_color.clear()
+		#	for diffColor in json.color:
+		#		Game.difficulty_color.append(Color8(int(diffColor[0]), int(diffColor[1]), int(diffColor[2])))
+		#	
+		#	# diffculty の　半分
+		#	Game.diff = clamp(int(floor((json.difficulty.size()-1.0) /2.0)),0, json.difficulty.size()-1)
 
 func p_offset(path: String):
 	return "Assets/Data/Settings and Offsets/" + path
 
+func files_template_check(path, path2, diff = "", ext=""):
+	var difftext = ""
+		
+	if diff == "normal" or diff == "": # ノーマル
+		difftext = ""
+	else:
+		difftext = "-"+diff 
+		
+	var lists = [
+		path + "/" + path2 + diff + ext,
+		path.replace(" ", "-") + "/" + path2 + difftext + ext,
+		path.replace("-", " ") + "/" + path2 + difftext + ext,
+	]	
+	return files_check(lists)
+	
+func files_check(paths):
+	for i in paths:
+		if FileAccess.file_exists(i):
+			return i
+	return ""
+	
 func p_song(path: String, path2: String):
+	var exist_path : String
+	
 	for i in song_path_list:
 		var p = i
-		if FileAccess.file_exists(p + path + "/" + path2 + ".ogg"):
-			return p + path + "/" + path2 + ".ogg"
-			
-		elif FileAccess.file_exists(p + path.to_lower() + "/" + path2 + ".ogg"):
-			return p + path.to_lower() + "/" + path2 + ".ogg"
-			
-		elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + path2 + ".ogg"):
-			return p + path.replace(" ", "-") + "/" + path2 + ".ogg"
-			
-		elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"):
-			return p + path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"
-			
-		elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + path2 + ".ogg"):
-			return p + path.replace("-", " ") + "/" + path2 + ".ogg"
-			
-		elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"):
-			return p + path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"
-	if FileAccess.file_exists(path + "/" + path2 + ".ogg"):
-		return path + "/" + path2 + ".ogg"
 		
-	elif FileAccess.file_exists(path.to_lower() + "/" + path2 + ".ogg"):
-		return path.to_lower() + "/" + path2 + ".ogg"
+		var lists = [
+			p + path + "/" + path2 + ".ogg",
+			p + path.replace(" ", "-") + "/" + path2 + ".ogg",
+			p + path.replace("-", " ") + "/" + path2 + ".ogg",
+		]
 		
-	elif FileAccess.file_exists(path.replace(" ", "-") + "/" + path2 + ".ogg"):
-		return path.replace(" ", "-") + "/" + path2 + ".ogg"
-		
-	elif FileAccess.file_exists(path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"):
-		return path.to_lower().replace(" ", "-") + "/" + path2 + ".ogg"
-		
-	elif FileAccess.file_exists(path.replace("-", " ") + "/" + path2 + ".ogg"):
-		return path.replace("-", " ") + "/" + path2 + ".ogg"
-		
-	elif FileAccess.file_exists(path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"):
-		return path.to_lower().replace("-", " ") + "/" + path2 + ".ogg"	
-
+		exist_path = files_check(lists)
+		if exist_path != "":
+			return exist_path
+	
+	var lists = [
+		path + "/" + path2 + ".ogg",
+		path.replace(" ", "-") + "/" + path2 + ".ogg",
+		path.replace("-", " ") + "/" + path2 + ".ogg",
+	]		
+	exist_path = files_check(lists)
+	if exist_path != "":
+		return exist_path	
+	
 	#print("paths song: invalid path")
 	return null
 
 func p_chart(path: String, diff: String):
+	var exist_path : String
+	
 	for i in chart_path_list:
 		var p = i
-		if diff == "normal":
-			if FileAccess.file_exists(p + path + "/" + path.to_lower() + ".json"):
-				return p + path + "/" + path.to_lower() + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower() + "/" + path.to_lower() + ".json"):
-				return p + path.to_lower() + "/" + path.to_lower() + ".json"
-				
-			elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + ".json"):
-				return p + path.replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + ".json"):
-				return p + path.to_lower().replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + ".json"
-				
-			elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + path.to_lower().replace("-", " ") + ".json"):
-				return p + path.replace("-", " ") + "/" + path.to_lower().replace("-", " ") + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + path.to_lower().replace("-", " ") + ".json"):
-				return p + path.to_lower().replace("-", " ") + "/" + path.to_lower().replace("-", " ") + ".json"
+		var difftext = ""
+		
+		exist_path = files_template_check(p + path, path, diff, ".json")
 
-		else:
-			if FileAccess.file_exists(p + path + "/" + path.to_lower() + "-" + diff + ".json"):
-				return p + path + "/" + path.to_lower() + "-" + diff + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower() + "/" + path.to_lower() + "-" + diff + ".json"):
-				return p + path.to_lower() + "/" + path.to_lower() + "-" + diff + ".json"
-				
-			elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + "-" + diff + ".json"):
-				return p + path.replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + "-" + diff + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + "-" + diff + ".json"):
-				return p + path.to_lower().replace(" ", "-") + "/" + path.to_lower().replace(" ", "-") + "-" + diff + ".json"
-				
-			elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + path.to_lower().replace("-", " ") + "-" + diff + ".json"):
-				return p + path.replace("-", " ") + "/" + path.to_lower().replace("-", " ") + "-" + diff + ".json"
-				
-			elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + path.to_lower().replace("-", " ") + "-" + diff + ".json"):
-				return p + path.to_lower().replace("-", " ") + "/" + path.to_lower().replace("-", " ") + "-" + diff + ".json"
-				
+		if exist_path != "":
+			return exist_path
+
+	exist_path = Game.DEFAULT_SONG
 	Audio.a_play("Error")
-	printerr("paths chart: invalid path")
-	return null
+	printerr("paths chart: invalid path: ", path, diff)
+	return exist_path
 
 func p_modchart(path: String, diff: String):
 	for i in chart_path_list:
-		for ind in modchart_extensions:
+		for ext in modchart_extensions:
 			for index in modchart_filenames:
 				var p = i
-				if FileAccess.file_exists(path + index + ind):
-					return path + index + ind
-				if diff == "normal":
-					if FileAccess.file_exists(p + path + "/" + index + ind):
-						return p + path + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + ind):
-						return p + path.to_lower() + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + ind):
-						return p + path.replace(" ", "-") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + ind):
-						return p + path.to_lower().replace(" ", "-") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + ind):
-						return p + path.replace("-", " ") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + ind):
-						return p + path.to_lower().replace("-", " ") + "/" + index + ind
-						
-				else:
-					if FileAccess.file_exists(p + path + "/" + index + "-" + diff + ind):
-						return p + path + "/" + index + "-" + diff + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + "-" + diff + ind):
-						return p + path.to_lower() + "/" + index + "-" + diff + ind
-						
-					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + "-" + diff + ind):
-						return p + path.replace(" ", "-") + "/" + index + "-" + diff + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + "-" + diff + ind):
-						return p + path.to_lower().replace(" ", "-") + "/" + index + "-" + diff + ind
-						
-					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + "-" + diff + ind):
-						return p + path.replace("-", " ") + "/" + index + "-" + diff + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + "-" + diff + ind):
-						return p + path.to_lower().replace("-", " ") + "/" + index + "-" + diff + ind
-					
-					elif FileAccess.file_exists(p + path + "/" + index + ind):
-						return p + path + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower() + "/" + index + ind):
-						return p + path.to_lower() + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.replace(" ", "-") + "/" + index + ind):
-						return p + path.replace(" ", "-") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace(" ", "-") + "/" + index + ind):
-						return p + path.to_lower().replace(" ", "-") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.replace("-", " ") + "/" + index + ind):
-						return p + path.replace("-", " ") + "/" + index + ind
-						
-					elif FileAccess.file_exists(p + path.to_lower().replace("-", " ") + "/" + index + ind):
-						return p + path.to_lower().replace("-", " ") + "/" + index + ind
+				if FileAccess.file_exists(path + index + ext):
+					return path + index + ext
+				if FileAccess.file_exists(p + path + "/" + index + ext):
+					return p + path + "/" + index + ext
+				
+				var exist_path = files_template_check(p + path, index, diff, ext)
+				if exist_path != "":
+					return exist_path
 				
 	print("paths modchart: no modchart")
 	return null
@@ -208,7 +139,7 @@ func p_sound(path: String):
 		elif FileAccess.file_exists(i + path.to_lower() + ".ogg"):
 			return i + path.to_lower() + ".ogg"
 	Audio.a_play("Error")
-	printerr("paths sound: invalid path")
+	printerr("paths sound: invalid path: ")
 	return null
 
 func p_chara(path: String):
@@ -218,7 +149,7 @@ func p_chara(path: String):
 		elif FileAccess.file_exists(i + path.to_lower() + ".json"):
 			return i + path.to_lower() + ".json"
 	Audio.a_play("Error")
-	printerr("paths character_data: invalid path")
+	printerr("paths character_data: invalid path: ", path)
 	return null
 
 func p_chara_xml(path: String):
@@ -228,8 +159,7 @@ func p_chara_xml(path: String):
 			return i + path + ".xml"
 		elif FileAccess.file_exists(i + path.to_lower() + ".xml"):
 			return i + path.to_lower() + ".xml"
-	Audio.a_play("Error")
-	printerr("paths character_xml: invalid path")
+	print("paths character_xml: invalid path: ", path)
 	return null
 
 func p_week_image(path: String):
@@ -241,7 +171,7 @@ func p_week_image(path: String):
 			if FileAccess.file_exists(p + path.to_lower().replace(" ", "") + ".png"):
 				return p + path.to_lower().replace(" ", "") + ".png"
 	Audio.a_play("Error")
-	printerr("paths week image: invalid path")
+	printerr("paths week image: invalid path: ", path)
 	return missing
 
 func p_stage_img(path: String):
@@ -251,7 +181,7 @@ func p_stage_img(path: String):
 		elif FileAccess.file_exists(i + path.to_lower() + ".png"):
 			return Game.load_image(i + path.to_lower() + ".png")
 	Audio.a_play("Error")
-	printerr("paths stage image: invalid path")
+	printerr("paths stage image: invalid path: ", path)
 	return missing
 
 func p_stage_data(path: String):
@@ -261,7 +191,7 @@ func p_stage_data(path: String):
 		elif FileAccess.file_exists(i + path.to_lower() + ".json"):
 			return i + path.to_lower() + ".json"
 	Audio.a_play("Error")
-	printerr("paths stage data: invalid path")
+	printerr("paths stage data: invalid path: ", path)
 	return null
 
 func p_stage_script(path: String):
@@ -272,8 +202,17 @@ func p_stage_script(path: String):
 			elif FileAccess.file_exists(i + path.to_lower() + ext):
 				return i + path.to_lower() + ext
 	Audio.a_play("Error")
-	printerr("paths stage script: invalid path")
+	printerr("paths stage script: invalid path: ", path)
 	return null
+
+var diff_image_path_list := ["Assets/Images/Story Mode/Difficulties/", "Mods/Images/Story Mode/Difficulties/", "mods/images/menudifficulties/"]
+
+func p_diff(path: String):
+	for i in diff_image_path_list:
+		if FileAccess.file_exists(i + path.to_lower() + ".png"):
+			return i + path.to_lower() + ".png"
+	print("paths get diff path: invalid difficulty name")
+	return missing
 
 func p_get_icon_path(path: String, icon: String):
 	if FileAccess.file_exists(path + icon + ".png"):
@@ -318,7 +257,7 @@ func p_icon_credits(path: String):
 		elif FileAccess.file_exists(p + path + "-icons.png"):
 			icon = Game.load_image(p + path + "-icons.png")
 			return icon
-	printerr("icon: icon not found")
+	printerr("icon: icon not found: ", path)
 	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon
 

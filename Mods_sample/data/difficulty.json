@@ -1,4 +1,4 @@
 {
-    "difficulty": ["normal"],
-    "color": [[255, 255, 0]]
+    "difficulty": ["normal", "hard"],
+    "color": [[255, 255, 0], [255, 0, 0]]
 }

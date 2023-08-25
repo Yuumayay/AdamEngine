@@ -19,6 +19,7 @@ extends Node2D
 @onready var loadjson = $Menu/LoadJSON
 @onready var loadjsonwindow: FileDialog = $Menu/LoadJSONWindow
 @onready var gridandzoom = $Menu/GridAndZoom
+@onready var song_diff = $Menu/SongDiff
 
 @onready var note_pr = Game.load_XMLSprite("Assets/Images/Notes/Default/default.xml")
 var note_tscn = preload("res://Scenes/ChartEditor/chart_note.tscn")
@@ -403,6 +404,9 @@ var jsonChara := [{},{},{}]
 var iconPath := ["","",""]
 var charaImagePath := ["","",""]
 var jsonStage := {}
+var noteXML := ""
+var cur_stage := "stage"
+var loadAudioByDifficulty := false
 
 # チャートエディタの現在位置　→　秒数にコンバートする
 func position_to_time():
@@ -490,8 +494,34 @@ func init():
 		song = convSong
 	print(diff)
 	cur_diff = diff
+	song_diff.text = diff
 	print(cur_song)
 	if not Paths.p_song(cur_song, "Inst"):
+		#loadFromAnotherFile(loadPath)
+		loadFromAnotherFile_Old(song)
+	if !cur_song:
+		Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", bpm)
+		Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", bpm)
+		cur_song = "test"
+	elif Paths.p_song(cur_song, "Inst"):
+		if Paths.p_song(cur_song, "Voices"):
+			Audio.a_set("Voices", Paths.p_song(cur_song, "Voices"), bpm)
+		else:
+			Audio.a_set("Voices", "", bpm)
+		Audio.a_set("Inst", Paths.p_song(cur_song, "Inst"), bpm)
+	elif Paths.p_song(songPath, "Inst"):
+		if Paths.p_song(songPath, "Voices"):
+			Audio.a_set("Voices", Paths.p_song(songPath, "Voices"), bpm)
+		else:
+			Audio.a_set("Voices", "", bpm)
+		Audio.a_set("Inst", Paths.p_song(songPath, "Inst"), bpm)
+	
+	erase_all_notes()
+	set_all_notes()
+	draw_menu()
+	draw_all()
+
+func loadFromAnotherFile_Old(song):
 		#MOD（psych, adam)のアイコン、キャラクターの読み込み
 		songPath = ""
 		var dataFilePaths := ["data/" + song + "/" + fileName,
@@ -501,6 +531,7 @@ func init():
 		"data/song charts/" + song + "/" + fileName,
 		"data/charts/" + fileName]
 		for i in dataFilePaths:
+			loadFromAnotherFile(loadPath)
 			print(i + song)
 			print(loadPath.replacen(i, "songs/" + song), " conv ", fileName)
 			songPath = loadPath.replacen(i, "songs/" + song)
@@ -508,7 +539,18 @@ func init():
 			if FileAccess.file_exists(loadPath + ".json"):
 				songData = File.f_read(loadPath + ".json", ".json")
 			var gf_name = Game.get_gf_name(songData)
+			if songData.song.has("stage"):
+				cur_stage = songData.song.stage
+				var stagePath = songPath.replacen("songs/" + song, "stages/")
+				if FileAccess.file_exists(stagePath.replacen("assets/", "mods/") + cur_stage + ".json"):
+					jsonStage = File.f_read(stagePath.replacen("assets/", "mods/") + cur_stage + ".json", ".json")
+				elif FileAccess.file_exists(stagePath.replacen("mods/", "assets/") + cur_stage + ".json"):
+					jsonStage = File.f_read(stagePath.replacen("mods/", "assets/") + cur_stage + ".json", ".json")
+			else:
+				cur_stage = "stage"
+				jsonStage = File.f_read(Paths.p_stage_data("stage"), ".json")
 			for j in range(3):
+				var folder = songPath.replacen("songs/" + song, "")
 				if j == 2:
 					if gf_name == "none":
 						jsonPathChara[j] = Paths.p_chara(gf_name)
@@ -518,12 +560,18 @@ func init():
 					jsonPathChara[j] = songPath.replacen("songs/" + song, "characters/" + songData.song["player" + str(j + 1)] + ".json")
 				if !FileAccess.file_exists(jsonPathChara[j]):
 					jsonPathChara[j] = jsonPathChara[j].replacen("mods/", "assets/")
+				if !FileAccess.file_exists(jsonPathChara[j]):
+					folder = folder.replacen(fileName, "")
+					noteXML = songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")
+					jsonPathChara[j] = jsonPathChara[j].replacen("assets/", "mods/")
+					jsonPathChara[j] = jsonPathChara[j].replacen("characters/" + songData.song["player" + str(j + 1)] + ".json", "character data/" + songData.song["player" + str(j + 1)] + "/config.json")
 				if song and FileAccess.file_exists(jsonPathChara[j]):
 					print("!!")
 					jsonChara[j] = File.f_read(jsonPathChara[j], ".json")
 					iconPath[j] = Paths.p_get_icon_path(songPath.replacen("songs/" + song, "images/icons/"), jsonChara[j].healthicon.to_lower())
+					if not iconPath[j]:
+						iconPath[j] = "bf"
 					data[j].icon_name = jsonChara[j].healthicon.to_lower()
-					var folder = songPath.replacen("songs/" + song, "")
 					for cPath in DirAccess.get_directories_at(folder):
 						if cPath == "shared":
 							if FileAccess.file_exists(folder + cPath + "/images/" + jsonChara[j].image + ".png"):
@@ -546,27 +594,34 @@ func init():
 			if FileAccess.file_exists(songPath + "/Inst.ogg"):
 				cur_song = song
 				break
-	if !cur_song:
-		Audio.a_set("Voices", "Assets/Songs/test/Voices.ogg", bpm)
-		Audio.a_set("Inst", "Assets/Songs/test/Inst.ogg", bpm)
-		cur_song = "test"
-	elif Paths.p_song(cur_song, "Inst"):
-		if Paths.p_song(cur_song, "Voices"):
-			Audio.a_set("Voices", Paths.p_song(cur_song, "Voices"), bpm)
-		else:
-			Audio.a_set("Voices", "", bpm)
-		Audio.a_set("Inst", Paths.p_song(cur_song, "Inst"), bpm)
-	elif Paths.p_song(songPath, "Inst"):
-		if Paths.p_song(songPath, "Voices"):
-			Audio.a_set("Voices", Paths.p_song(songPath, "Voices"), bpm)
-		else:
-			Audio.a_set("Voices", "", bpm)
-		Audio.a_set("Inst", Paths.p_song(songPath, "Inst"), bpm)
-	
-	erase_all_notes()
-	set_all_notes()
-	draw_menu()
-	draw_all()
+
+var assetsPresets := ["assets", "mods"]
+var dataPresets := ["data", "song charts", "song data", "charts", "chart data"]
+
+func loadFromAnotherFile(loadPath):
+	print(loadPath.split("/"))
+	var engineType = "unknown"
+	var sp = loadPath.split("/")
+	var songName = sp[-1].split("-")[0]
+	var songNameDiff = sp[-1]
+	for assets in assetsPresets:
+		for data in dataPresets:
+			var songDir = ["/" + assets + "/" + data + "/" + songName + "/" + songNameDiff,
+			"/" + assets + "/" + data + "/" + songName]
+			var dir_i := 0
+			for dir in songDir:
+				var rep = loadPath.replacen(dir, "")
+				var fullpath = rep + dir + ".json"
+				print(fullpath)
+				if dir_i == 0 and FileAccess.file_exists(fullpath):
+					print("pe or ke or le: ", dir)
+					engineType = "psych"
+					return
+				elif dir_i == 1 and FileAccess.file_exists(fullpath):
+					print("dave: ", dir)
+					engineType = "dave"
+					return
+				dir_i += 1
 
 func draw_menu():
 	pass
@@ -741,6 +796,10 @@ func set_all_notes():
 			
 			var sus = i[2]
 			
+			if !sus is String:
+				if sus <= 0.0:
+					sus = 0
+			
 			var note = set_note_line_ms(type, ms, sus, dir, data[type].key_count)
 			if i.size() == 3:
 				i.append(0)
@@ -766,7 +825,7 @@ func set_note_and_line(noteX, noteY, lineY, dir: int, keycount):
 	if keycount > 18:
 		note.animation = View.keys["18k"][dir % 18]
 	else:
-		note.animation = View.keys[str(keycount) + "k"][dir]
+		note.animation = View.keys[str(keycount) + "k"][dir % 18]
 	note.position += Vector2(2, 2)
 	note.z_index = 2
 	notes.add_child(note_parent)
@@ -814,8 +873,8 @@ var ind2: int = 0
 func scroll():
 	## 音楽が再生中のとき ##
 	if playing:
-		# 現在のyを現在のビート(float)を200とmultiでかけたものにする (?????)
-		cur_y = Audio.a_get_beat_float("Inst") * 200 * multi * chart_zoom
+		# 現在のyを現在のビート(float)をMASS_SIZE * 4でかけたものにする
+		cur_y = Audio.a_get_beat_float("Inst") * (MASS_SIZE * 4) * chart_zoom
 		
 		## メトロノーム処理 ##
 		# ビートが変わったら
@@ -889,37 +948,44 @@ func scroll():
 
 var lastBPM := 150.0
 
-func songname_changed():
-	chartData["song"] = songname.text
+func songname_changed(new_text):
+	print("song name change")
+	chartData["song"] = new_text
 
-func bpm_changed():
-	chartData["bpm"] = bpm_label.value
+func bpm_changed(value):
+	bpm = value
+	chartData["bpm"] = value
 
-func speed_changed():
-	chartData["speed"] = speed.value
+func speed_changed(value):
+	chartData["speed"] = value
 
-func bfname_changed():
-	data[BF].icon_name = bfname.text
-	chartData["player1"] = bfname.text
+func bfname_changed(new_text):
+	data[BF].icon_name = new_text
+	chartData["player1"] = new_text
 
-func dadname_changed():
-	data[DAD].icon_name = dadname.text
-	chartData["player2"] = dadname.text
+func dadname_changed(new_text):
+	data[DAD].icon_name = new_text
+	chartData["player2"] = new_text
 
 func reloadAudio():
-	if !Paths.p_song(songname.text, "Inst"):
-		if !Paths.p_song(songPath, "Inst"):
+	var difftext: String
+	if loadAudioByDifficulty:
+		difftext = "-"+cur_diff
+	var inst = "Inst" + difftext
+	var voices = "Voices" + difftext
+	if !Paths.p_song(songname.text, inst):
+		if !Paths.p_song(songPath, inst):
 			Audio.a_play("Error")
-			printerr("Inst.ogg not found")
+			printerr(inst + ".ogg not found")
 			return
 		else:
-			if Paths.p_song(songPath, "Voices"):
-				Audio.a_set("Voices", Paths.p_song(songPath, "Voices"), bpm)
-			Audio.a_set("Inst", Paths.p_song(songPath, "Inst"), bpm)
+			if Paths.p_song(songPath, voices):
+				Audio.a_set("Voices", Paths.p_song(songPath, voices), bpm)
+			Audio.a_set("Inst", Paths.p_song(songPath, inst), bpm)
 			cur_song = songname.text
-	if Paths.p_song(songname.text, "Voices"):
-		Audio.a_set("Voices", Paths.p_song(songname.text, "Voices"), bpm)
-	Audio.a_set("Inst", Paths.p_song(songname.text, "Inst"), bpm)
+	if Paths.p_song(songname.text, voices):
+		Audio.a_set("Voices", Paths.p_song(songname.text, voices), bpm)
+	Audio.a_set("Inst", Paths.p_song(songname.text, inst), bpm)
 	cur_song = songname.text
 
 func sort_ascending(a, b):
@@ -978,10 +1044,10 @@ func loadJson(json):
 func get_difficulty_and_songname(text : String):
 	var sp: Array = text.split("-")
 	var dif = sp[-1].to_lower()
-	print(sp, ", ", dif)
-	if Game.difficulty_case.has(dif):
+	print(sp, ", ", dif.to_lower())
+	if Game.difficulty_color.has(dif.to_lower()):
 		sp.erase(sp[-1])
-		return [sp, dif]
+		return [sp, dif.to_lower()]
 	
 	return [text, "normal"]
 
@@ -1008,8 +1074,11 @@ func key_check():
 			Game.cur_song_data_path = loadPath
 			Game.chara_image_path = charaImagePath
 			Game.chara_json = jsonChara
+			Game.stage_json = jsonStage
+			Game.cur_stage = cur_stage
 			Game.iconBF = iconPath[0]
 			Game.iconDAD = iconPath[1]
+			Game.noteXML = noteXML
 		Game.edit_jsonpath = "user://ae_chart_temp" + ".json"
 		File.f_save("user://ae_chart_temp", ".json", generateJson())
 		Trans.t_trans("Gameplay")
@@ -1043,12 +1112,14 @@ func key_check():
 		grid /= 2
 		grid_text_set()
 	if Input.is_action_just_pressed("chart_zoom_up"):
+		cur_y = cur_y * 2 
 		chart_zoom *= 2
 		grid_text_set()
 		draw_all()
 		updateZoom()
 		
 	if Input.is_action_just_pressed("chart_zoom_down"):
+		cur_y = cur_y / 2
 		chart_zoom /= 2
 		grid_text_set()
 		draw_all()
@@ -1085,7 +1156,7 @@ func updateZoom():
 			n.position.y = ms_to_y(i[MS]) 
 			
 			var line :Line2D = n.line
-			if i[SUS] == 0:
+			if (not i[SUS] is String) and (i[SUS] == 0):
 				line.hide()
 			else:
 				line.set_point_position(1, Vector2(0, susms_to_y(i[SUS])  + MASS_SIZE/2) )
@@ -1279,3 +1350,11 @@ func _on_button_mouse_entered():
 func _on_button_mouse_exited():
 	shortCut = false
 	
+
+
+func _on_load_audio_by_difficulty_toggled(toggled_on):
+	loadAudioByDifficulty = toggled_on
+
+
+func _on_song_diff_text_changed(new_text):
+	cur_diff = new_text

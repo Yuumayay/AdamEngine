@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=38 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://Script/VersionText.gd" id="13_3bbrj"]
 [ext_resource type="Script" path="res://Script/Camera.gd" id="13_k8e81"]
 [ext_resource type="Shader" path="res://Assets/Shader/Distortion.gdshader" id="16_4dswv"]
+[ext_resource type="FontFile" uid="uid://4qjpimiprfm5" path="res://Assets/Fonts/GENOCIDE.TTF" id="16_hpcqc"]
 [ext_resource type="Script" path="res://Script/Syobon-kun.gd" id="17_8jmrd"]
 [ext_resource type="Script" path="res://Script/Gameover.gd" id="17_c2dnk"]
 [ext_resource type="Texture2D" uid="uid://d2afi6iva3esg" path="res://Assets/Images/Syobon-kun/base.png" id="18_qq5ca"]
@@ -136,6 +137,7 @@ texture = ExtResource("6_nviql")
 flip_h = true
 
 [node name="LuaSprites" type="Node2D" parent="."]
+z_index = -3
 
 [node name="Characters" type="Node2D" parent="."]
 
@@ -146,6 +148,7 @@ script = ExtResource("6_7pr8o")
 position = Vector2(641, 365)
 
 [node name="GFStrums" type="CanvasLayer" parent="."]
+visible = false
 follow_viewport_enabled = true
 
 [node name="Strums" type="CanvasLayer" parent="."]
@@ -158,9 +161,9 @@ follow_viewport_enabled = true
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HealthBarBG" type="TextureRect" parent="UI"]
-offset_left = 356.0
+offset_left = 343.0
 offset_top = 75.0
-offset_right = 957.0
+offset_right = 944.0
 offset_bottom = 115.0
 scale = Vector2(1, 0.5)
 texture = ExtResource("6_ggca7")
@@ -242,12 +245,21 @@ vertical_alignment = 1
 [node name="Info" type="CanvasLayer" parent="."]
 script = ExtResource("11_0kbrg")
 
-[node name="Label1" type="Label" parent="Info"]
-offset_left = 454.0
-offset_top = 129.0
-offset_right = 853.0
-offset_bottom = 152.0
+[node name="ScoreTxt" type="Control" parent="Info"]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 82.0
+offset_right = 1277.0
+offset_bottom = 179.0
+
+[node name="Label1" type="Label" parent="Info/ScoreTxt"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(640, 50)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
@@ -255,6 +267,7 @@ theme_override_fonts/font = ExtResource("11_mwtkh")
 theme_override_font_sizes/font_size = 20
 text = "Score: 0 | Misses: 0 | Rating: N/A"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Info"]
 offset_left = 12.0
@@ -291,23 +304,41 @@ horizontal_alignment = 2
 script = ExtResource("13_3bbrj")
 
 [node name="Label4" type="Label" parent="Info"]
-offset_left = 20.0
-offset_top = 688.0
-offset_right = 208.0
-offset_bottom = 709.0
+offset_left = 3.0
+offset_top = 696.0
+offset_right = 4.0
+offset_bottom = 717.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("11_mwtkh")
 theme_override_font_sizes/font_size = 20
-text = "Asdasdasd - Hard"
+
+[node name="Difficulty" type="Label" parent="Info/Label4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 9.0
+offset_top = -12.5
+offset_right = 56.0
+offset_bottom = 10.5
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 20
+text = "Hard"
+vertical_alignment = 1
 
 [node name="KPS" type="Label" parent="Info"]
 visible = false
 offset_left = 1080.0
-offset_top = 636.0
+offset_top = 642.0
 offset_right = 1268.0
-offset_bottom = 683.0
+offset_bottom = 689.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
@@ -315,6 +346,76 @@ theme_override_fonts/font = ExtResource("11_mwtkh")
 theme_override_font_sizes/font_size = 50
 text = "0.00"
 horizontal_alignment = 2
+
+[node name="kps" type="Label" parent="Info/KPS"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -18.0
+offset_right = 187.0
+offset_bottom = 29.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 20
+text = "PLAYER KPS"
+horizontal_alignment = 2
+
+[node name="DADKPS" type="Label" parent="Info"]
+visible = false
+offset_left = 5.0
+offset_top = 647.0
+offset_right = 193.0
+offset_bottom = 694.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 50
+text = "0.00"
+
+[node name="kps" type="Label" parent="Info/DADKPS"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -19.0
+offset_right = 190.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_mwtkh")
+theme_override_font_sizes/font_size = 20
+text = "ENEMY KPS"
+
+[node name="RatingTxt" type="Label" parent="Info"]
+visible = false
+anchors_preset = -1
+offset_left = 526.0
+offset_top = 553.0
+offset_right = 764.0
+offset_bottom = 614.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("16_hpcqc")
+theme_override_font_sizes/font_size = 40
+text = "sick!"
+horizontal_alignment = 1
+
+[node name="Num" type="Label" parent="Info"]
+visible = false
+anchors_preset = -1
+offset_left = 516.0
+offset_top = 615.0
+offset_right = 754.0
+offset_bottom = 676.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("16_hpcqc")
+theme_override_font_sizes/font_size = 30
+text = "000"
+horizontal_alignment = 1
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(638, 363)

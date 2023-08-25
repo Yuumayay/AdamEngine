@@ -19,12 +19,12 @@ func _ready():
 	Audio.a_volume_set(hit, 10)
 	
 	ndir = dir
-	if type == 1 or type == 2: #bf strum
+	if type == PLAYER or type == AUTO_PLAYER: #bf strum
 		kc = Game.KC_BF
 		ndir -= Game.key_count[Game.KC_DAD]
-	elif type == 0: # dad strum
+	elif type == AUTO_DAD: # dad strum
 		kc = Game.KC_DAD
-	else:
+	elif type == GF: # gf strum
 		kc = Game.KC_GF
 		ndir -= Game.key_count[Game.KC_DAD]
 	
@@ -231,6 +231,9 @@ func player_strum():
 func judge(hit_ms, notetype):
 	emit_signal("bf_hit")
 	
+	if Modchart.has_goodNoteHit:
+		Modchart.mNode.call("goodNoteHit")
+	
 	var ms = abs(hit_ms)
 	var layer = rating.instantiate()
 	var new_rating = layer.get_node("Rating")
@@ -292,6 +295,9 @@ func judge(hit_ms, notetype):
 	$/root.add_child(layer)
 
 func dad_hit():
+	Game.dad_kps.append(1.0)
+	if Modchart.has_opponentNoteHit:
+		Modchart.mNode.call("opponentNoteHit")
 	if Modchart.modcharts.has("healthDrain"):
 		if Game.health - Modchart.modcharts.healthDrain[0] >= Modchart.modcharts.healthDrain[1]:
 			Game.add_health(-Modchart.modcharts.healthDrain[0])

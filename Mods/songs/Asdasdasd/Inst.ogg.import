@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://daq4nojjvpapc"
-path="res://.godot/imported/Inst.ogg-81fe997feca71fea6f82a17ca20934fc.oggvorbisstr"
+uid="uid://chseiqkllxrej"
+path="res://.godot/imported/Inst.ogg-ab3d71f2c91249c89cf524eef686a410.oggvorbisstr"
 
 [deps]
 
-source_file="res://Mods/songs/Asdasdasd/Inst.ogg"
-dest_files=["res://.godot/imported/Inst.ogg-81fe997feca71fea6f82a17ca20934fc.oggvorbisstr"]
+source_file="res://mods/songs/Asdasdasd/Inst.ogg"
+dest_files=["res://.godot/imported/Inst.ogg-ab3d71f2c91249c89cf524eef686a410.oggvorbisstr"]
 
 [params]
 

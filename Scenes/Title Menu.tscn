@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bet63uxyrwco7"]
+[gd_scene load_steps=9 format=3 uid="uid://bet63uxyrwco7"]
 
 [ext_resource type="Script" path="res://Scenes/Title Menu.gd" id="1_c346j"]
+[ext_resource type="FontFile" uid="uid://2xv0r3rj1xw8" path="res://Assets/Fonts/BugMaru.ttc" id="2_1pnxx"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="2_yeaf2"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="3_7lvid"]
 [ext_resource type="Texture2D" uid="uid://dxxvknnlpy2ve" path="res://Assets/Images/Title Menu/logoBumpin.png" id="3_vv2f3"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="4_6ltcd"]
 [ext_resource type="Script" path="res://Script/Enter.gd" id="5_748cc"]
+[ext_resource type="Script" path="res://Script/TitleCam.gd" id="6_gthxk"]
 
 [node name="Title Menu" type="Node2D"]
 script = ExtResource("1_c346j")
@@ -19,6 +22,61 @@ offset_bottom = 720.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="CautionJPN" type="Label" parent="BG"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.309804, 0.690196, 0.866667, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("2_1pnxx")
+theme_override_font_sizes/font_size = 45
+text = "BFからのメッセージ
+ 
+ごきげんよう、ファンクヘッド！
+テンプレ警告文を見るのは飽きたと思うが、
+一応警告しておくぜ！
+ 
+このゲームには「フラッシュや光」が含まれてる。
+一部のファンクヘッドは発作をおこしちまうかもしれねぇ。
+だからここで選んでおけよ！
+ 
+Enter: 光を有効にする
+Esc: 光を無効にする"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CautionENG" type="Label" parent="BG"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.309804, 0.690196, 0.866667, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_7lvid")
+theme_override_font_sizes/font_size = 45
+text = "Message from BF
+
+Howdy, Funkhead!
+I'm sure you're tired of seeing
+the usual long and annoying warnings,
+but I'll give you a warning.
+
+this game contains lights and flashes.
+Some funkheads may have a seizure.
+So pick and choose here!
+
+Enter: Enable lights
+Esc: Disable lights"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="UI" type="Node2D" parent="."]
 
@@ -62,3 +120,7 @@ script = ExtResource("5_748cc")
 [node name="gfpos" type="Node2D" parent="Logo"]
 z_index = -1
 position = Vector2(879, 355)
+
+[node name="Cam" type="Camera2D" parent="."]
+offset = Vector2(640, 360)
+script = ExtResource("6_gthxk")

@@ -9,6 +9,8 @@ extends Node2D
 @onready var highscore_label = get_parent().get_node("Info/ScorePanel/HighScore")
 @onready var fc_state_label = get_parent().get_node("Info/ScorePanel/FCState")
 
+var difficulties := {}
+
 var select: int = 0
 var child_count: int = 0
 var selected: bool = false
@@ -24,15 +26,19 @@ var path: String
 func _ready():
 	var ind = 0
 	
-	diffselect = Game.diff
 	Game.game_mode = Game.FREEPLAY
 	Game.edit_jsonpath = ""
 	
 	for indexi in Paths.week_path_list:
 		if !DirAccess.dir_exists_absolute(indexi): continue
 		for index in DirAccess.get_files_at(indexi):
+			if index.get_extension() != "json":
+				continue
 			var week_data = File.f_read(indexi + "/" + index, ".json")
 			var songs = week_data.songs
+			difficulties[week_data.weekName] = week_data.difficulties.replace(" ", "").split(",")
+			if week_data.hideFreeplay:
+				continue
 			for i in songs:
 				var new_song: RichTextLabel = get_parent().get_node("Template").duplicate()
 				#var alphabet: Node = new_song.get_node("Alphabet")
@@ -50,6 +56,7 @@ func _ready():
 				new_song.ind = ind
 				new_song.color = songcolor
 				new_song.name = songname
+				new_song.week = week_data.weekName
 				if icon.get_size() == Vector2(150, 150):
 					new_song.get_node("Icon").hframes = 1
 				if icon.get_size() == Vector2(300, 150):
@@ -68,21 +75,37 @@ func _ready():
 		difficulty_label.hide()
 		difficulty_label2.show()
 	
-	diff = Game.difficulty
-	
-	diff_count = Game.difficulty.size() - 1
 	child_count = get_child_count() - 1
+	
+	diffCheck()
 	
 	multi_label.text = str(Game.cur_multi)
 	path = get_child(select).name.to_lower() + "-" + diff[diffselect]
 	getSongScore()
 	
-	#for i in get_child_count():
-	#	if Paths.p_chart(get_child(i).name, "hard"):
-	#		var songfile = File.f_read(Paths.p_chart(get_child(i).name, "hard"), ".json")
-	#		Game.what_engine(songfile)
-	#	else:
-	#		print("failed")
+func diffCheck():
+	Game.difficulty = difficulties[get_child(select).week]
+	diff = Game.difficulty
+	
+	if diff_count != Game.difficulty.size() - 1:
+		diff_count = Game.difficulty.size() - 1
+		if Game.difficulty.size() == 1:
+			diffselect = 0
+		else:
+			diffselect = floor(Game.difficulty.size() / 2.0)
+		update_difficulty_right()
+
+func update_difficulty_left():
+	difficulty_label.position.x = 458
+	difficulty_label.modulate.a = 0
+	difficulty_label2.position.x = 428
+	difficulty_label2.modulate.a = 0
+
+func update_difficulty_right():
+	difficulty_label.position.x = 258
+	difficulty_label.modulate.a = 0
+	difficulty_label2.position.x = 228
+	difficulty_label2.modulate.a = 0
 
 func getSongScore():
 	path = get_child(select).name.to_lower() + "-" + diff[diffselect]
@@ -120,22 +143,21 @@ func _process(_delta):
 				select = child_count
 			else:
 				select -= 1
+			diffCheck()
 		if Input.is_action_just_pressed("game_ui_down"):
 			Audio.a_scroll()
 			if select == child_count:
 				select = 0
 			else:
 				select += 1
+			diffCheck()
 		if Input.is_action_just_pressed("game_ui_left"):
 			Audio.a_play("close2", 1.0, 5.0)
 			if Input.is_action_pressed("game_shift"):
 				Game.cur_multi -= 0.05
 				multi_label.text = str(Game.cur_multi)
 			else:
-				difficulty_label.position.x = 458
-				difficulty_label.modulate.a = 0
-				difficulty_label2.position.x = 428
-				difficulty_label2.modulate.a = 0
+				update_difficulty_left()
 				if diffselect == 0:
 					diffselect = diff_count
 				else:
@@ -146,10 +168,7 @@ func _process(_delta):
 				Game.cur_multi += 0.05
 				multi_label.text = str(Game.cur_multi)
 			else:
-				difficulty_label.position.x = 258
-				difficulty_label.modulate.a = 0
-				difficulty_label2.position.x = 228
-				difficulty_label2.modulate.a = 0
+				update_difficulty_right()
 				if diffselect == diff_count:
 					diffselect = 0
 				else:

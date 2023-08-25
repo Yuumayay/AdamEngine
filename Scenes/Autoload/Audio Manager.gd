@@ -5,13 +5,14 @@ extends Node
 ############################## シグナル ##############################
 
 signal beat_hit
-
+signal section_hit
 
 
 ############################## 変数 ##############################
 
 var bpm: float
 var cur_ms: float
+var cur_step: int
 var cur_beat: int
 var cur_beat_float: float
 var cur_sec: float
@@ -20,6 +21,7 @@ var songLength: float
 var beatLength: float
 
 var beat_hit_bool: bool = false
+var step_hit_event := false
 var beat_hit_event: bool = false
 var section_hit_event: bool = false
 
@@ -45,6 +47,10 @@ func a_stop(key: String):
 		target.playing = false
 	else:
 		printerr("audio_stop: node not found")
+
+func a_stop_all():
+	for i in get_children():
+		i.stop()
 
 func a_pause(key: String):
 	var target: AudioStreamPlayer = get_node_or_null(key)
@@ -165,18 +171,49 @@ func _ready():
 	# music
 	var system_music = File.f_read(Paths.p_offset("Music/Offset.json"), ".json").system_music
 	for m in system_music:
-		Audio.a_set(m[0], "Assets/Music/" + m[1], float(m[2]), m[3])
+		Audio.a_set(m[0], "Assets/Music/FNF/" + m[1], float(m[2]), m[3])
 	
 	# sound
 	var system_sound = File.f_read(Paths.p_offset("Sound/Offset.json"), ".json").system_sound
 	for m in system_sound:
 		Audio.se_set(m[0], "Assets/Sounds/FNF/" + m[1])
+	
+	refresh()
 
+func refresh():
+	var path = "FNF"
+	if Setting.engine() == "other a":
+		path = "other a"
+	elif Setting.engine() == "other b":
+		path = "other b"
+	var system_sound = File.f_read(Paths.p_offset("Sound/Offset.json"), ".json").system_sound
+	for m in system_sound:
+		var playing := false
+		if Audio.get_node(m[0]).is_playing():
+			playing = true
+		if FileAccess.file_exists("Assets/Sounds/" + path + "/" + m[1]):
+			Audio.se_set(m[0], "Assets/Sounds/" + path + "/" + m[1])
+		else:
+			Audio.se_set(m[0], "Assets/Sounds/FNF/" + m[1])
+		if playing:
+			Audio.a_play(m[0])
+	var system_music = File.f_read(Paths.p_offset("Music/Offset.json"), ".json").system_music
+	for m in system_music:
+		var playing := false
+		if Audio.get_node(m[0]).is_playing():
+			playing = true
+		if FileAccess.file_exists("Assets/Music/" + path + "/" + m[1]):
+			Audio.a_set(m[0], "Assets/Music/" + path + "/" + m[1], float(m[2]), m[3])
+		else:
+			Audio.a_set(m[0], "Assets/Music/FNF/" + m[1], float(m[2]), m[3])
+		if playing:
+			Audio.a_play(m[0])
 
 ############################## 曲の情報更新 ##############################
 
 var value := 0
 var value2 := 0
+var value3 := 0
 
 func _process(_delta):
 	if a_check("Inst"):
@@ -192,6 +229,7 @@ func _process(_delta):
 			cur_beat_float = a_get_beat_float("Inst")
 			cur_sec = a_get_sec("Inst")
 			cur_section = a_get_beat("Inst", 1)
+			cur_step = a_get_beat("Inst", 16)
 			cur_ms = cur_beat_float * (60.0 / bpm * 1000)
 			#print(cur_ms)
 			if value != a_get_beat("Inst"):
@@ -209,8 +247,12 @@ func _process(_delta):
 					if value % 4 == 0:
 						beat_hit_bool = true
 			if value2 != a_get_beat("Inst", 1):
+				emit_signal("section_hit")
 				value2 = a_get_beat("Inst", 1)
 				section_hit_event = true
+			if value3 != a_get_beat("Inst", 16):
+				value3 = a_get_beat("Inst", 16)
+				step_hit_event = true
 			if cur_section <= Game.who_sing_section.size() - 1:
 				if Game.who_sing_section[cur_section]:
 					Game.mustHit = true

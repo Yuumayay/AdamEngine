@@ -8,7 +8,30 @@ var child_count2: int = 0
 var canvas: CanvasLayer
 var db: float
 
+@onready var tile = get_parent().get_node("Tile")
+@onready var songname = get_parent().get_node("SongName")
+@onready var difficulty = get_parent().get_node("Difficulty")
+@onready var mode = get_parent().get_node("Mode")
+
+const tileImg = "Assets/Images/UI/WhiteTile.png"
+
 func _ready():
+	tile.texture = Game.load_image(tileImg)
+	songname.text = Game.cur_song.to_upper()
+	difficulty.text = Game.cur_diff.to_upper()
+	if Setting.practice() and Setting.bot():
+		mode.text = "PRACTICE BOTPLAY"
+	else:
+		if Setting.bot():
+			mode.text = "BOTPLAY"
+		else:
+			mode.text = ""
+			if Setting.practice():
+				mode.text = "PRACTICE"
+			else:
+				mode.text = ""
+
+	
 	child_count = get_child_count() - 1
 	canvas = get_parent().get_parent()
 	Audio.a_play("Pause Menu", 1.0, -10)
@@ -129,6 +152,17 @@ func _process(delta):
 					Audio.a_stop("Pause Menu")
 					canvas.get_parent().quit()
 					canvas.queue_free()
+			if Setting.practice() and Setting.bot():
+				mode.text = "PRACTICE BOTPLAY"
+			else:
+				if Setting.bot():
+					mode.text = "BOTPLAY"
+				else:
+					mode.text = ""
+					if Setting.practice():
+						mode.text = "PRACTICE"
+					else:
+						mode.text = ""
 		if Input.is_action_just_pressed("ui_cancel"):
 			Game.cur_state = Game.PLAYING
 			Audio.a_resume("Inst")
@@ -138,6 +172,10 @@ func _process(delta):
 # Called when the node enters the scene tree for the first time.
 func update_position():
 	for i in get_children():
+		if tile.position.x <= -50:
+			tile.position = Vector2.ZERO
+		tile.position.x -= 0.05
+		tile.position.y -= 0.05
 		i.position.x = lerp(i.position.x, abs(select - i.get_index()) * -25.0 + 225.0, 0.25)
 		i.position.y = lerp(i.position.y, -select * 150.0 + (275.0 + i.get_index() * 150.0), 0.25)
 		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.get_index()) / 5.0, 0.25)

@@ -1,0 +1,188 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				9,
+				19
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFTmiss",
+			"indices": [],
+			"name": "BF NOTE LEFT MISS"
+		},
+		{
+			"offsets": [
+				-15,
+				-19
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "BF NOTE DOWN MISS"
+		},
+		{
+			"offsets": [
+				-46,
+				27
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUPmiss",
+			"indices": [],
+			"name": "BF NOTE UP MISS"
+		},
+		{
+			"offsets": [
+				-44,
+				22
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHTmiss",
+			"indices": [],
+			"name": "BF NOTE RIGHT MISS"
+		},
+		{
+			"offsets": [
+				-3,
+				5
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "hey",
+			"indices": [],
+			"name": "BF HEY"
+		},
+		{
+			"offsets": [
+				14,
+				18
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "hurt",
+			"indices": [],
+			"name": "BF hit"
+		},
+		{
+			"offsets": [
+				-4,
+				0
+			],
+			"loop": true,
+			"fps": 24,
+			"anim": "scared",
+			"indices": [],
+			"name": "BF idle shaking"
+		},
+		{
+			"offsets": [
+				-10,
+				-16
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "dodge",
+			"indices": [],
+			"name": "boyfriend dodge"
+		},
+		{
+			"offsets": [
+				294,
+				267
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "attack",
+			"indices": [],
+			"name": "boyfriend attack"
+		},
+		{
+			"offsets": [
+				-40,
+				-40
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "pre-attack",
+			"indices": [],
+			"name": "bf pre attack"
+		},
+		{
+			"loop": false,
+			"offsets": [
+				383,
+				368
+			],
+			"anim": "idle",
+			"fps": 30,
+			"name": "nanamin idle",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				374,
+				377
+			],
+			"anim": "singUP",
+			"fps": 30,
+			"name": "nanamin up",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				380,
+				369
+			],
+			"anim": "singDOWN",
+			"fps": 30,
+			"name": "nanamin down",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				292,
+				333
+			],
+			"anim": "singRIGHT",
+			"fps": 30,
+			"name": "nanamin right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				455,
+				334
+			],
+			"anim": "singLEFT",
+			"fps": 30,
+			"name": "nanamin left",
+			"indices": []
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/nanamin",
+	"position": [
+		400,
+		580
+	],
+	"healthicon": "nanamin",
+	"flip_x": false,
+	"healthbar_colors": [
+		255,
+		169,
+		244
+	],
+	"camera_position": [
+		-500,
+		-350
+	],
+	"sing_duration": 4,
+	"scale": 0.78
+}

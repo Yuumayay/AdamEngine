@@ -8,8 +8,9 @@ var value: int
 var string: String
 var array: Array
 var color: Color
+var data: String
 
-var conv_name: Dictionary = {"\'": "apostrophe", ".": "period"}
+var conv_name: Dictionary = {"\'": "apostrophe", ".": "period", "/": "forward slash"}
 
 var last_text: String
 var last_type: int
@@ -44,7 +45,7 @@ func property_changed():
 		var total_x := 0.0
 		var total_y := 0.0
 		for i in get_children():
-			if i is AnimatedSprite2D:
+			if i.name.contains("AlphabetSprite"):
 				remove_child(i)
 		for i in text.length():
 			var sprite: AnimatedSprite2D = alphabet.duplicate()
@@ -83,20 +84,20 @@ func property_changed():
 			sprite.offset.y += 50
 			sprite.position.x = total_x
 			sprite.position.y = total_y
-			sprite.name = "Sprite"
+			sprite.name = "AlphabetSprite"
 			#sprite.position.y -= 150 / 2
 			if text_name != "\n" and text_name != " ":
 				total_x += sprite.sprite_frames.get_frame_texture(anim_name, 0).get_width()
 				if type == 0:
-					sprite.position.y += (sprite.sprite_frames.get_frame_texture(anim_name, 0).get_height()) / 2.0 * -1
-			add_child(sprite)
+					sprite.position.y += (sprite.sprite_frames.get_frame_texture(anim_name, 0).get_height()) * -1
+			add_child(sprite, true)
 		if grow_direction_h == 0:
 			for i in get_children():
-				if i is AnimatedSprite2D:
+				if i.name.contains("AlphabetSprite"):
 					i.position.x -= total_x
 		elif grow_direction_h == 1:
 			for i in get_children():
-				if i is AnimatedSprite2D:
+				if i.name.contains("AlphabetSprite"):
 					i.position.x -= total_x / 2.0
 		width = total_x
 		emit_signal("text_ready")

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://o61mnl56hi12"]
+
+[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_6m0ko"]
+[ext_resource type="Script" path="res://Scenes/Awards.gd" id="1_8hnde"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_myc4c"]
+[ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="4_vu5da"]
+
+[node name="Awards" type="Node2D"]
+script = ExtResource("1_8hnde")
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(1, 0.466667, 1, 1)
+position = Vector2(641, 358)
+texture = ExtResource("1_6m0ko")
+script = ExtResource("2_myc4c")
+bumpin_scale = Vector2(1.02, 1.02)
+music_div = 2
+what_music = "Option Menu"
+load_img = "menuDesat"
+
+[node name="Selectable" type="Node2D" parent="."]
+
+[node name="Alphabet" parent="." instance=ExtResource("4_vu5da")]
+
+[node name="Icon" type="Sprite2D" parent="Alphabet"]

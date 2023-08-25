@@ -22,13 +22,13 @@ func _ready():
 	# 曲の情報がロードされるまで待つ
 	await Game.game_ready
 	
-	var dead_xml: String = Game.player1 + "_DEAD"
+	var dead_xml: String = Game.player1.to_upper() + "_DEAD"
 	var json: Dictionary
 	
 	# スプライトのロード
 	if Paths.p_chara_xml(dead_xml):
 		spr = Game.load_XMLSprite(Paths.p_chara_xml(dead_xml), "bf dies", false, 24, 2)
-		json = File.f_read(Paths.p_chara(Game.player1 + "-dead"), ".json")
+		json = File.f_read(Paths.p_chara(Game.player1.to_lower() + "-dead"), ".json")
 	else:
 		spr = Game.load_XMLSprite(Paths.p_chara_xml(DEFAULT_DEAD_XML), "bf dies", false, 24, 2)
 		json = File.f_read(Paths.p_chara(DEFAULT_DEAD_JSON), ".json")

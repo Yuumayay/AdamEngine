@@ -38,6 +38,9 @@ func calc_distance():
 	return calc_distance2 * up_or_down
 
 func calc_sus():
+	if sus <= 0.0:
+		sus = 0
+	
 	# susのms から　Y距離を計算
 	var distance_sus = (strumPos.y - spawn_y) * up_or_down
 	var p_ms = Game.get_preload_sec() * 1000
@@ -48,6 +51,7 @@ func calc_sus():
 var strumPos: Vector2
 
 func _ready():
+	dir = clamp(dir, 0, Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD] + Game.key_count[Game.KC_GF] - 1)
 	if player == 1:
 		kc = 0
 	sprite_frames = arrowSpriteFrames

@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bn6j7ish2vl78"]
+[gd_scene load_steps=6 format=3 uid="uid://bn6j7ish2vl78"]
 
-[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_ccrr2"]
+[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_ccrr2"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_ycnpj"]
 [ext_resource type="Script" path="res://Scenes/Chart Editor.gd" id="4_taosd"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="6_o2uja"]
 
@@ -26,6 +27,9 @@ modulate = Color(0.796078, 0.698039, 0.988235, 1)
 z_index = -1
 position = Vector2(639, 360)
 texture = ExtResource("1_ccrr2")
+script = ExtResource("3_ycnpj")
+bumpin_scale = Vector2(1, 1)
+load_img = "menuDesat"
 
 [node name="Rect" type="ColorRect" parent="."]
 visible = false
@@ -1096,7 +1100,7 @@ custom_arrow_step = 0.1
 offset_left = 1025.0
 offset_top = -40.0
 offset_right = 1307.0
-offset_bottom = 375.0
+offset_bottom = 420.0
 focus_mode = 1
 color = Color(0.380392, 0.380392, 0.380392, 1)
 
@@ -1138,11 +1142,22 @@ text = "Test"
 placeholder_text = "Song Name"
 alignment = 1
 
+[node name="SongDiff" type="LineEdit" parent="Menu"]
+offset_left = 1044.0
+offset_top = 102.0
+offset_right = 1260.0
+offset_bottom = 133.0
+focus_mode = 1
+theme_override_fonts/font = ExtResource("6_o2uja")
+text = "normal"
+placeholder_text = "Song Name"
+alignment = 1
+
 [node name="bf" type="LineEdit" parent="Menu"]
-offset_left = 1038.0
-offset_top = 260.0
-offset_right = 1265.0
-offset_bottom = 291.0
+offset_left = 1039.0
+offset_top = 306.0
+offset_right = 1266.0
+offset_bottom = 337.0
 focus_mode = 1
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "bf"
@@ -1150,10 +1165,10 @@ placeholder_text = "bf"
 alignment = 1
 
 [node name="dad" type="LineEdit" parent="Menu"]
-offset_left = 1038.0
-offset_top = 327.0
-offset_right = 1265.0
-offset_bottom = 358.0
+offset_left = 1039.0
+offset_top = 373.0
+offset_right = 1266.0
+offset_bottom = 404.0
 focus_mode = 1
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "dad"
@@ -1169,41 +1184,61 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Song name:"
 
+[node name="Label7" type="Label" parent="Menu"]
+offset_left = 1039.0
+offset_top = 75.0
+offset_right = 1185.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_o2uja")
+text = "Song difficulty:"
+
 [node name="Label2" type="Label" parent="Menu"]
-offset_left = 1040.0
-offset_top = 74.0
-offset_right = 1152.0
-offset_bottom = 97.0
+offset_left = 1038.0
+offset_top = 140.0
+offset_right = 1150.0
+offset_bottom = 163.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Song BPM:"
 
 [node name="Label3" type="Label" parent="Menu"]
-offset_left = 1039.0
-offset_top = 138.0
-offset_right = 1151.0
-offset_bottom = 161.0
+offset_left = 1037.0
+offset_top = 204.0
+offset_right = 1153.0
+offset_bottom = 227.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Song speed:"
 
 [node name="Label4" type="Label" parent="Menu"]
-offset_left = 1040.0
-offset_top = 232.0
-offset_right = 1156.0
-offset_bottom = 255.0
+offset_left = 1041.0
+offset_top = 278.0
+offset_right = 1157.0
+offset_bottom = 301.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "BF name:"
 
 [node name="Label5" type="Label" parent="Menu"]
-offset_left = 1037.0
-offset_top = 301.0
-offset_right = 1153.0
-offset_bottom = 324.0
+offset_left = 1038.0
+offset_top = 347.0
+offset_right = 1154.0
+offset_bottom = 370.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Dad name:"
+
+[node name="Label6" type="Label" parent="Menu"]
+offset_left = 495.0
+offset_top = 676.0
+offset_right = 725.0
+offset_bottom = 719.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_o2uja")
+text = "Load Audio
+By Difficulty:"
+horizontal_alignment = 2
 
 [node name="GridAndZoom" type="Label" parent="Menu"]
 offset_left = 8.0
@@ -1219,10 +1254,10 @@ text = "Zoom: 1x
 Grid: 1/16"
 
 [node name="BetaText" type="Label" parent="Menu"]
-offset_left = 871.0
-offset_top = 382.0
-offset_right = 1273.0
-offset_bottom = 681.0
+offset_left = 870.0
+offset_top = 430.0
+offset_right = 1272.0
+offset_bottom = 729.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 5
@@ -1240,10 +1275,10 @@ Chart Editor BETA"
 horizontal_alignment = 2
 
 [node name="BPM" type="SpinBox" parent="Menu"]
-offset_left = 1041.0
-offset_top = 98.0
-offset_right = 1272.0
-offset_bottom = 132.0
+offset_left = 1039.0
+offset_top = 164.0
+offset_right = 1270.0
+offset_bottom = 198.0
 focus_mode = 1
 theme = SubResource("Theme_k5lk6")
 max_value = 9999.0
@@ -1252,10 +1287,10 @@ value = 150.0
 alignment = 1
 
 [node name="Speed" type="SpinBox" parent="Menu"]
-offset_left = 1041.0
-offset_top = 162.0
-offset_right = 1272.0
-offset_bottom = 196.0
+offset_left = 1039.0
+offset_top = 228.0
+offset_right = 1270.0
+offset_bottom = 262.0
 focus_mode = 1
 theme = SubResource("Theme_k5lk6")
 max_value = 10.0
@@ -1277,6 +1312,14 @@ ok_button_text = "開く"
 file_mode = 0
 access = 2
 
+[node name="LoadAudioByDifficulty" type="CheckBox" parent="Menu"]
+offset_left = 721.0
+offset_top = 672.0
+offset_right = 745.0
+offset_bottom = 696.0
+scale = Vector2(2.25, 2.25)
+focus_mode = 0
+
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(640, 360)
 
@@ -1285,5 +1328,7 @@ position = Vector2(640, 360)
 [connection signal="mouse_entered" from="CanvasLayer/button" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/button" to="." method="_on_button_mouse_exited"]
 [connection signal="button_down" from="Rect/Button" to="Rect" method="_on_button_button_down"]
+[connection signal="text_changed" from="Menu/SongDiff" to="." method="_on_song_diff_text_changed"]
 [connection signal="file_selected" from="Menu/SaveJSONWindow" to="." method="_on_save_json_window_file_selected"]
 [connection signal="file_selected" from="Menu/LoadJSONWindow" to="." method="_on_load_json_window_file_selected"]
+[connection signal="toggled" from="Menu/LoadAudioByDifficulty" to="." method="_on_load_audio_by_difficulty_toggled"]

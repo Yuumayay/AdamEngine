@@ -1,0 +1,51 @@
+{
+	"storyName": "Nanamin 3",
+	"storyNameJPN": "ナナミンの怒り",
+	"difficulties": "Easy, Hard, V1",
+	"hideFreeplay": false,
+	"weekBackground": "",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": false,
+	"songs": [
+		[
+			"Liberalized-Rage",
+			"nanaminmad",
+			[
+				155,
+				80,
+				120
+			]
+		],
+		[
+			"Tribulation",
+			"nanaminmad",
+			[
+				135,
+				60,
+				100
+			]
+		],
+		[
+			"Crisis",
+			"nanaminmad",
+			[
+				115,
+				40,
+				80
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "Nanamin 3"
+}

@@ -4,6 +4,7 @@ extends Node2D
 @export var color: Color
 #@export var same_name_ind: int
 @export var storyName: String
+var weekName: String
 
 func accepted(selected: bool):
 	if selected:
