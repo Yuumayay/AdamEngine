@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7sfrf0ljogdw"]
+
+[ext_resource type="Texture2D" uid="uid://c2tfedv8jllbr" path="res://mods/images/BOYFRIEND.png" id="1_8gnl5"]
+[ext_resource type="Script" path="res://Scenes/GameplayOptions.gd" id="1_lmiap"]
+
+[node name="GameplayOptions" type="CanvasLayer"]
+script = ExtResource("1_lmiap")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+self_modulate = Color(1, 1, 1, 0.588235)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="BGBF" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(708, 209)
+scale = Vector2(3.5, 3.5)
+texture = ExtResource("1_8gnl5")
+hframes = 2
+
+[node name="Selectable" type="Node" parent="."]

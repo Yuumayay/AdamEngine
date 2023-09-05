@@ -2,6 +2,8 @@ extends CanvasLayer
 
 var last_hit = 0
 var stop := false
+var died := false
+var death := 0
 
 @onready var info1 = $ScoreTxt/Label1
 @onready var info2 = $Label2
@@ -90,6 +92,7 @@ func generate_info_text(score, miss = 0, rating = "", acc = "", fc = "", rank = 
 	var accTxt := "Accuracy"
 	var ratingTxt := "Rating"
 	var npsTxt := "NPS"
+	var deathTxt := ""
 	var sp = ": "
 	var sp2 = " | "
 	var sp3 = " - "
@@ -110,8 +113,10 @@ func generate_info_text(score, miss = 0, rating = "", acc = "", fc = "", rank = 
 	if Setting.jpn():
 		missTxt = "Miss"
 		ratingTxt = "Rank"
+	if death >= 1:
+		deathTxt = " | Death: " + str(death)
 	if get == "adam":
-		return [scoreTxt + sp + str(score) + sp2 + missTxt + sp + str(miss) + limit + sp2 + ratingTxt + sp + rating + sp4 + str(acc) + sp5 + sp3 + fc, text_size, outline_size]
+		return [scoreTxt + sp + str(score) + sp2 + missTxt + sp + str(miss) + limit + deathTxt + sp2 + ratingTxt + sp + rating + sp4 + str(acc) + sp5 + sp3 + fc, text_size, outline_size]
 	elif get == "psych":
 		outline_size = 6
 		return [scoreTxt + sp + str(score) + sp2 + missTxt + sp + str(miss) + limit + sp2 + ratingTxt + sp + rating + sp4 + str(acc) + sp5 + sp3 + fc, text_size, outline_size]
@@ -372,6 +377,14 @@ func updateComboInfo():
 
 
 func fc_state_check():
+	if Game.fc_state == "Failed":
+		if Game.health == 0:
+			if !died:
+				death += 1
+			died = true
+		else:
+			died = false
+		return "Failed"
 	var list = adam_fc
 	var engine = Setting.engine()
 	if engine == "leather":
@@ -382,7 +395,9 @@ func fc_state_check():
 		list = denpa_fc
 	for i in list:
 		if i[1] == "fail":
-			if Game.health == 0 or Game.fc_state == "Failed":
+			if Game.health == 0:
+				death += 1
+				died = true
 				Game.fc_state = i[0]
 				break
 		elif i[1] == "marv":

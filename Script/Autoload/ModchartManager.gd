@@ -28,10 +28,7 @@ var modcharts: Dictionary = {}
 func loadModchart():
 	if Game.cur_song.to_lower() == "defeat" or Game.cur_song.to_lower() == "defeated":
 		setDefeatModchart()
-	if Game.is3D:
-		gameplay = $/root/Gameplay3D
-	else:
-		gameplay = $/root/Gameplay
+	gameplay = $/root/Gameplay
 	modLayer = gameplay.get_node("ModchartCanvas")
 	lyricslabel = modLayer.get_node("LyricsLabel")
 	ui = gameplay.get_node("UI")
@@ -134,6 +131,7 @@ func drawBlackBG():
 	var blackBG = ColorRect.new()
 	blackBG.set_anchors_preset(Control.PRESET_FULL_RECT)
 	blackBG.color = Color(0, 0, 0)
+	blackBG.name = "blackBG"
 	modLayer.add_child(blackBG)
 
 func drawTextureBG(t: Texture2D, tag: String):
@@ -181,6 +179,26 @@ func hideUI():
 func showUI():
 	ui.show()
 	info.show()
+
+func hideBarAndIcon():
+	ui.hide()
+
+func showBarAndIcon():
+	ui.show()
+
+func hideInfo():
+	info.hide()
+
+func showInfo():
+	info.show()
+
+func hideNote():
+	strums.hide()
+	notes.hide()
+
+func showNote():
+	strums.show()
+	notes.show()
 
 func setScoreTextColor(value = Color(1, 1, 1)):
 	scoretext.add_theme_color_override("font_color", value)
@@ -239,6 +257,9 @@ func makeGraphic(tag, w, h, color):
 
 func addLuaSprite(tag: String, front):
 	pass
+
+func spawnTitle(sec = 2.0):
+	gameplay.get_node("SongTitle").spawnTitle(sec)
 
 func setProperty(key: String, value):
 	var sp = key.split(".")
@@ -304,12 +325,36 @@ func camZoomGF(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0, off
 	var cam = gameplay.get_node("Camera")
 	cam.camMove(cam.gf.getPosOffset() + offset, zoom, sec, cspeed, zspeed)
 
+func camZoomSet(zoom = 1, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0):
+	var cam = gameplay.get_node("Camera")
+	cam.camMove("same", zoom, sec, cspeed, zspeed)
+
 func camReset():
 	gameplay.get_node("Camera").state = 0
 
 func cameraShake(intensity = 10, dulation = 0.1, camera = "camGame"):
 	var cam = gameplay.get_node("Camera")
 	cam.camShake(intensity, dulation)
+
+func camPosSet(pos = Vector2(0, 0), lock = true):
+	var cam = gameplay.get_node("Camera")
+	if lock:
+		cam.state = 1
+	else:
+		cam.state = 0
+	cam.position = pos
+
+func camPosAdd(pos = Vector2(0, 0), lock = true):
+	var cam = gameplay.get_node("Camera")
+	if lock:
+		cam.state = 1
+	else:
+		cam.state = 0
+	cam.position += pos
+
+func camLock():
+	var cam = gameplay.get_node("Camera")
+	cam.state = 2
 
 ############### SHADER EFFECTS ###############
 
@@ -321,6 +366,14 @@ func glitch(shake_color_rate = 0.001, shake_power = 0.0, shake_rate = 1.0, shake
 	rect.material.set("shader_parameter/shake_speed", shake_speed)
 	rect.material.set("shader_parameter/shake_block_size", shake_block_size)
 	rect.material.set("shader_parameter/shake_color_rate", shake_color_rate)
+
+func impact(force = 0, size = 1, thickness = 1, center = Vector2(0.5, 0.5)):
+	gameplay.get_node("Impact").show()
+	var rect: ColorRect = gameplay.get_node("Impact/Rect")
+	rect.material.set("shader_parameter/center", center)
+	rect.material.set("shader_parameter/force", force)
+	rect.material.set("shader_parameter/size", size)
+	rect.material.set("shader_parameter/thickness", thickness)
 
 ############### TWEEN ###############
 
@@ -343,6 +396,15 @@ func doTweenAngle(tag, vars, value = 0.0, dulation = 0.0, ease = "", trans = "")
 			t.tween_property(gameplay.get_node("Characters/dadpos/dad"), "rotation_degrees", value, dulation)
 		elif vars == "gf":
 			t.tween_property(gameplay.get_node("Characters/gfpos/gf"), "rotation_degrees", value, dulation)
+
+func doTweenColor(tag, color, dulation = 1, ea = Tween.EASE_IN, tr = Tween.TRANS_LINEAR):
+	if tag and color:
+		var target = modLayer.get_node_or_null(tag)
+		if target:
+			var t = create_tween()
+			t.set_ease(ea)
+			t.set_trans(tr)
+			t.tween_property(target, "self_modulate", color, dulation)
 
 ############### NOTES AND STRUMS ###############
 
@@ -368,6 +430,12 @@ func notePropertySet(dir = 0, property = "position:x", value = 0):
 		if i.dir == dir:
 			i[property] = value
 
+func notePropertySetAll(property = "position:x", value = 0):
+	for i in notes.get_children():
+		i[property] = value
+	for i in strums.get_children():
+		i[property] = value
+
 func noteTweenDad(property = "position:x", value = 0, dulation = 0):
 	for i in range(0, Game.key_count[Game.KC_DAD]):
 		noteTween(i, property, value, dulation)
@@ -380,13 +448,21 @@ func noteTweenBoth(property = "position:x", value = 0, dulation = 0):
 	for i in range(0, Game.key_count[Game.KC_DAD] + Game.key_count[Game.KC_BF]):
 		noteTween(i, property, value, dulation)
 
+func hideStrum():
+	strums.hide()
+
+func showStrum():
+	strums.show()
+
 ############### TEXT ###############
 
 func stopUpdateText():
 	info.stopUpdateText()
+	ui.get_node("ColorRect/TimeBar").stopUpdateText()
 
 func resumeUpdateText():
 	info.resumeUpdateText()
+	ui.get_node("ColorRect/TimeBar").resumeUpdateText()
 
 func setTextString(tag, text):
 	var target

@@ -49,13 +49,33 @@ var descJPN := {
 	"hit sound volume": "ノーツを打ったときの音の音量を上げることができるよ。\n[wait][concern]上げすぎると、鼓膜が死ぬよ。",
 	"botplay": "全部オートプレイになるよ。\n[wait][angry]人生も全部自動で上手くいってくれればいいのにね。",
 	"practice": "HPが0になっても、ゲームオーバーにならなくなるよ。\n[wait][happy]さぁ、練習練習！",
+	"deathmatch": "1回のミスでゲームオーバーになるようにするよ。\n[wait][happy]スリル満点だね！",
 	"max fps": "FPSの最大値を変えられるよ。\n注意：上げすぎるとPCにとても負荷がかかるよ！！",
 	"show ms": "ms表示の切り替えができるよ。",
 	"show kps": "KPS表示の切り替えができるよ。\nスパム曲で試してみよう！",
 	"syobon-kun": "オンにすると、しょぼん君が画面に現れてキーボードを叩くよ。\n現在、4Kしか対応してないよ。",
 	"engine type": "FNF次元を自由自在に移動することができるよ。",
 	"visuals and ui": "見た目とかの設定だよ。\n[wait][concern]グラフィックとの違いは、いまいちわからん。",
-	"graphics": "見た目とかの設定だよ。\n[wait][concern]ユーアイとの違いは、いまいちわからん。"
+	"graphics": "見た目とかの設定だよ。\n[wait][concern]ユーアイとの違いは、いまいちわからん。",
+	
+	"name": "いろいろな物の名前を変えることができるよ。",
+	"display": "表示関連のオプションだよ。",
+	"marvelous name": "Marvelousの呼び名を変更できるよ。",
+	"sick name": "Sickの呼び名を変更できるよ。",
+	"good name": "Goodの呼び名を変更できるよ。",
+	"bad name": "Badの呼び名を変更できるよ。",
+	"shit name": "Shitの呼び名を変更できるよ。",
+	"miss name": "Missの呼び名を変更できるよ。",
+	"score name": "Scoreの呼び名を変更できるよ。",
+	"accuracy name": "Accuracyの呼び名を変更できるよ。",
+	"rating name": "Ratingの呼び名を変更できるよ。",
+	"health name": "Healthの呼び名を変更できるよ。",
+	"combo name": "Comboの呼び名を変更できるよ。",
+	"max combo name": "Max Comboの呼び名を変更できるよ。",
+	"use marvelous": "Sickより高い評価(Marvelous)を使うかどうかの設定だよ。",
+	"use winning icon": "勝利アイコンを使うか使わないかの設定だよ。オンにしても、\n必ずアイコンを３つ用意しなければいけないわけではないから安心！",
+	"shit to miss": "ShitがMissになるかどうかの設定だよ。",
+	"show turn timer": "次のターンまでの時間を表示するタイマーの切り替えだよ。"
 }
 
 var setting: Dictionary = {
@@ -63,7 +83,7 @@ var setting: Dictionary = {
 		"language": {
 			"language": {
 				"type": "array",
-				"cur": 0,
+				"cur": 1,
 				"array": ["english", "japanese"],
 			},
 		},
@@ -103,6 +123,10 @@ var setting: Dictionary = {
 			"practice": {
 				"type": "bool",
 				"cur": false
+			},
+			"deathmatch": {
+				"type": "bool",
+				"cur": false
 			}
 		},
 		"graphics": {
@@ -130,10 +154,127 @@ var setting: Dictionary = {
 			"engine type": {
 				"type": "engineType",
 				"cur": 0,
-				"array": [{"name": "Engines", "data": ["Adam Engine", "Psych Engine", "Leather Engine", "Denpa Engine"], "metadata": ["adam", "psych", "leather", "denpa"]}, {"name": "Kade Engine", "data": ["KE 1.2", "KE 1.4", "KE 1.8"], "metadata": ["kade12", "kade14", "kade18"]}, {"name": "Mod Presets", "data": ["Human Impostor", "Strident Crisis", "Voiid Chronicles"], "metadata": ["other a", "other b", "voiid"]}],
-				"metadata": ["adam", "psych", "leather", "denpa", "kade12", "kade14", "kade18", "other a", "other b", "voiid"]
+				"array": [{"name": "Engines", "data": ["Adam Engine", "Psych Engine", "Leather Engine", "Denpa Engine"], "metadata": ["adam", "psych", "leather", "denpa"]}, {"name": "Kade Engine", "data": ["KE 1.2", "KE 1.4", "KE 1.8"], "metadata": ["kade12", "kade14", "kade18"]}],#, {"name": "Mod Presets", "data": ["Human Impostor", "Strident Crisis", "Voiid Chronicles"], "metadata": ["other a", "other b", "voiid"]}],
+				"metadata": ["adam", "psych", "leather", "denpa", "kade12", "kade14", "kade18"],#, "other a", "other b", "voiid"]
 				#"array": ["Adam Engine", "Psych Engine", "Kade Engine 1.2", "Kade Engine 1.4", "Kade Engine 1.8", "Leather Engine", "Denpa Engine", "Other A", "Other B"],
 				#"metadata": ["adam", "psych", "kade12", "kade14", "kade18", "leather", "denpa", "other a", "other b"]
+			}
+		}
+	}
+}
+
+var adv_setting := {
+	"category": {
+		"name": {
+			"marvelous name": {
+				"type": "textEdit",
+				"cur": "Marvelous"
+			},
+			"sick name": {
+				"type": "textEdit",
+				"cur": "Sick"
+			},
+			"good name": {
+				"type": "textEdit",
+				"cur": "Good"
+			},
+			"bad name": {
+				"type": "textEdit",
+				"cur": "Bad"
+			},
+			"shit name": {
+				"type": "textEdit",
+				"cur": "Shit"
+			},
+			"miss name": {
+				"type": "textEdit",
+				"cur": "Misses"
+			},
+			"score name": {
+				"type": "textEdit",
+				"cur": "Score"
+			},
+			"accuracy name": {
+				"type": "textEdit",
+				"cur": "Accuracy"
+			},
+			"rating name": {
+				"type": "textEdit",
+				"cur": "Rating"
+			},
+			"health name": {
+				"type": "textEdit",
+				"cur": "Health"
+			},
+			"combo name": {
+				"type": "textEdit",
+				"cur": "Combo"
+			},
+			"max combo name": {
+				"type": "textEdit",
+				"cur": "Max Combo"
+			},
+		},
+		"display": {
+			"show turn timer": {
+				"type": "bool",
+				"cur": false
+			},
+			"text rating counter": {
+				"type": "bool",
+				"cur": false
+			},
+			"show song credits": {
+				"type": "bool",
+				"cur": false
+			},
+			"show \"screw you\" text": {
+				"type": "bool",
+				"cur": false
+			},
+			"use splash": {
+				"type": "bool",
+				"cur": false
+			}
+		},
+		"gimmics": {
+			"shit to miss": {
+				"type": "bool",
+				"cur": false
+			},
+			"use marvelous": {
+				"type": "bool",
+				"cur": true
+			},
+			"use winning icon": {
+				"type": "bool",
+				"cur": true
+			},
+			"use currency": {
+				"type": "bool",
+				"cur": false
+			},
+			"currency name": {
+				"type": "textEdit",
+				"cur": "Coin"
+			},
+			"currency name (short)": {
+				"type": "textEdit",
+				"cur": "C"
+			}
+		},
+		"modchart": {
+			"load song script": {
+				"type": "bool",
+				"cur": true
+			},
+			"load stage script": {
+				"type": "bool",
+				"cur": true
+			},
+			"load script folder": {
+				"type": "bool",
+				"cur": true
 			}
 		}
 	}
@@ -246,6 +387,7 @@ var conv_jpn := [
 	["practice", "レンシュウ"],
 	["practice on", "レンシュウ オン"],
 	["practice off", "レンシュウ オフ"],
+	["deathmatch", "デスマッチ"],
 	["max fps", "サイダイ エフピーエス"],
 	["show ms", "エムエス ヒョウジ"],
 	["show kps", "ケーピーエス ヒョウジ"],

@@ -10,7 +10,7 @@ var array: Array
 var color: Color
 var data: String
 
-var conv_name: Dictionary = {"\'": "apostrophe", ".": "period", "/": "forward slash"}
+var conv_name: Dictionary = {"\'": "apostrophe", ".": "period", "/": "forward slash", "\"": "quote"}
 
 var last_text: String
 var last_type: int

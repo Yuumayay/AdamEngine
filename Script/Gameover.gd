@@ -65,10 +65,7 @@ func gameover(): #ゲームオーバー
 	spr.stop()
 	spr.play(anim_name[START_ANIM])
 	spr.offset = anim_offset[anim_name[START_ANIM]]
-	if Game.is3D:
-		spr.position = $/root/Gameplay3D/Characters/bfpos.getPosOffset()
-	else:
-		spr.position = $/root/Gameplay/Characters/bfpos.getPosOffset()
+	spr.position = $/root/Gameplay/Characters/bfpos.getPosOffset()
 	spr.visible = true
 	bg.visible = true
 	

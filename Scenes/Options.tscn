@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://2nqcs4l4ibwt"]
+[gd_scene load_steps=10 format=3 uid="uid://2nqcs4l4ibwt"]
 
 [ext_resource type="Script" path="res://Scenes/Options.gd" id="1_40o4e"]
-[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_voa3y"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_cbk1a"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_r2lco"]
 [ext_resource type="Script" path="res://Script/OptionTemplate.gd" id="5_ivfsk"]
@@ -17,7 +16,6 @@ script = ExtResource("1_40o4e")
 [node name="BG" type="Sprite2D" parent="."]
 modulate = Color(1, 0.466667, 1, 1)
 position = Vector2(641, 358)
-texture = ExtResource("1_voa3y")
 script = ExtResource("2_cbk1a")
 bumpin_scale = Vector2(1.02, 1.02)
 music_div = 2

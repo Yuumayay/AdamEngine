@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://bn6j7ish2vl78"]
+[gd_scene load_steps=5 format=3 uid="uid://bn6j7ish2vl78"]
 
-[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_ccrr2"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_ycnpj"]
 [ext_resource type="Script" path="res://Scenes/Chart Editor.gd" id="4_taosd"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="6_o2uja"]
@@ -26,7 +25,6 @@ focus_mode = 1
 modulate = Color(0.796078, 0.698039, 0.988235, 1)
 z_index = -1
 position = Vector2(639, 360)
-texture = ExtResource("1_ccrr2")
 script = ExtResource("3_ycnpj")
 bumpin_scale = Vector2(1, 1)
 load_img = "menuDesat"

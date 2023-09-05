@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7jao46sg4pdn"]
+
+[ext_resource type="Script" path="res://Script/SongTitle.gd" id="1_dyhbk"]
+
+[node name="SongTitle" type="CanvasLayer"]
+script = ExtResource("1_dyhbk")

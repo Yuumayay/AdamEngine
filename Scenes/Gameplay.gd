@@ -12,6 +12,7 @@ var timer: Timer = Timer.new()
 var countDownTimer: Timer = Timer.new()
 
 var pause = preload("res://Scenes/Pause Menu.tscn")
+var song_title = preload("res://Scenes/SongTitle.tscn")
 
 var countdowns: Array = View.countdowns
 
@@ -19,7 +20,18 @@ var keytomove_move_to: String
 var keytomove_difficulty: String
 var keytomove_what_key: String
 
+var note_instance
+
 func _ready():
+	note_instance = note_scn.instantiate()
+	if Game.noteXML != "":
+		View.arrowSpriteFrames = Game.load_XMLSprite(Game.noteXML).sprite_frames
+		View.splashSpriteFrames = Game.load_XMLSprite(Game.noteXML.replacen("/default.xml", "/Note_Splashes.xml")).sprite_frames
+	else:
+		View.arrowSpriteFrames = View.arrow.sprite_frames
+		View.splashSpriteFrames = View.splash.sprite_frames
+		
+	
 	timer.name = "timer"
 	countDownTimer.name = "countDownTimer"
 	
@@ -46,6 +58,10 @@ func _ready():
 	cam_zoom = Game.defaultZoom
 	var cam = $Camera
 	if Game.is3D:
+		var camera3 = Camera3D.new()
+		camera3.name = "Camera"
+		$Camera.replace_by(camera3)
+		$Camera.set_script(load("Script/3DStageCamera.gd"))
 		$Camera.fov = cam_zoom * 75
 	else:
 		$Camera.zoom = Vector2(cam_zoom, cam_zoom)
@@ -241,7 +257,10 @@ func gameoverCheck():
 			
 			if missCount >= Modchart.mGet("defeat", 0):
 				killBF()
-			
+		if Setting.s_get("gameplay", "deathmatch"):
+			var missCount = Game.rating_total[Game.MISS]
+			if missCount >= 1:
+				killBF()
 		elif Game.health <= 0:
 			Game.fc_state = "Failed"
 			
@@ -277,10 +296,7 @@ func note_spawn_load():
 	var psec = Game.get_preload_sec()
 	
 	if Game.ms[note_count] - psec * 1000 <= Audio.cur_ms:
-		var new_note = note_scn.instantiate()
-		if Game.noteXML:
-			var noteSkin = Game.load_XMLSprite(Game.noteXML)
-			new_note.sprite_frames = noteSkin.sprite_frames
+		var new_note: AnimatedSprite2D = note_instance.duplicate()
 		new_note.ind = note_count
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
@@ -330,6 +346,8 @@ func strum_set():
 			
 	for i in Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD]:
 		var new_strum = load("res://Scenes/Notes/Strum.tscn").instantiate()
+		if Game.noteXML != "":
+			new_strum.sprite_frames = Game.load_XMLSprite(Game.noteXML).sprite_frames
 		var dad_f := 1
 		new_strum.dir = i
 			
@@ -494,9 +512,13 @@ func countdown():
 	start()
 	
 func start():
+	var title = song_title.instantiate()
+	add_child(title)
+	
 	Audio.a_play("Inst", Game.cur_multi)
 	Audio.a_play("Voices", Game.cur_multi)
 	Game.cur_state = Game.PLAYING
+	Game.emit_signal("song_start")
 
 func reset_property():
 	Game.score = 0
@@ -556,6 +578,8 @@ func quit_reset():
 	Game.chara_json.clear()
 	Game.iconBF = ""
 	Game.iconDAD = ""
+	Game.noteXML = ""
+	Game.cur_diff = Game.difficulty[0]
 
 func quit():
 	quit_reset()
@@ -587,11 +611,9 @@ func moveSong(what):
 	if song_data.song.has("is3D"):
 		if song_data.song.is3D:
 			Game.is3D = true
-			Trans.t_trans("Gameplay3D")
 		else:
 			Game.is3D = false
-			Trans.t_trans("Gameplay")
 	else:
 		Game.is3D = false
-		Trans.t_trans("Gameplay")
+	Trans.t_trans("Gameplay")
 

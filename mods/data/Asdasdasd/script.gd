@@ -3,6 +3,8 @@ extends Node
 var rotation_value := 0.0
 
 func onCreate():
+    Modchart.hideUI()
+    Modchart.hideStrum()
     Modchart.keyToMove("Iamangrynow", "Hard", "7")
 
 func onUpdate():
@@ -14,11 +16,22 @@ func onUpdate():
 
 func onSectionHit():
     var section: int = Audio.cur_section
+    if section == 16:
+        Flash.flash()
+        Modchart.showUI()
+        Modchart.showStrum()
     if section < 48:
         if section % 2 == 0: 
             rotation_value = 15
         else:
             rotation_value = -15
+    else:
+        if section % 2 == 0: 
+            Modchart.camZoomSet(0.6, -1)
+        else:
+            Modchart.camZoomSet(0.7, -1)
+    if section == 48:
+        Modchart.camLock()
 
 func onBeatHit():
     var beat: int = Audio.cur_beat

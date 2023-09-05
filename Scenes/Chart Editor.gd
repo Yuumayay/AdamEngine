@@ -562,7 +562,9 @@ func loadFromAnotherFile_Old(song):
 					jsonPathChara[j] = jsonPathChara[j].replacen("mods/", "assets/")
 				if !FileAccess.file_exists(jsonPathChara[j]):
 					folder = folder.replacen(fileName, "")
-					noteXML = songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")
+					folder = folder.replacen("/data/song data/" + song, "")
+					if FileAccess.file_exists(songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")):
+						noteXML = songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")
 					jsonPathChara[j] = jsonPathChara[j].replacen("assets/", "mods/")
 					jsonPathChara[j] = jsonPathChara[j].replacen("characters/" + songData.song["player" + str(j + 1)] + ".json", "character data/" + songData.song["player" + str(j + 1)] + "/config.json")
 				if song and FileAccess.file_exists(jsonPathChara[j]):

@@ -2,7 +2,7 @@ extends Node
 
 ## CONSTS ##
 const note_spawn_y: Array = [-600, 1320]
-const strum_pos_og: Array = [Vector2(150, 600), Vector2(150, 120)]
+const strum_pos_og: Array = [Vector2(150, 620), Vector2(150, 100)]
 const version_text: String = "Adam Engine 1.0"
 const version_text_color: Color = Color("ffb7ce")
 
@@ -109,10 +109,15 @@ var countdowns: Array
 var num: Array
 var arrow : AnimatedSprite2D
 var arrowSpriteFrames: SpriteFrames
+var splash : AnimatedSprite2D
+var splashSpriteFrames: SpriteFrames
 # 動的に画像を読み出す。
 func loadAssets():
 	arrow = Game.load_XMLSprite("Assets/Images/Notes/Default/default.xml")
 	arrowSpriteFrames = arrow.sprite_frames
+	
+	splash = Game.load_XMLSprite("Assets/Images/Notes/Default/Note_Splashes.xml")
+	splashSpriteFrames = splash.sprite_frames
 	
 	held = [Game.load_image("Assets/Images/Notes/Default/held/left hold0000.png"),
 	Game.load_image("Assets/Images/Notes/Default/held/down hold0000.png"),

@@ -2,6 +2,8 @@ extends ProgressBar
 
 var atime = 1.0
 
+var update := true
+
 func _ready():
 	if not Setting.s_get("gameplay", "downscroll"):
 		get_parent().position.y = 700 - get_parent().position.y
@@ -18,6 +20,12 @@ func updatePos():
 	else:
 		get_parent().position.y = 678
 
+func stopUpdateText():
+	update = false
+
+func resumeUpdateText():
+	update = true
+
 func _process(delta):
 	atime += delta * Game.cur_multi
 	
@@ -31,9 +39,10 @@ func _process(delta):
 			atime -= 1.0
 			if Game.PLAYING and !$Label.visible:
 				$Label.visible = true
-			$Label.text = "%d:%02d" % [remain_min, remain_sec % 60]
-			Game.timeText = "%d:%02d" % [remain_min, remain_sec % 60]
-			if Setting.s_get("gameplay", "botplay"):
-				$Label.text += " (BOT)"
-			if Setting.s_get("gameplay", "practice"):
-				$Label.text += " (PRACTICE)"
+			if update:
+				$Label.text = "%d:%02d" % [remain_min, remain_sec % 60]
+				Game.timeText = "%d:%02d" % [remain_min, remain_sec % 60]
+				if Setting.s_get("gameplay", "botplay"):
+					$Label.text += " (BOT)"
+				if Setting.s_get("gameplay", "practice"):
+					$Label.text += " (PRACTICE)"

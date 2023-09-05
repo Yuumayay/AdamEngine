@@ -6,6 +6,7 @@ var song_path_list: Array = ["Assets/Songs/", "Mods/songs/"]
 var chart_path_list: Array = ["Assets/Songs/", "Mods/songs/", "Assets/Data/Song Charts/", "Mods/data/song charts/", "Mods/data/", "Mods/data/song data/"]
 var icon_path_list: Array = ["Assets/Images/Icons/", "Mods/images/icons/"]
 var icon_credits_path_list: Array = ["Assets/Images/Other Icons/Credits/", "Mods/images/other icons/credits/", "Mods/images/credits/"]
+var icon_awards_path_list: Array = ["Assets/Images/Other Icons/Awards/", "Mods/images/other icons/awards/", "Mods/images/awards/"]
 var week_path_list: Array = ["Assets/Weeks/", "Mods/weeks/"]
 var week_image_path_list: Array = ["Assets/Images/Story Mode/Weeks/", "Mods/Images/Story Mode/Weeks/", "mods/images/storymenu/"]
 var character_data_path_list: Array = ["Assets/Data/characters/", "Mods/data/characters/", "Mods/characters/"]
@@ -260,6 +261,24 @@ func p_icon_credits(path: String):
 	printerr("icon: icon not found: ", path)
 	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
 	return icon
+
+func p_icon_awards(path: String):
+	var icon: Texture2D
+	for i in icon_awards_path_list:
+		var p = i
+		if FileAccess.file_exists(p + path + ".png"):
+			icon = Game.load_image(p + path + ".png")
+			return icon
+		elif FileAccess.file_exists(p + "icon-" + path + ".png"):
+			icon = Game.load_image(p + "icon-" + path + ".png")
+			return icon
+		elif FileAccess.file_exists(p + path + "-icons.png"):
+			icon = Game.load_image(p + path + "-icons.png")
+			return icon
+	printerr("icon: icon not found: ", path)
+	icon = Game.load_image("Assets/Images/Icons/icon-face.png")
+	return icon
+	
 
 func p_image(path: String, xml = false):
 	for i in images_path_list:

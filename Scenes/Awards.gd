@@ -17,24 +17,42 @@ func _ready():
 		desc.add_theme_constant_override("shadow_outline_size", 5)
 		desc.add_theme_color_override("font_shadow_color", Color(0, 0, 0))
 	for i in read_property:
-		var new_item = $Alphabet.duplicate()
+		var new_item: Label
+		if Setting.jpn():
+			new_item = $JPN.duplicate()
+			Setting.set_dfont_mini(new_item)
+		else:
+			new_item = $Alphabet.duplicate()
 		var itemname = i.awardName
+		var unlockIcon: String
+		var lockIcon: String
+		var lock := true
 		if i.size() != 1:
 			var lockdesc = i.lockDescription
 			var itemdesc = i.description
 			var itemdesc2 = i.comment
 			var itemcolor: Color = Color(i.awardColor)
-			var itemurl
-			if i.size() - 1 == 4:
-				itemurl = i[4]
+			var condition = i.condition
+			unlockIcon = i.awardIcon
+			lockIcon = i.lockedIcon
 			
 			new_item.name = itemname
 			new_item.text = itemname
 			new_item.value = ind
 			new_item.color = itemcolor
 			new_item.name = itemname
-			new_item.string = itemurl
 			new_item.array = [itemdesc, itemdesc2]
+			
+			if condition == "week":
+				var weekScore = File.f_read("user://ae_week_score_data.json", ".json")
+				if weekScore.has(i.week):
+					var cur_fc = Game.fc_name.find(weekScore[i.week].fc_state)
+					var cond_fc = Game.fc_name.find(i.fc)
+					if cur_fc <= cond_fc:
+						lock = false
+			elif condition == "gfpet":
+				if Game.gf_pet_total >= i.second:
+					lock = false
 		else:
 			new_item.type = 1
 			new_item.color = Color(1,1,1)
@@ -43,8 +61,13 @@ func _ready():
 			new_item.value = ind
 			new_item.array = ["", ""]
 			new_item.get_node("Icon").hide()
-		
-		var icon = Paths.p_icon_awards(itemname)
+			
+		var icon
+		if lock:
+			new_item.text = "???"
+			icon = Paths.p_icon_awards(lockIcon)
+		else:
+			icon = Paths.p_icon_awards(unlockIcon)
 		if icon.get_size() == Vector2(150, 150):
 			new_item.get_node("Icon").hframes = 1
 		elif icon.get_size() == Vector2(300, 150):
@@ -56,8 +79,9 @@ func _ready():
 		new_item.visible = true
 		list.add_child(new_item)
 		ind += 1
-		await new_item.text_ready
-		new_item.get_node("Icon").position.x += new_item.width + 50
+		if Setting.eng():
+			await new_item.text_ready
+			new_item.get_node("Icon").position.x += new_item.width + 50
 	
 	child_count = list.get_child_count() - 1
 	update_desc()

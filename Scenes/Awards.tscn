@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://o61mnl56hi12"]
+[gd_scene load_steps=6 format=3 uid="uid://o61mnl56hi12"]
 
-[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_6m0ko"]
 [ext_resource type="Script" path="res://Scenes/Awards.gd" id="1_8hnde"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_myc4c"]
+[ext_resource type="FontFile" uid="uid://2xv0r3rj1xw8" path="res://Assets/Fonts/BugMaru.ttc" id="4_ao45s"]
 [ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="4_vu5da"]
+[ext_resource type="Script" path="res://Script/AwardsLabelJPN.gd" id="5_mxvqv"]
 
 [node name="Awards" type="Node2D"]
 script = ExtResource("1_8hnde")
@@ -11,7 +12,6 @@ script = ExtResource("1_8hnde")
 [node name="BG" type="Sprite2D" parent="."]
 modulate = Color(1, 0.466667, 1, 1)
 position = Vector2(641, 358)
-texture = ExtResource("1_6m0ko")
 script = ExtResource("2_myc4c")
 bumpin_scale = Vector2(1.02, 1.02)
 music_div = 2
@@ -23,3 +23,34 @@ load_img = "menuDesat"
 [node name="Alphabet" parent="." instance=ExtResource("4_vu5da")]
 
 [node name="Icon" type="Sprite2D" parent="Alphabet"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 15.0
+offset_top = 559.0
+offset_right = 854.0
+offset_bottom = 711.0
+
+[node name="Desc" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel2" type="Panel" parent="."]
+offset_left = 871.0
+offset_top = 13.0
+offset_right = 1263.0
+offset_bottom = 713.0
+
+[node name="JPN" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("4_ao45s")
+theme_override_font_sizes/font_size = 50
+script = ExtResource("5_mxvqv")
+
+[node name="Icon" type="Sprite2D" parent="JPN"]

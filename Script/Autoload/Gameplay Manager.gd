@@ -1,6 +1,7 @@
 extends Node
 
 signal game_ready
+signal song_start
 
 const PRELOAD_SEC = 2
 
@@ -19,6 +20,17 @@ enum {ADAM, PSYCH, LEATHER, KADE, DENPA, STRIDENT}
 var song_engine_type := 0
 
 enum {SAME, NULL}
+
+var psych_character_property := {"animations": "animations",
+	"no_antialiasing": "no_antialiasing",
+	"image": "image",
+	"position": "position",
+	"healthicon": "healthicon",
+	"flip_x": "flip_x",
+	"healthbar_colors": "healthbar_colors",
+	"camera_position": "camera_position",
+	"sing_dulation": "sing_dulation",
+	"scale": "scale"}
 
 var character_property := [
 	{"animations": SAME,
@@ -124,6 +136,7 @@ var max_combo: int
 var fc_state: String = "N/A"
 
 var rating_name := ["Marvelous", "Sick", "Good", "Bad", "Shit", "Misses"]
+var fc_name := ["MFC", "SFC", "GFC", "FC", "SDCB", "Clear"]
 var rating_total: Array = [0, 0, 0, 0, 0, 0]
 var cur_rating: String
 
@@ -636,7 +649,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 func load_XMLSprite3D(path, play_animation_name = "", loop_f = true, fps = 24, character = 0):
 	var ret = load_XMLSprite(path, play_animation_name, loop_f, fps, character)
 	var sprite_data:AnimatedSprite3D = AnimatedSprite3D.new() 
-	sprite_data.frames = ret.frames
+	sprite_data.sprite_frames = ret.sprite_frames
 	sprite_data.play(play_animation_name)
 	
 	return sprite_data

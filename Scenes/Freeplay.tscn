@@ -1,6 +1,5 @@
-[gd_scene load_steps=11 format=3 uid="uid://dnwsewr85wjs2"]
+[gd_scene load_steps=10 format=3 uid="uid://dnwsewr85wjs2"]
 
-[ext_resource type="Texture2D" path="res://Assets/Images/UI/menuDesat.png" id="1_vcpxn"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="2_1uuha"]
 [ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="3_n65er"]
 [ext_resource type="Script" path="res://Script/Song Template.gd" id="4_x5sm4"]
@@ -16,7 +15,6 @@
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(641, 358)
-texture = ExtResource("1_vcpxn")
 script = ExtResource("2_1uuha")
 bumpin_scale = Vector2(1.02, 1.02)
 load_img = "menuDesat"

@@ -8,7 +8,6 @@ enum {AUTO_DAD, PLAYER, AUTO_PLAYER, GF}
 @export var type: int
 
 var rating = preload("res://Scenes/Rating.tscn")
-var splash_path = "Assets/Images/Notes/Default/Note_Splashes.xml"
 var hit: String
 var ndir := 0 # dir
 var keys_anim : Array 
@@ -42,7 +41,8 @@ func _ready():
 		animation = keys_anim[ndir].replace("2", "") + " static"
 	else:
 		animation = keys_anim[ndir] + " static"
-	var splash = Game.load_XMLSprite(splash_path, "", false)
+	var splash = AnimatedSprite2D.new()
+	splash.sprite_frames = View.splashSpriteFrames
 	splash.name = "splash"
 	splash.modulate.a = 0
 	splash.scale = Vector2(2, 2)

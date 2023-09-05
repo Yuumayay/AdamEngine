@@ -35,8 +35,24 @@ var loop_dic := {}
 var xml_load_fail: bool = false
 var json_load_fail: bool = false
 var gf_beatanim_flag := false
+var simple_anim := false
 
 var offset3D := Vector2(75.0, -200.0)
+
+var simple_anim_presets := {
+	"left": 
+		{"scale": [0, 0],
+		"skew": -0.5},
+	"up": 
+		{"scale": [0, 0.5],
+		"skew": 0},
+	"down": 
+		{"scale": [0, -0.5],
+		"skew": 0},
+	"right": 
+		{"scale": [0, 0],
+		"skew": 0.5}
+}
 
 func _ready():
 	if Game.is3D:
@@ -49,25 +65,19 @@ func _ready():
 
 func setValue(setproperty, property, type = ""):
 	var characterProperty = Game.character_property[Game.song_engine_type][property]
+	if characterProperty == Game.SAME:
+		characterProperty = Game.psych_character_property[property]
+	elif characterProperty == Game.NULL:
+		return
 	if json.has(characterProperty):
-		match json[characterProperty]:
-			Game.SAME:
-				if type == "vector2":
-					setproperty = Vector2(json[property][0], json[property][1])
-					return
-				setproperty = json[property]
-				return
-			Game.NULL:
-				return
-			_:
-				if type == "vector2":
-					if json[characterProperty] is Array and json[characterProperty].size() == 1:
-						setproperty = Vector2(json[characterProperty][0], json[characterProperty][0])
-					else:
-						setproperty = Vector2(json[characterProperty][0], json[characterProperty][1])
-					return
-				setproperty = json[characterProperty]
-				return
+		if type == "vector2":
+			if json[characterProperty] is Array:
+				setproperty = Vector2(json[characterProperty][0], json[characterProperty][1])
+			else:
+				setproperty = Vector2(json[characterProperty], json[characterProperty])
+			return
+		setproperty = json[characterProperty]
+		return
 
 func setup2D():
 	var spr : AnimatedSprite2D
@@ -101,6 +111,8 @@ func setup2D():
 		
 	if json.has("gf_special_anim"):
 		gf_beatanim_flag = json.gf_special_anim
+	if json.has("simpleAnimation"):
+		simple_anim = json.simpleAnimation
 		
 	if Paths.p_chara_xml(json.image): # キャラクターのxmlが存在していたら
 		spr = Game.load_XMLSprite(Paths.p_chara_xml(json.image), idle_anim, false, 24, type + 1)
@@ -165,8 +177,8 @@ func setup2D():
 
 func setup3D():
 	var spr : AnimatedSprite3D
-	var cam = $/root/Gameplay3D/Camera
-	var gameplay = $/root/Gameplay3D
+	var cam = $/root/Gameplay/Camera
+	var gameplay = $/root/Gameplay
 	
 	if type == PLAYER: # BF側
 		json = Game.p1_json # jsonにbfのjsonをいれる
@@ -270,8 +282,8 @@ func setOffset(animname : String):
 		bf.position.x = offset_dic[animname].x + offset3.x
 		bf.position.y = offset_dic[animname].y + offset3.y
 	else:
-		bf.position.x = 0 + offset3.x
-		bf.position.y = 0 + offset3.y
+		bf.position.x = offset3.x
+		bf.position.y = offset3.y
 
 func setAnimLoop():
 	for i in json["animations"]:
@@ -292,6 +304,15 @@ func animDirection(dir: int):
 	setOffset(animname)
 	
 	animRemain = 60.0 / Audio.bpm * (animLength / 4.0)
+	
+	if simple_anim:
+		bf.scale = Vector2(json.scale, json.scale)
+		bf.skew = 0.0
+		var simple_anim_scale = simple_anim_presets[note_anim_name].scale
+		var simple_anim_skew = simple_anim_presets[note_anim_name].skew
+		bf.scale.x += simple_anim_scale[0]
+		bf.scale.y += simple_anim_scale[1]
+		bf.skew += simple_anim_skew
 
 func animDirectionMiss(dir: int):
 	state = MISS
@@ -336,7 +357,9 @@ func _process(delta):
 		if loop_dic.has(bf.animation):
 			if not loop_dic[bf.animation]:
 				bf.pause()
-			
+	if simple_anim:
+		bf.scale = lerp(bf.scale, Vector2(json.scale, json.scale), 0.1)
+		bf.skew = lerp(bf.skew, 0.0, 0.1)
 	#if type == PLAYER:
 	#	run_anim(delta)
 	#elif type == DAD:
@@ -344,7 +367,7 @@ func _process(delta):
 	#elif type == GF:
 	
 	run_anim(delta)
-		
+
 var beat := 0
 func run_anim(delta):
 	var input : Array

@@ -1,4 +1,84 @@
 {
+    "gameover": [
+        {"case": "health",
+        "eng": "Note missed.",
+        "jpn": "ミスッたため しぼう"},
+
+        {"case": "badTiming",
+        "eng": "Too bad timing.",
+        "jpn": "打つタイミングが悪かったため しぼう"},
+
+        {"case": "hazard",
+        "eng": "Attacked by enemy.",
+        "jpn": "敵のこうげきにあたったため しぼう"},
+
+        {"case": "drain",
+        "eng": "Health-drained by enemy.",
+        "jpn": "体力を吸い取られきったため しぼう"},
+
+        {"case": "deathmatch",
+        "eng": "Note missed at deathmatch.",
+        "jpn": "デスマッチでミスッたため しぼう"},
+
+        {"case": "defeat",
+        "eng": "DEFEAT",
+        "jpn": "DEFEAT"},
+
+        {"case": "poison",
+        "eng": "Poisoned.",
+        "jpn": "毒で しぼう"},
+
+        {"case": "freezed",
+        "eng": "Died in cool conditions.",
+        "jpn": "涼しくなりながら しぼう"},
+
+        {"case": "onFire",
+        "eng": "Died in hot conditions.",
+        "jpn": "アツくなりながら しぼう"},
+
+        {"case": "shooted",
+        "eng": "BOOM headshot.",
+        "jpn": "華麗にヘッドショットをキメられて しぼう"},
+
+        {"case": "sliced",
+        "eng": "Get sliced by enemy.",
+        "jpn": "真っ二つにスライスされて しぼう"},
+
+        {"case": "glitched",
+        "eng": "Glitttttcheddddd.",
+        "jpn": "バ 懸グっ た残ため し黒ぼ う"},
+
+        {"case": "jumpscare",
+        "eng": "Scared by jumpscare.",
+        "jpn": "脅かしにビビッたため しぼう"},
+
+        {"case": "reset",
+        "eng": "Reset button pressed.",
+        "jpn": "リセットボタンの力により しぼう"},
+
+        {"case": "cheated",
+        "eng": "You cheater.",
+        "jpn": "チートをこころみて しぼう"},
+
+        {"case": "adam",
+        "eng": "[ADAMIZED]",
+        "jpn": "[アダムった]"},
+
+        {"case": "sussy",
+        "eng": "Killed by sussy guy.",
+        "jpn": "アヤシイやつらにやられて しぼう"},
+
+        {"case": "unknown",
+        "eng": "Died by unknown reason.",
+        "jpn": "ナゾの理由により しぼう"}
+    ],
+    "gameplayOptions": [
+        {"optionName": "botplay",
+        "optionPath": "gameplay/botplay"},
+
+        {"optionName": "practice",
+        "optionPath": "gameplay/practice"}
+    ],
     "awards": [
         {"awardName": "Tutorial",
         "lockedIcon": "silver_lock",
@@ -10,7 +90,7 @@
         "condition": "week",
         "fc": "Clear",
         "difficulty": "hard",
-        "week": "week0",
+        "week": "tutorial",
         "secret": 0},
 
         {"awardName": "Dating with GF",
@@ -23,7 +103,7 @@
         "condition": "week",
         "fc": "FC",
         "difficulty": "hard",
-        "week": "week0",
+        "week": "tutorial",
         "secret": 0},
 
         {"awardName": "I love GF",
@@ -49,7 +129,7 @@
         "condition": "week",
         "fc": "Clear",
         "difficulty": "hard",
-        "week": "week0",
+        "week": "tutorial",
         "secret": 0},
 
         {"awardName": "GFとデート",
@@ -62,7 +142,7 @@
         "condition": "week",
         "fc": "FC",
         "difficulty": "hard",
-        "week": "week0",
+        "week": "tutorial",
         "secret": 0},
 
         {"awardName": "GF大好き",
@@ -71,9 +151,9 @@
         "awardColor": "ffffff",
         "lockDescription": "",
         "description": "GFをたくさんなでなでした！",
-        "comment": "こんなに撫でられたこと、あんまり無いよ\n- GFより",
+        "comment": "こんなに撫でられたこと、あんまり無いよ - GFより\nBeep...(オレのGF...) - BFより",
         "condition": "gfpet",
-        "second": 30,
+        "second": 60,
         "secret": 1}
     ]
 }

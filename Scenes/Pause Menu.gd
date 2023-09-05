@@ -15,6 +15,8 @@ var db: float
 
 const tileImg = "Assets/Images/UI/WhiteTile.png"
 
+var listChild := []
+
 func _ready():
 	tile.texture = Game.load_image(tileImg)
 	songname.text = Game.cur_song.to_upper()
@@ -59,6 +61,11 @@ func _ready():
 			i.add_theme_constant_override("outline_size", 25)
 			i.add_theme_color_override("font_outline_color", Color(0, 0, 0))
 			i.text = Setting.translate(i.text)
+	
+	for i in get_children():
+		listChild.append(i.duplicate())
+
+var alp_pr = preload("res://Script/alphabet.tscn")
 
 func _process(delta):
 	if db <= 0:
@@ -90,6 +97,11 @@ func _process(delta):
 				else:
 					select2 += 1
 		if Input.is_action_just_pressed("ui_accept"):
+			if layer == 1 and Game.difficulty.has(get_child(select2).name):
+				Audio.a_stop("Pause Menu")
+				Game.cur_diff = get_child(select2).name
+				canvas.get_parent().moveSong(Game.cur_song)
+				canvas.queue_free()
 			match get_child(select).name:
 				"Resume":
 					Audio.a_resume("Inst")
@@ -110,12 +122,20 @@ func _process(delta):
 					for i in get_children():
 						remove_child(i)
 					for i in Game.difficulty:
-						var label = Label.new()
-						label.text = i
-						label.uppercase = true
-						label.add_theme_font_override("font", Game.load_image("Assets/Fonts/alphabet.png"))
-						add_child(label)
+						if Setting.jpn():
+							var label = Label.new()
+							label.text = Setting.translate(i)
+							label.name = i
+							Setting.set_dfont(label)
+							add_child(label)
+						elif Setting.eng():
+							var alp = alp_pr.instantiate()
+							alp.type = "bold"
+							alp.text = i.to_upper()
+							alp.name = i
+							add_child(alp)
 					child_count2 = get_child_count() - 1
+					layer += 1
 				"Downscroll":
 					Setting.s_set("gameplay", "downscroll", !Setting.s_get("gameplay", "downscroll"))
 					if Setting.s_get("gameplay", "downscroll"):
@@ -164,18 +184,26 @@ func _process(delta):
 					else:
 						mode.text = ""
 		if Input.is_action_just_pressed("ui_cancel"):
-			Game.cur_state = Game.PLAYING
-			Audio.a_resume("Inst")
-			Audio.a_resume("Voices")
-			canvas.queue_free()
-	update_position()
+			if layer == 0:
+				Game.cur_state = Game.PLAYING
+				Audio.a_resume("Inst")
+				Audio.a_resume("Voices")
+				canvas.queue_free()
+			else:
+				for child in get_children():
+					child.queue_free()
+				for child in listChild:
+					add_child(child)
+				layer -= 1
+	update_position(delta)
 # Called when the node enters the scene tree for the first time.
-func update_position():
+func update_position(delta):
 	for i in get_children():
+		var selectList := [select, select2]
 		if tile.position.x <= -50:
 			tile.position = Vector2.ZERO
-		tile.position.x -= 0.05
-		tile.position.y -= 0.05
-		i.position.x = lerp(i.position.x, abs(select - i.get_index()) * -25.0 + 225.0, 0.25)
-		i.position.y = lerp(i.position.y, -select * 150.0 + (275.0 + i.get_index() * 150.0), 0.25)
-		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(select - i.get_index()) / 5.0, 0.25)
+		tile.position.x -= 5 * delta
+		tile.position.y -= 5 * delta
+		i.position.x = lerp(i.position.x, abs(selectList[layer] - i.get_index()) * -25.0 + 225.0, 0.25)
+		i.position.y = lerp(i.position.y, -selectList[layer] * 150.0 + (275.0 + i.get_index() * 150.0), 0.25)
+		i.modulate.a = lerp(i.modulate.a, 1.0 - abs(selectList[layer] - i.get_index()) / 5.0, 0.25)

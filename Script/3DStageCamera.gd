@@ -1,6 +1,6 @@
 extends Camera3D
 
-enum {NORMAL, MODCHART}
+enum {NORMAL, MODCHART, LOCK}
 var state := 0
 
 var beat := 0
@@ -37,13 +37,15 @@ func _process(_delta):
 		position = lerp(position, camPos, camSpeed)
 		fov = lerp(fov, camZoom * 75, zoomSpeed)
 
-func camMove(pos: Vector3, value = Game.defaultZoom, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0):
-	camPos = pos
+func camMove(pos = Vector3.ZERO, value = Game.defaultZoom, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0):
+	if pos is Vector3:
+		camPos = pos
 	camZoom = value
 	camSpeed = cspeed * baseSpeed
 	zoomSpeed = zspeed * baseSpeed
 	
-	state = MODCHART
+	if state != LOCK:
+		state = MODCHART
 	
 	if sec == -1:
 		return
@@ -51,3 +53,12 @@ func camMove(pos: Vector3, value = Game.defaultZoom, sec = 60.0 / Audio.bpm, csp
 		await get_tree().create_timer(sec).timeout
 	
 	state = NORMAL
+
+func camShake(intensity, dulation):
+	for i in range(floor(dulation * 1000.0)):
+		var rand_x = randf_range(float(-intensity), float(intensity))
+		var rand_y = randf_range(float(-intensity), float(intensity))
+		var rand_z = randf_range(float(-intensity), float(intensity))
+		global_position = Vector3(rand_x, rand_y, rand_z)
+		await get_tree().create_timer(0).timeout
+	global_position = Vector3.ZERO

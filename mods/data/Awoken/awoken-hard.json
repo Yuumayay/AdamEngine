@@ -22505,7 +22505,6 @@
 		"arrowSkin": "",
 		"needsVoices": true,
 		"speed": 3.5,
-		"loadAudioByDifficulty": true,
 		"bpm": 150
 	}
 }

@@ -9,6 +9,11 @@ func convertAdam(text):
 	return text
 
 func onCreate():
+	Modchart.hideUI()
+	Modchart.notePropertySetAll("self_modulate", Color(1, 1, 1, 0))
+	Modchart.noteTweenBoth("self_modulate:a", 1.0, Audio.beatLength * 32)
+	Modchart.drawBlackBG()
+	Modchart.doTweenColor("blackBG", Color(0, 0, 0, 0), Audio.beatLength * 32)
 	Modchart.stopUpdateText()
 
 func onUpdate():
@@ -18,6 +23,7 @@ func onUpdate():
 		Modchart.camZoomDad(0.75)
 	glitchValue = lerp(glitchValue, 0.001, 0.1)
 	Modchart.glitch(glitchValue)
+	Modchart.impact(glitchValue)
 	Modchart.setHealthDrain(0.02)
 	var perf = convertAdam(str(Game.rating_total[Game.PERF]))
 	var sick = convertAdam(str(Game.rating_total[Game.SICK]))
@@ -36,6 +42,8 @@ func onUpdate():
 	Modchart.setTextString("timeTxt", time)
 
 func onBeatHit():
+	if Audio.cur_beat >= -3:
+		Modchart.cameraShake(5)
 	glitchValue = 0.01
 
 func oldModchart():
@@ -69,6 +77,10 @@ func oldModchart():
 				Modchart[i].offset.y = 0
 
 func onSectionHit():
+	if Audio.cur_section == 8:
+		Modchart.spawnTitle(2)
+		Flash.flash()
+		Modchart.showUI()
 	if Audio.cur_section >= 28:
 		Flash.flash()
 	glitchValue += 0.1

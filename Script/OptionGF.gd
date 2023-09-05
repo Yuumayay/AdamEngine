@@ -3,6 +3,7 @@ extends AnimatedSprite2D
 var last_x := 0.0
 var last_y := 0.0
 var og_x := 0.0
+var gf_petting_frame := 0
 
 func _ready():
 	og_x = position.x
@@ -36,6 +37,12 @@ func _process(delta):
 				Audio.add_child(gfsound)
 			play("girlfriend :raised_eyeborw:")
 		else:
+			if Game.gf_pet_total < 30.0:
+				gf_petting_frame = 0
+			elif Game.gf_pet_total < 60.0:
+				gf_petting_frame = 1
+			else:
+				gf_petting_frame = 2
 			if not Audio.a_check("gf_petting"):
 				Audio.a_play("gf_petting", 0.5)
 			Audio.a_volume_set("gf_petting", clamp(x_speed, 0, 20) / 10.0 - 10)
@@ -43,8 +50,7 @@ func _process(delta):
 			raw_x_speed = clamp(raw_x_speed, -20, 20)
 			skew = lerp(skew, raw_x_speed / 360.0, 0.1)
 			position.x = lerp(position.x, og_x + raw_x_speed, 0.1)
-			if frame >= 1:
-				frame = 0
+			frame = gf_petting_frame
 	else:
 		if Audio.has_node("gf_petting"):
 			if entered:
@@ -53,8 +59,7 @@ func _process(delta):
 				Audio.a_stop("gf_petting")
 		pet_timer -= delta
 		if animation == "girlfriend :raised_eyeborw:":
-			if frame >= 1:
-				frame = 0
+			frame = gf_petting_frame
 			if pet_timer <= 0.0:
 				Audio.a_stop("gf_petting")
 				play("girlfriend neutral")

@@ -1,0 +1,100 @@
+[gd_scene load_steps=10 format=3 uid="uid://c7qc87vy1n55i"]
+
+[ext_resource type="Script" path="res://Scenes/Advanced Option.gd" id="1_hytn4"]
+[ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_iqv6a"]
+[ext_resource type="FontFile" uid="uid://c4plq10geby5v" path="res://Assets/Fonts/alphabet.png" id="4_wx0ho"]
+[ext_resource type="Script" path="res://Script/OptionTemplate.gd" id="5_rotu0"]
+[ext_resource type="FontFile" uid="uid://clqfmqaltqtkq" path="res://Assets/Fonts/DarumadropOne-Regular.ttf" id="6_vqlqw"]
+[ext_resource type="PackedScene" uid="uid://dgy0cg5q0r7mv" path="res://Script/alphabet.tscn" id="7_ousiw"]
+[ext_resource type="SpriteFrames" uid="uid://dvcl0pk516cwi" path="res://Assets/Images/Notes/Default/default.res" id="8_rwsvo"]
+[ext_resource type="Texture2D" uid="uid://b0833nl8a6yls" path="res://Assets/Images/Icons/icon-gf.png" id="9_xxoqw"]
+[ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="10_gk3l5"]
+
+[node name="Advanced Option" type="Node2D"]
+script = ExtResource("1_hytn4")
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(1, 0.466667, 1, 1)
+position = Vector2(641, 358)
+script = ExtResource("3_iqv6a")
+bumpin_scale = Vector2(1.02, 1.02)
+music_div = 2
+what_music = "Option Menu"
+load_img = "menuAdam"
+
+[node name="Template" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("4_wx0ho")
+text = "test"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+script = ExtResource("5_rotu0")
+
+[node name="Current" type="Label" parent="Template"]
+visible = false
+layout_mode = 0
+offset_top = 26.0
+offset_right = 212.0
+offset_bottom = 138.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_vqlqw")
+theme_override_font_sizes/font_size = 75
+vertical_alignment = 1
+uppercase = true
+script = ExtResource("5_rotu0")
+
+[node name="Selectable" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Template2" parent="." instance=ExtResource("7_ousiw")]
+type = 1
+
+[node name="Current" parent="Template2" instance=ExtResource("7_ousiw")]
+scale = Vector2(1.25, 1.25)
+
+[node name="Note" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = ExtResource("8_rwsvo")
+animation = &"shaggydeath"
+
+[node name="Alphabet" parent="." instance=ExtResource("7_ousiw")]
+visible = false
+position = Vector2(612, 352)
+text = ">     <"
+type = 1
+grow_direction_h = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(172, 520)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("9_xxoqw")
+hframes = 2
+
+[node name="Layer" type="CanvasLayer" parent="."]
+
+[node name="Description" type="RichTextLabel" parent="Layer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -63.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("10_gk3l5")
+theme_override_font_sizes/normal_font_size = 35
+bbcode_enabled = true
+fit_content = true
+
+[node name="Description2" parent="Layer" instance=ExtResource("7_ousiw")]
+position = Vector2(656, 635)
+grow_direction_h = 1
