@@ -1,6 +1,6 @@
 extends Camera2D
 
-enum {NORMAL, MODCHART, LOCK}
+enum {NORMAL, MODCHART, LOCK, ZOOM}
 var state := 0
 
 var beat := 0
@@ -62,15 +62,25 @@ func _process(_delta):
 		position = lerp(position, gf.getPosOffset() + lock_move, baseSpeed)
 		zoom = lerp(zoom, Vector2(camZoom, camZoom), zoomSpeed)
 		lock_move = lerp(lock_move, Vector2.ZERO, baseSpeed)
+	elif state == ZOOM:
+		zoom = lerp(zoom, Vector2(camZoom, camZoom), zoomSpeed)
+		if Game.mustHit:
+			#position = lerp(position, bf.getPosOffset() + bf.getCamOffset() * dad.getScale() + BF_CAMERA_OFFSET, baseSpeed)
+			position = lerp(position, bf.getPosOffset(), baseSpeed)
+		else:
+			#position = lerp(position, dad.getPosOffset() + dad.getCamOffset() * dad.getScale() + DAD_CAMERA_OFFSET, baseSpeed)
+			position = lerp(position, dad.getPosOffset(), baseSpeed)
 
 func camMove(pos = Vector2.ZERO, value = Game.defaultZoom, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0):
 	if pos is Vector2:
 		camPos = pos
+	else:
+		state = ZOOM
 	camZoom = value
 	camSpeed = cspeed * baseSpeed
 	zoomSpeed = zspeed * baseSpeed
 	
-	if state != LOCK:
+	if state != LOCK and state != ZOOM:
 		state = MODCHART
 	
 	if sec == -1:

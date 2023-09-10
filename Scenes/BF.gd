@@ -125,11 +125,14 @@ func setup2D():
 		spr = Game.load_XMLSprite(DEFAULT_XML[type], idle_anim, false, 24, type + 1)
 		xml_load_fail = true
 	setAnimLoop()
-	setValue(animLength, "sing_dulation")
-	setValue(spr.flip_h, "flip_x")
+	#setValue(animLength, "sing_duration")
+	animLength = json.sing_duration
+	#setValue(spr.flip_h, "flip_x")
+	spr.flip_h = json.flip_x
 	spr.name = SPR_NAME[type]
 	name = SPR_NAME[type] + "pos"
-	setValue(spr.scale, "scale", "vector2")
+	#setValue(spr.scale, "scale", "vector2")
+	spr.scale = Vector2(json.scale, json.scale)
 	spr.centered = true
 	
 	# イレギュラー処理-------
