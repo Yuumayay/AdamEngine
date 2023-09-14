@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="the-laughter-man.png">
-<SubTexture name="the-laughter-man down0000" x="0" y="483" width="399" height="303" frameX="-103" frameY="-185" frameWidth="512" frameHeight="512" />
-<SubTexture name="the-laughter-man idle0000" x="354" y="0" width="243" height="454" frameX="-146" frameY="-33" frameWidth="512" frameHeight="512" />
-<SubTexture name="the-laughter-man left0000" x="597" y="0" width="306" height="450" frameX="-5" frameY="-35" frameWidth="512" frameHeight="512" />
-<SubTexture name="the-laughter-man right0000" x="903" y="0" width="300" height="443" frameX="-196" frameY="-41" frameWidth="512" frameHeight="512" />
-<SubTexture name="the-laughter-man up0000" x="0" y="0" width="354" height="483" frameX="-97" frameY="-5" frameWidth="512" frameHeight="512" />
-</TextureAtlas>

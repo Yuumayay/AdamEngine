@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="icon-debugadam.png">
-	<!-- Created with Adobe Animate version 23.0.1.70 -->
-	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="Icon0000" x="0" y="0" width="126" height="120"/>
-	<SubTexture name="Icon0001" x="126" y="0" width="112" height="108" frameX="-11" frameY="-3" frameWidth="126" frameHeight="120"/>
-	<SubTexture name="Icon0002" x="0" y="120" width="113" height="111" frameX="0" frameY="-5" frameWidth="126" frameHeight="120"/>
-	<SubTexture name="Icon0003" x="113" y="120" width="107" height="109" frameX="-15" frameY="-8" frameWidth="126" frameHeight="120"/>
-</TextureAtlas>

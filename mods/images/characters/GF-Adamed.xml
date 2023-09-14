@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="GF-Adamed.png">
-	<!-- Created with Adobe Animate version 23.0.1.70 -->
-	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="GFAdamed dance right0000" x="0" y="0" width="481" height="791" frameX="-119" frameY="0" frameWidth="600" frameHeight="810"/>
-	<SubTexture name="GFAdamed dance right0001" x="481" y="0" width="516" height="757" frameX="-44" frameY="-41" frameWidth="600" frameHeight="810"/>
-	<SubTexture name="GFAdamed dance left0000" x="997" y="0" width="438" height="758" frameX="0" frameY="-52" frameWidth="600" frameHeight="810"/>
-	<SubTexture name="GFAdamed dance left0001" x="1435" y="0" width="543" height="757" frameX="-31" frameY="-41" frameWidth="600" frameHeight="810"/>
-</TextureAtlas>
