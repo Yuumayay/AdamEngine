@@ -459,8 +459,7 @@ func _ready():
 		if Game.cur_song_data_path:
 			print("LOAD FROM ANOTHER MOD FILE")
 			
-			var json = File.f_read(Game.cur_song_data_path + ".json", ".json")
-			loadJson(json)
+			_on_load_json_window_file_selected(Game.cur_song_data_path + ".json")
 		else:
 			print("LOAD FROM TEMPFILE")
 			
@@ -531,7 +530,7 @@ func loadFromAnotherFile_Old(song):
 		"data/song charts/" + song + "/" + fileName,
 		"data/charts/" + fileName]
 		for i in dataFilePaths:
-			loadFromAnotherFile(loadPath)
+			#loadFromAnotherFile(loadPath)
 			print(i + song)
 			print(loadPath.replacen(i, "songs/" + song), " conv ", fileName)
 			songPath = loadPath.replacen(i, "songs/" + song)
@@ -541,11 +540,14 @@ func loadFromAnotherFile_Old(song):
 			var gf_name = Game.get_gf_name(songData)
 			if songData.song.has("stage"):
 				cur_stage = songData.song.stage
-				var stagePath = songPath.replacen("songs/" + song, "stages/")
-				if FileAccess.file_exists(stagePath.replacen("assets/", "mods/") + cur_stage + ".json"):
-					jsonStage = File.f_read(stagePath.replacen("assets/", "mods/") + cur_stage + ".json", ".json")
-				elif FileAccess.file_exists(stagePath.replacen("mods/", "assets/") + cur_stage + ".json"):
-					jsonStage = File.f_read(stagePath.replacen("mods/", "assets/") + cur_stage + ".json", ".json")
+				if Paths.p_stage_data(cur_stage):
+					jsonStage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
+				else:
+					var stagePath = songPath.replacen("songs/" + song, "stages/")
+					if FileAccess.file_exists(stagePath.replacen("assets/", "mods/") + cur_stage + ".json"):
+						jsonStage = File.f_read(stagePath.replacen("assets/", "mods/") + cur_stage + ".json", ".json")
+					elif FileAccess.file_exists(stagePath.replacen("mods/", "assets/") + cur_stage + ".json"):
+						jsonStage = File.f_read(stagePath.replacen("mods/", "assets/") + cur_stage + ".json", ".json")
 			else:
 				cur_stage = "stage"
 				jsonStage = File.f_read(Paths.p_stage_data("stage"), ".json")

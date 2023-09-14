@@ -37,10 +37,7 @@ func _ready():
 	if Audio.a_check("Freaky Menu"):
 		introend()
 	else:
-		if !caution:
-			Audio.a_title()
-		else:
-			Audio.a_play("Option Menu")
+		Audio.a_title()
 	
 	if intro_text.size() == 2:
 		texts[9] = "<random>"
@@ -66,7 +63,7 @@ var caution_node
 func _process(_delta):
 	var beat = Audio.a_get_beat("Freaky Menu", 8)
 	
-	if not caution and Input.is_action_just_pressed("ui_accept") and Game.can_input:
+	if Input.is_action_just_pressed("ui_accept") and Game.can_input:
 		if not intro_end:
 			introend()
 		else:
@@ -78,44 +75,23 @@ func _process(_delta):
 			beat_gf = Audio.a_get_beat("Freaky Menu", 4)
 			$Logo/gfpos/GF.frame = int(beat_gf) % 2 * 15
 	else:
-		if caution:
-			if !caution_show:
-				caution_show = true
-				if Setting.eng():
-					caution_node = get_node("BG/CautionENG")
-				if Setting.jpn():
-					caution_node = get_node("BG/CautionJPN")
-				caution_node.show()
-			if not Game.can_input:
-				caution_node.modulate.a = lerp(caution_node.modulate.a, 0.0, 0.1)
-				Audio.a_volume_add("Option Menu", -1)
-				if Audio.get_node("Option Menu").volume_db <= -80:
-					caution = false
-					Game.can_input = true
-					Audio.a_stop_all()
-					Audio.a_volume_set("Option Menu", 0)
-					Audio.a_title()
-			if Input.is_action_just_pressed("ui_accept") and Game.can_input:
-				Game.can_input = false
-				Audio.a_cancel()
-		else:
-			if Audio.get_node("Freaky Menu").volume_db < 0:
-				Audio.a_volume_add("Freaky Menu", 1)
-			if beat == time[ind]:
-				if texts[ind] == "<erase>":
-					introtext.text = ""
+		if Audio.get_node("Freaky Menu").volume_db < 0:
+			Audio.a_volume_add("Freaky Menu", 1)
+		if beat == time[ind]:
+			if texts[ind] == "<erase>":
+				introtext.text = ""
+				ind += 1
+			elif texts[ind] == "<end>":
+				introend()
+			elif texts[ind] == "<random>":
+				if index == 0:
+					introtext.text += intro_text[index]
+					index += 1
 					ind += 1
-				elif texts[ind] == "<end>":
-					introend()
-				elif texts[ind] == "<random>":
-					if index == 0:
-						introtext.text += intro_text[index]
-						index += 1
-						ind += 1
-					else:
-						introtext.text += "\n" + intro_text[index]
-						index += 1
-						ind += 1
 				else:
-					introtext.text += texts[ind]
+					introtext.text += "\n" + intro_text[index]
+					index += 1
 					ind += 1
+			else:
+				introtext.text += texts[ind]
+				ind += 1

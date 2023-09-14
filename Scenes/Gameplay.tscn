@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://c4pfx07knvgra"]
+[gd_scene load_steps=41 format=3 uid="uid://c4pfx07knvgra"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay.gd" id="1_ble4j"]
 [ext_resource type="Texture2D" uid="uid://bq7qrhtxmvs8s" path="res://Assets/Images/Stages/stageback.png" id="2_aef0f"]
@@ -15,7 +15,6 @@
 [ext_resource type="FontFile" uid="uid://u25tx2fiar3s" path="res://Assets/Fonts/vcr.ttf" id="11_mwtkh"]
 [ext_resource type="Script" path="res://Script/TimeBar.gd" id="12_fwr13"]
 [ext_resource type="Script" path="res://Script/VersionText.gd" id="13_3bbrj"]
-[ext_resource type="Script" path="res://Script/Camera.gd" id="13_k8e81"]
 [ext_resource type="Shader" path="res://Assets/Shader/Distortion.gdshader" id="16_4dswv"]
 [ext_resource type="FontFile" uid="uid://4qjpimiprfm5" path="res://Assets/Fonts/GENOCIDE.TTF" id="16_hpcqc"]
 [ext_resource type="Script" path="res://Script/Syobon-kun.gd" id="17_8jmrd"]
@@ -33,7 +32,6 @@
 [ext_resource type="Shader" path="res://Assets/Shader/Monitor.gdshader" id="31_acybw"]
 [ext_resource type="Shader" path="res://Assets/Shader/Impact.gdshader" id="32_8ibre"]
 [ext_resource type="Shader" path="res://Assets/Shader/Light.gdshader" id="33_gqkhh"]
-[ext_resource type="Texture2D" uid="uid://dwglcj1oo544q" path="res://Assets/Images/UI/Light.png" id="34_b0c1r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5t4ff"]
 bg_color = Color(0, 0, 0, 1)
@@ -457,10 +455,6 @@ theme_override_font_sizes/font_size = 30
 text = "000"
 horizontal_alignment = 1
 
-[node name="Camera" type="Camera2D" parent="."]
-position = Vector2(638, 363)
-script = ExtResource("13_k8e81")
-
 [node name="ModchartScript" type="Node" parent="."]
 
 [node name="StageScript" type="Node" parent="."]
@@ -574,12 +568,3 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="PointLight" type="PointLight2D" parent="."]
-visible = false
-position = Vector2(641, -366)
-blend_mode = 2
-shadow_enabled = true
-shadow_color = Color(0, 0, 0, 0.509804)
-texture = ExtResource("34_b0c1r")
-texture_scale = 3.9

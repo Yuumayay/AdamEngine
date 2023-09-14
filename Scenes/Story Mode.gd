@@ -24,8 +24,12 @@ var tracks: Dictionary = {}
 var weekScore := 0.0
 var json = File.f_read("user://ae_week_score_data.json", ".json")
 
+const DEFAULT_DIFFICULTIES := ["easy", "normal", "hard"]
+
 func _ready():
 	var ind := 0
+	#if Trans.last_scene == "Gameplay":
+	diffselect = Game.get_diff_i()
 	
 	Game.game_mode = Game.STORY
 	Game.edit_jsonpath = ""
@@ -37,7 +41,10 @@ func _ready():
 			if i.get_extension() != "json":
 				continue
 			var week = File.f_read(index + "/" + i, ".json")
-			difficulties[week.weekName] = week.difficulties.replace(" ", "").split(",")
+			if week.has("difficulties"):
+				difficulties[week.weekName] = week.difficulties.to_lower().replace(" ", "").split(",")
+			else:
+				difficulties[week.weekName] = DEFAULT_DIFFICULTIES
 			if week.hideStoryMode:
 				continue
 			var new_item: Node2D = $Template.duplicate()
@@ -82,6 +89,7 @@ func _ready():
 	update_tracks()
 	update_difficulty()
 
+# 難易度の読み込み、表示準備
 func diffCheck():
 	Game.difficulty = difficulties[list.get_child(select).weekName]
 	difficulty = []
@@ -91,10 +99,9 @@ func diffCheck():
 	
 	if diff_count != Game.difficulty.size() - 1:
 		diff_count = Game.difficulty.size() - 1
-		if Game.difficulty.size() == 1:
-			diffselect = 0
-		else:
-			diffselect = floor(Game.difficulty.size() / 2.0)
+		if Game.difficulty.size() <= diffselect:
+			diffselect = Game.difficulty.size() - 1
+
 		update_difficulty()
 
 func _process(_delta):

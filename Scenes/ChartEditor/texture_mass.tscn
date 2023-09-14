@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://2u7qf2lnr11u"]
 
-[ext_resource type="Texture2D" uid="uid://dogt0qqtgjbjw" path="res://eAssets/mass.png" id="1_vvnbp"]
+[ext_resource type="Texture2D" uid="uid://dogt0qqtgjbjw" path="res://Assets/Images/Editor/mass.png" id="1_p3dfx"]
 [ext_resource type="Script" path="res://Scenes/TextureMass.gd" id="2_l3cg1"]
 
 [node name="TextureMass" type="TextureRect"]
@@ -9,7 +9,7 @@ offset_left = 136.0
 offset_top = 222.0
 offset_right = 390.0
 offset_bottom = 589.0
-texture = ExtResource("1_vvnbp")
+texture = ExtResource("1_p3dfx")
 expand_mode = 1
 stretch_mode = 1
 script = ExtResource("2_l3cg1")

@@ -23,8 +23,12 @@ var diff_count = 0
 var json = File.f_read("user://ae_score_data.json", ".json")
 var path: String
 
+const DEFAULT_DIFFICULTIES := ["easy", "normal", "hard"]
+
 func _ready():
 	var ind = 0
+	
+	diffselect = Game.get_diff_i()
 	
 	Game.game_mode = Game.FREEPLAY
 	Game.edit_jsonpath = ""
@@ -36,7 +40,10 @@ func _ready():
 				continue
 			var week_data = File.f_read(indexi + "/" + index, ".json")
 			var songs = week_data.songs
-			difficulties[week_data.weekName] = week_data.difficulties.replace(" ", "").split(",")
+			if week_data.has("difficulties"):
+				difficulties[week_data.weekName] = week_data.difficulties.replace(" ", "").split(",")
+			else:
+				difficulties[week_data.weekName] = DEFAULT_DIFFICULTIES
 			if week_data.hideFreeplay:
 				continue
 			for i in songs:
@@ -89,10 +96,8 @@ func diffCheck():
 	
 	if diff_count != Game.difficulty.size() - 1:
 		diff_count = Game.difficulty.size() - 1
-		if Game.difficulty.size() == 1:
-			diffselect = 0
-		else:
-			diffselect = floor(Game.difficulty.size() / 2.0)
+		if Game.difficulty.size() <= diffselect:
+			diffselect = Game.difficulty.size() - 1
 		update_difficulty_right()
 
 func update_difficulty_left():

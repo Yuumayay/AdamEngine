@@ -10,12 +10,15 @@ func _ready():
 		for i in stageJSON.stageData:
 			print("stageData: ", i)
 			var spr
-			var tag = i[0]
-			var img = i[1]
-			var posArray = i[2]
-			var scaleArray = i[3]
-			var sortInd = i[4]
-			var flipX = i[5]
+			var anim
+			var path
+			var tag = Game.check_property_and_set(i, "tag", "unnamed")
+			var img = Game.check_property_and_set(i, "path", "UI/Missing")
+			var posArray = Game.check_property_and_set(i, "pos", [0, 0])
+			var scaleArray = Game.check_property_and_set(i, "scale", [1, 1])
+			var sortInd = Game.check_property_and_set(i, "z", 0)
+			var flipX = Game.check_property_and_set(i, "flip_x", false)
+			var cam = Game.check_property_and_set(i, "cam", "")
 			if Game.is3D:
 				spr = Sprite3D.new()
 				
@@ -39,8 +42,35 @@ func _ready():
 				
 				# 重ね順を設定(3D)
 				spr.sorting_offset = sortInd
+				spr.centered = false
+				spr.flip_h = flipX
+				
+				if FileAccess.file_exists("Assets/Images/" + img + ".png"):
+					spr.texture = Game.load_image("Assets/Images/" + img + ".png")
+				else:
+					spr.texture = Game.load_image("Mods/Images/" + img + ".png")
+				
+			elif cam == "screen":
+				spr = CanvasLayer.new()
+				spr.layer = sortInd
+				var texRect = TextureRect.new()
+				if FileAccess.file_exists("Assets/Images/" + img + ".png"):
+					texRect.texture = Game.load_image("Assets/Images/" + img + ".png")
+				else:
+					texRect.texture = Game.load_image("Mods/Images/" + img + ".png")
+				texRect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+				spr.add_child(texRect)
 			else:
-				spr = Sprite2D.new()
+				if FileAccess.file_exists("Assets/Images/" + img + ".xml"):
+					path = "Assets/Images/" + img + ".xml"
+					anim = true
+					spr = Game.load_XMLSprite(path)
+				elif FileAccess.file_exists("Mods/Images/" + img + ".xml"):
+					path = "Mods/Images/" + img + ".xml"
+					anim = true
+					spr = Game.load_XMLSprite(path)
+				else:
+					spr = Sprite2D.new()
 				
 				# json内のarrayから位置を設定(2D)
 				if posArray.size() == 2:
@@ -58,10 +88,15 @@ func _ready():
 				
 				# 重ね順を設定(2D)
 				spr.z_index = sortInd
+				spr.centered = false
+				spr.flip_h = flipX
+				if not anim:
+					if FileAccess.file_exists("Assets/Images/" + img + ".png"):
+						spr.texture = Game.load_image("Assets/Images/" + img + ".png")
+					else:
+						spr.texture = Game.load_image("Mods/Images/" + img + ".png")
 			
 			spr.name = tag
-			spr.texture = Game.load_image("Assets/Images/Stages/" + img)
-			spr.flip_h = flipX
 			add_child(spr)
 	else:
 		if Paths.p_stage_script(Game.cur_stage):

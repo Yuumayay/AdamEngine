@@ -92,7 +92,7 @@ func loadModchart():
 
 func _process(delta):
 	if is_modchart:
-		if has_onUpdate:
+		if has_onUpdate and not Game.trans and not Game.cur_state == Game.PAUSE:
 			mNode.call("onUpdate")
 		if Audio.step_hit_event:
 			if has_onStepHit:

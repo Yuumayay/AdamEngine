@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://cqaaaqv6dn8no"]
 
 [ext_resource type="Script" path="res://Scenes/Debug Menu.gd" id="1_4ej6k"]
-[ext_resource type="Texture2D" uid="uid://c10dj51ekonn4" path="res://Assets/Images/UI/menuAdam.png" id="1_d6kg0"]
+[ext_resource type="Texture2D" uid="uid://bkywaunhg5b8h" path="res://Assets/Images/UI/FNF/menuAdam.png" id="2_tc05l"]
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_ef43x"]
 [ext_resource type="Script" path="res://Script/DebugBG.gd" id="3_yhs3m"]
 [ext_resource type="FontFile" uid="uid://bscjqs20nvnnn" path="res://Assets/Fonts/adamFont.png" id="4_vhxar"]
@@ -17,7 +17,7 @@ script = ExtResource("1_4ej6k")
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -2
 position = Vector2(640, 360)
-texture = ExtResource("1_d6kg0")
+texture = ExtResource("2_tc05l")
 script = ExtResource("3_yhs3m")
 
 [node name="ColorRect" type="ColorRect" parent="."]

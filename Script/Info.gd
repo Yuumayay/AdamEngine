@@ -68,7 +68,8 @@ func _ready():
 	else:
 		info4.text = Game.cur_song[0] + " - "
 	info4.get_node("Difficulty").text = Setting.translate(Game.cur_diff[0].to_upper() + Game.cur_diff.substr(1))
-	info4.get_node("Difficulty").add_theme_color_override("font_color", Game.difficulty_color[Game.cur_diff])
+	if Game.difficulty_color.has(Game.cur_diff.to_lower()):
+		info4.get_node("Difficulty").add_theme_color_override("font_color", Game.difficulty_color[Game.cur_diff.to_lower()])
 	
 	var info_data = generate_info_text("N/A")
 	info1.text = info_data[0]

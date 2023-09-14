@@ -113,7 +113,7 @@
 		{
 			"offsets": [
 				383,
-				368
+				68
 			],
 			"loop": false,
 			"fps": 30,
@@ -124,7 +124,7 @@
 		{
 			"offsets": [
 				374,
-				427
+				127
 			],
 			"loop": false,
 			"fps": 60,
@@ -135,7 +135,7 @@
 		{
 			"offsets": [
 				380,
-				319
+				19
 			],
 			"loop": false,
 			"fps": 60,
@@ -146,7 +146,7 @@
 		{
 			"offsets": [
 				505,
-				334
+				34
 			],
 			"loop": false,
 			"fps": 60,
@@ -157,7 +157,7 @@
 		{
 			"offsets": [
 				242,
-				333
+				33
 			],
 			"loop": false,
 			"fps": 60,
@@ -170,7 +170,7 @@
 	"image": "characters/nanamindark",
 	"position": [
 		250,
-		300
+		0
 	],
 	"healthicon": "nanamindark",
 	"flip_x": false,

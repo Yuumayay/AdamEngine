@@ -10257,8 +10257,10 @@
 		"bpm": 200,
 		"player1": "BFAdamed",
 		"player2": "DebugAdam",
+		"gfVersion": "GFAdamed",
 		"speed": 3,
 		"loadAudioByDifficulty": true,
-		"songTitle": false
+		"songTitle": false,
+		"stage": "adam"
 	}
 }

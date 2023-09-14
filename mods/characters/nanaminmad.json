@@ -114,7 +114,7 @@
 			"loop": false,
 			"offsets": [
 				374,
-				377
+				77
 			],
 			"anim": "singUP",
 			"fps": 30,
@@ -125,7 +125,7 @@
 			"loop": false,
 			"offsets": [
 				380,
-				369
+				69
 			],
 			"anim": "singDOWN",
 			"fps": 30,
@@ -136,7 +136,7 @@
 			"loop": false,
 			"offsets": [
 				292,
-				333
+				33
 			],
 			"anim": "singRIGHT",
 			"fps": 30,
@@ -147,7 +147,7 @@
 			"loop": false,
 			"offsets": [
 				455,
-				334
+				34
 			],
 			"anim": "singLEFT",
 			"fps": 30,
@@ -157,7 +157,7 @@
 		{
 			"offsets": [
 				383,
-				368
+				68
 			],
 			"indices": [],
 			"fps": 30,
@@ -169,8 +169,8 @@
 	"no_antialiasing": false,
 	"image": "characters/nanaminmad",
 	"position": [
-		400,
-		580
+		300,
+		330
 	],
 	"healthicon": "nanaminmad",
 	"flip_x": false,

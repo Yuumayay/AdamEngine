@@ -113,7 +113,7 @@
 		{
 			"offsets": [
 				383,
-				368
+				68
 			],
 			"loop": false,
 			"fps": 30,
@@ -124,7 +124,7 @@
 		{
 			"offsets": [
 				374,
-				377
+				77
 			],
 			"loop": false,
 			"fps": 30,
@@ -135,7 +135,7 @@
 		{
 			"offsets": [
 				380,
-				369
+				69
 			],
 			"loop": false,
 			"fps": 30,
@@ -146,7 +146,7 @@
 		{
 			"offsets": [
 				292,
-				333
+				33
 			],
 			"loop": false,
 			"fps": 30,
@@ -157,7 +157,7 @@
 		{
 			"offsets": [
 				455,
-				334
+				34
 			],
 			"loop": false,
 			"fps": 30,
@@ -169,8 +169,8 @@
 	"no_antialiasing": false,
 	"image": "characters/nanaminstressed",
 	"position": [
-		400,
-		580
+		300,
+		330
 	],
 	"healthicon": "nanaminstressed",
 	"flip_x": false,

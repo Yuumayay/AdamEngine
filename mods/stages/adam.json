@@ -5,5 +5,16 @@
 
 	"boyfriend": [900, 80],
 	"girlfriend": [340, 100],
-	"opponent": [0, 80]
+	"opponent": [0, 80],
+	
+	"stageData": [
+		{
+			"tag": "adam",
+			"path": "adam",
+			"pos": [0, 0],
+			"scale": [1, 1], 
+			"z": -1,
+			"cam": "screen"
+		}
+	]
 }

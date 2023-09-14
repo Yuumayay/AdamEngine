@@ -5,5 +5,14 @@
 
 	"boyfriend": [900, 80],
 	"girlfriend": [340, 100],
-	"opponent": [0, 80]
+	"opponent": [0, 80],
+
+	"stageData": [
+		{
+			"tag": "concert",
+			"path": "concertdark",
+			"pos": [-600, 300],
+			"z": -1
+		}
+	]
 }

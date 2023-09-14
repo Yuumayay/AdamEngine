@@ -13,6 +13,7 @@ var countDownTimer: Timer = Timer.new()
 
 var pause = preload("res://Scenes/Pause Menu.tscn")
 var song_title = preload("res://Scenes/SongTitle.tscn")
+var camera = preload("res://Scenes/camera.tscn")
 
 var countdowns: Array = View.countdowns
 
@@ -56,15 +57,16 @@ func _ready():
 	Game.setup(song_data)
 	
 	cam_zoom = Game.defaultZoom
-	var cam = $Camera
+	var cam = camera.instantiate()
+	add_child(cam)
 	if Game.is3D:
 		var camera3 = Camera3D.new()
 		camera3.name = "Camera"
-		$Camera.replace_by(camera3)
-		$Camera.set_script(load("Script/3DStageCamera.gd"))
-		$Camera.fov = cam_zoom * 75
+		camera3.set_script(load("Script/3DStageCamera.gd"))
+		camera3.fov = cam_zoom * 75
+		cam.replace_by(camera3)
 	else:
-		$Camera.zoom = Vector2(cam_zoom, cam_zoom)
+		cam.zoom = Vector2(cam_zoom, cam_zoom)
 	
 	# DANGER 関数にまとめる
 	var difftext: String
@@ -288,8 +290,6 @@ func scoreSaveCheck():
 		Game.saveScore = false
 	elif Setting.s_get("gameplay", "practice"):
 		Game.saveScore = false
-	else:
-		Game.saveScore = true
 
 var note_scn = preload("res://Scenes/Notes/Note.tscn")
 func note_spawn_load():
@@ -571,28 +571,35 @@ func reset_dict_and_array():
 
 func quit_reset():
 	Game.cur_state = Game.NOT_PLAYING
-	Game.cur_song_path = ""
+	#Game.cur_diff = Game.difficulty[0]
+	Game.saveScore = true
+	Game.is3D = false
+
+func reset_editor_property():
 	Game.cur_song_data_path = ""
+	Game.cur_song_path = ""
 	Game.stage_json.clear()
 	Game.chara_image_path.clear()
 	Game.chara_json.clear()
 	Game.iconBF = ""
 	Game.iconDAD = ""
 	Game.noteXML = ""
-	Game.cur_diff = Game.difficulty[0]
 
 func quit():
 	quit_reset()
 	if Game.game_mode == Game.TITLE:
 		await Trans.t_trans("Chart Editor")
 	elif Game.game_mode == Game.STORY:
+		reset_editor_property()
 		Audio.a_title()
 		await Trans.t_trans("Story Mode")
 	else:
+		reset_editor_property()
 		Audio.a_title()
 		await Trans.t_trans("Freeplay")
 
 func moveSong(what):
+	Game.saveScore = true
 	Game.cur_state = Game.NOT_PLAYING
 	Game.cur_song = what
 	var song_data

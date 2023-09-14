@@ -22,3 +22,9 @@ script = ExtResource("1_88cbn")
 material = SubResource("ShaderMaterial_lsoqo")
 sprite_frames = ExtResource("2_pefub")
 animation = &"bf hey!!"
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+text = "＜-----ここ"

@@ -89,14 +89,15 @@ func setup2D():
 		
 		# 超絶分かりにくいfnfのpositionの仕様に仕方なく対応
 		#position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
-		position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		#position = Vector2(Game.stage.boyfriend[0], -Game.stage.boyfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]) + Vector2(json["position"][0], json["position"][1])
 		cam.bf = self # カメラの注視オブジェクトに自分をいれる
 		json_load_fail = Game.bf_load_fail #chara jsonの読み出し失敗
 		
 	elif type == DAD: # DAD側
 		json = Game.p2_json
 		#position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
-		position = Vector2(Game.stage.opponent[0], -Game.stage.opponent[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.opponent[0], Game.stage.opponent[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
 		cam.dad = self
 		json_load_fail = Game.dad_load_fail
 		
@@ -104,7 +105,7 @@ func setup2D():
 		gf_beatanim_flag = true
 		json = Game.gf_json
 		#position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1] * 2) + Vector2(json["position"][0], json["position"][1]) * json.scale
-		position = Vector2(Game.stage.girlfriend[0], -Game.stage.girlfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
+		position = Vector2(Game.stage.girlfriend[0], Game.stage.girlfriend[1]) + Vector2(json["position"][0], json["position"][1]) * json.scale
 		cam.gf = self
 		gameplay.gf_strum_set(position)
 		json_load_fail = Game.gf_load_fail
@@ -169,12 +170,14 @@ func setup2D():
 		print("sp", atlastexture, s)
 		
 		#bf.offset += Vector2(s.x / 2.0, s.y / 2.0)
+		#position += Vector2(s.x / 2.0, s.y / 2.0)
 		position += Vector2(s.x / 2.0, s.y / 2.0)
 	
 	for i in json.animations:
 		var psych_fnf_name = i.anim.to_lower()
 		#offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
-		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0], i.offsets[1] / 2.0)
+		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0] / 1.5, i.offsets[1] / 2.0)
+	setOffset("idle")
 	#ResourceSaver.save(bf.sprite_frames, "Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
 	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
 
@@ -255,6 +258,8 @@ func setup3D():
 		offset_dic[psych_fnf_name] = -Vector2(i.offsets[0] / offset3D.x, i.offsets[1] / 2.0 / offset3D.y)
 	#ResourceSaver.save(bf.sprite_frames, "Assets/Images/Characters/DADDY_DEAREST.res" , ResourceSaver.FLAG_COMPRESS)
 	print(position, ", ", bf.offset, ", ", Vector2(Game.stage.boyfriend[0], Game.stage.boyfriend[1]), ", ", Vector2(Game.stage.opponent[0], Game.stage.opponent[1]), ", ", Vector2(json["position"][0], json["position"][1]))
+	
+	setOffset("idle")
 
 func getPosOffset():
 	#position + offsetを返す カメラの位置計算に使う

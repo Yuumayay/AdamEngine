@@ -144,7 +144,7 @@ var cur_rating: String
 enum {TITLE, FREEPLAY, STORY}
 var game_mode: int = TITLE
 var edit_jsonpath : String = "" #曲をエディットしている場合。
-var saveScore: bool
+var saveScore := true
 var songList: Array
 var cur_song_index: int
 var skipCountdown := false
@@ -165,32 +165,30 @@ var week_rating_total: Array = [0, 0, 0, 0, 0, 0]
 var stage: Dictionary
 var defaultZoom: float
 var isPixel: bool
+var lockCam: bool
 
 ## SONG JSON ##
-const DEFAULT_SONG = "asdasdasd"
+const DEFAULT_SONG = "bopeebo"
 var cur_song: String = DEFAULT_SONG
 var cur_song_path: String
 var cur_song_data_path: String
 var chara_image_path: Array
 var noteXML: String
 var chara_json: Array
-var diff := 2 #現在の難易度
-var cur_diff: String = "hard": #現在の難易度（文字列
-	set(v): # クソコード
-		cur_diff = v
-		var n = 0
-		for i in difficulty_case:
-			if v == i:
-				diff = n
-			n += 1
-	get:
-		return difficulty_case[diff]
-		
+var cur_diff: String = "normal" #現在の難易度（文字列
 var cur_stage: String = "stage"
 var stage_json: Dictionary
 var player1: String = "bf"
 var player2: String = "dad"
 var player3 = "gf"
+
+func get_diff_i():
+	var n = 0
+	for i in difficulty:
+		if cur_diff.to_lower() == i.to_lower():
+			return n
+		n += 1
+	return 0
 
 var is3D: bool = false
 
@@ -294,11 +292,13 @@ func get_json_keycount(song):
 	return ret
 
 # songのプロパティチェックのテンプレート
-func check_property_and_set(dict, key):
+func check_property_and_set(dict, key, init = null):
 	if dict.has(key):
 		# keyがdictの中で見つかった場合、dict[key]を返す（プロパティに合わせる）
 		return dict[key]
 	# keyがdictの中で見つからない場合、Game[key]を返す（変えない）
+	if init != null:
+		return init
 	return Game[key]
 
 # json load
@@ -319,6 +319,7 @@ func setup(data):
 		stage = stage_json
 		defaultZoom = stage.defaultZoom
 		isPixel = stage.isPixelStage
+		lockCam = check_property_and_set(stage, "lockCam")
 	else:
 		if song.has("stage"):
 			cur_stage = song.stage
@@ -328,10 +329,12 @@ func setup(data):
 			stage = File.f_read(Paths.p_stage_data(cur_stage), ".json")
 			defaultZoom = stage.defaultZoom
 			isPixel = stage.isPixelStage
+			lockCam = check_property_and_set(stage, "lockCam")
 		else:
 			stage = File.f_read(Paths.p_stage_data("stage"), ".json")
 			defaultZoom = 1.0
 			isPixel = false
+			lockCam = false
 	
 	player1 = song.player1
 	player2 = song.player2
@@ -542,7 +545,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 							var orginal_fnf_name = i.name.to_lower().replace("!", "").replace("0", "")#謎仕様に対応
 							if orginal_fnf_name == animation_name:
 								animation_name = i.anim.to_lower()
-								print(i.name, " -> ", orginal_fnf_name," -> ", animation_name)
+								#print(i.name, " -> ", orginal_fnf_name," -> ", animation_name)
 								no_anim = false
 								json_anim = true
 								anim_loop = i.loop
@@ -584,11 +587,6 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 				if xml.has_attribute("frameX"): #offsetをマージン設定に変換
 					var margin:Rect2
 					
-					#var raw_frame_x:int
-					#var raw_frame_y:int
-					#raw_frame_x = xml.get_named_attribute_value("frameX").to_int()
-					#raw_frame_y = xml.get_named_attribute_value("frameY").to_int()
-				
 					var raw_frame_width:int = xml.get_named_attribute_value("frameWidth").to_int()
 					var raw_frame_height:int = xml.get_named_attribute_value("frameHeight").to_int()
 					
@@ -600,7 +598,7 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 					if frame_size_data == Vector2.ZERO:
 						frame_size_data = frame_rect.size
 					
-					margin = Rect2(#Vector2(-raw_frame_x, -raw_frame_y) ,
+					margin = Rect2(
 						Vector2(
 							-int(xml.get_named_attribute_value("frameX")),
 							-int(xml.get_named_attribute_value("frameY"))
@@ -609,8 +607,6 @@ func load_XMLSprite(path, play_animation_name = "", loop_f = true, fps = 24, cha
 							int(xml.get_named_attribute_value("frameWidth")) - frame_rect.size.x,
 							int(xml.get_named_attribute_value("frameHeight")) - frame_rect.size.y
 						)
-							#Vector2(raw_frame_width - frame_rect.size.x,
-									#raw_frame_height - frame_rect.size.y)
 					)					
 					if margin.size.x < abs(margin.position.x):
 						margin.size.x = abs(margin.position.x)

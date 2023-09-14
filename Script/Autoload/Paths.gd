@@ -202,8 +202,7 @@ func p_stage_script(path: String):
 				return i + path + ext
 			elif FileAccess.file_exists(i + path.to_lower() + ext):
 				return i + path.to_lower() + ext
-	Audio.a_play("Error")
-	printerr("paths stage script: invalid path: ", path)
+	print("paths stage script: invalid path: ", path)
 	return null
 
 var diff_image_path_list := ["Assets/Images/Story Mode/Difficulties/", "Mods/Images/Story Mode/Difficulties/", "mods/images/menudifficulties/"]

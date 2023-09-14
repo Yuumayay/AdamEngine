@@ -17,9 +17,14 @@ var bf
 var dad
 var gf
 
-const BF_CAMERA_OFFSET =  Vector2(-100, -100)
-const DAD_CAMERA_OFFSET =  Vector2(100, -100)
+const BF_CAMERA_OFFSET =  Vector2(-100, 0)
+const DAD_CAMERA_OFFSET =  Vector2(100, 0)
 const CAM_LOCK_MOVE = 100
+
+func _ready():
+	await Game.game_ready
+	if Game.lockCam:
+		state = LOCK
 
 func _process(_delta):
 	if Game.cur_state == Game.NOT_PLAYING: return
@@ -27,10 +32,10 @@ func _process(_delta):
 		zoom = lerp(zoom, Vector2(Game.defaultZoom, Game.defaultZoom), baseSpeed * 2)
 		if Game.mustHit:
 			#position = lerp(position, bf.getPosOffset() + bf.getCamOffset() * dad.getScale() + BF_CAMERA_OFFSET, baseSpeed)
-			position = lerp(position, bf.getPosOffset(), baseSpeed)
+			position = lerp(position, bf.getPosOffset() + BF_CAMERA_OFFSET, baseSpeed)
 		else:
 			#position = lerp(position, dad.getPosOffset() + dad.getCamOffset() * dad.getScale() + DAD_CAMERA_OFFSET, baseSpeed)
-			position = lerp(position, dad.getPosOffset(), baseSpeed)
+			position = lerp(position, dad.getPosOffset() + DAD_CAMERA_OFFSET, baseSpeed)
 		if beat != Audio.cur_section:
 			beat = Audio.cur_section
 			zoom = Vector2(Game.defaultZoom + 0.025, Game.defaultZoom + 0.025)
@@ -59,17 +64,17 @@ func _process(_delta):
 				elif anim_name.contains("right"):
 					lock_move = Vector2(CAM_LOCK_MOVE, 0)
 			index += 1
-		position = lerp(position, gf.getPosOffset() + lock_move, baseSpeed)
+		position = lerp(position, gf.getPosOffset(), baseSpeed)
 		zoom = lerp(zoom, Vector2(camZoom, camZoom), zoomSpeed)
 		lock_move = lerp(lock_move, Vector2.ZERO, baseSpeed)
 	elif state == ZOOM:
 		zoom = lerp(zoom, Vector2(camZoom, camZoom), zoomSpeed)
 		if Game.mustHit:
 			#position = lerp(position, bf.getPosOffset() + bf.getCamOffset() * dad.getScale() + BF_CAMERA_OFFSET, baseSpeed)
-			position = lerp(position, bf.getPosOffset(), baseSpeed)
+			position = lerp(position, bf.getPosOffset() + BF_CAMERA_OFFSET, baseSpeed)
 		else:
 			#position = lerp(position, dad.getPosOffset() + dad.getCamOffset() * dad.getScale() + DAD_CAMERA_OFFSET, baseSpeed)
-			position = lerp(position, dad.getPosOffset(), baseSpeed)
+			position = lerp(position, dad.getPosOffset() + DAD_CAMERA_OFFSET, baseSpeed)
 
 func camMove(pos = Vector2.ZERO, value = Game.defaultZoom, sec = 60.0 / Audio.bpm, cspeed = 1.0, zspeed = 1.0):
 	if pos is Vector2:
@@ -95,6 +100,7 @@ func camShake(intensity, dulation):
 		var rand_x = randf_range(float(-intensity), float(intensity))
 		var rand_y = randf_range(float(-intensity), float(intensity))
 		offset = Vector2(rand_x, rand_y)
-		await get_tree().create_timer(0).timeout
+		if get_tree():
+			await get_tree().create_timer(0).timeout
 	offset = Vector2.ZERO
 		
