@@ -623,4 +623,3 @@ func moveSong(what):
 	else:
 		Game.is3D = false
 	Trans.t_trans("Gameplay")
-
