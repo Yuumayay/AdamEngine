@@ -113,6 +113,7 @@ func option():
 						else:
 							new_item.text = type.name
 						new_item.name = str(index)
+						new_item.visible = true
 						list.add_child(new_item.duplicate())
 						index += 1
 					new_item.value = index
@@ -126,6 +127,7 @@ func option():
 						else:
 							new_item.text = data
 						new_item.name = str(index)
+						new_item.visible = true
 						list.add_child(new_item.duplicate())
 						index += 1
 					new_item.value = index
