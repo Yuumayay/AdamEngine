@@ -17,6 +17,8 @@ enum {LOOP = 5, BEAT = 6, STOP = 7}
 var has_idle := false
 
 var duplicated := false
+var can_delete := true
+var can_duplicate := true
 
 func _ready():
 	if $icons.get_child_count() != 0: duplicated = true
@@ -46,6 +48,10 @@ func _ready():
 		var total_x := 0
 		var total_y := 0
 		for i in icons:
+			if i[0] == "delete_icon" and not can_delete:
+				return
+			if i[0] == "duplicate_icon" and not can_duplicate:
+				return
 			var spr = Sprite2D.new()
 			spr.set_script(load("Script/EditorIcon.gd"))
 			spr.texture = editorIcon
@@ -183,6 +189,9 @@ func loop_type_icon_pressed():
 	anim_spr.stop()
 	anim_spr.play(anim_spr.animation)
 
+func modulate_icon_pressed():
+	$ColorPicker.show()
+
 func _on_mouse_entered():
 	print("enter")
 	mouse_enter = true
@@ -190,4 +199,9 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	print("exit")
+	$ColorPicker.hide()
 	mouse_enter = false
+
+
+func _on_color_picker_color_changed(color):
+	self_modulate = color

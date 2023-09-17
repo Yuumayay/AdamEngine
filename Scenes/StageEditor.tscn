@@ -19,6 +19,16 @@ theme_override_fonts/font = ExtResource("1_gf10w")
 theme_override_font_sizes/font_size = 20
 text = "Add Sprite"
 
+[node name="SaveJSON" type="Button" parent="UI"]
+offset_left = 1080.0
+offset_top = 635.0
+offset_right = 1274.0
+offset_bottom = 668.0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("1_gf10w")
+theme_override_font_sizes/font_size = 20
+text = "Save JSON"
+
 [node name="FileDialog" type="FileDialog" parent="UI"]
 title = "Open a File"
 initial_position = 2
@@ -29,11 +39,25 @@ access = 2
 
 [node name="Sprites" type="Node2D" parent="."]
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -128
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Cam" type="Camera2D" parent="."]
 offset = Vector2(640, 360)
 position_smoothing_enabled = true
 script = ExtResource("3_cwtra")
 
 [connection signal="pressed" from="UI/AddSprite" to="." method="_on_add_sprite_pressed"]
+[connection signal="pressed" from="UI/SaveJSON" to="." method="_on_save_json_pressed"]
 [connection signal="close_requested" from="UI/FileDialog" to="." method="_on_file_dialog_close_requested"]
 [connection signal="file_selected" from="UI/FileDialog" to="." method="_on_file_dialog_file_selected"]

@@ -567,6 +567,9 @@ func loadFromAnotherFile_Old(song):
 					folder = folder.replacen("/data/song data/" + song, "")
 					if FileAccess.file_exists(songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")):
 						noteXML = songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")
+						for file in DirAccess.get_files_at(songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows")):
+							if file.get_file() != "default.xml" and file.get_extension() == "xml":
+								Game.specialNotes.append(Game.load_XMLSprite(file).sprite_frames)
 					jsonPathChara[j] = jsonPathChara[j].replacen("assets/", "mods/")
 					jsonPathChara[j] = jsonPathChara[j].replacen("characters/" + songData.song["player" + str(j + 1)] + ".json", "character data/" + songData.song["player" + str(j + 1)] + "/config.json")
 				if song and FileAccess.file_exists(jsonPathChara[j]):
