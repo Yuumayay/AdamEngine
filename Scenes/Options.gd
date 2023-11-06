@@ -20,6 +20,8 @@ var child_count4: int = 0
 var selecting_name: String
 var gf_spr
 
+const FIX_ENGFONT_Y = 25
+
 func _ready():
 	category()
 	Audio.a_stop("Freaky Menu")
@@ -52,6 +54,8 @@ func category():
 		new_item.ind = ind
 		
 		new_item.visible = true
+		if Setting.eng():
+			new_item.scale = Vector2(5,5)
 		list.add_child(new_item)
 		ind += 1
 	
@@ -81,6 +85,7 @@ func option():
 			new_item = template2.duplicate()
 		else:
 			new_item = template.duplicate()
+			
 		
 		var valuetext = new_item.get_node("Current")
 		var itemname = i
@@ -96,15 +101,21 @@ func option():
 		if !Setting.eng():
 			valuetext.show()
 		else:
-			valuetext.position.y += 25
+			valuetext.position.y += FIX_ENGFONT_Y
+			
+		print("item:", Setting.setting.category[selected_name][i])
 		
 		match itemtype:
 			"engineType":
+				if Setting.eng():
+					valuetext.position.y += FIX_ENGFONT_Y
+					
 				if layer == 0 or layer == 1:
 					for index in Setting.setting.category[selected_name][i]["metadata"]:
 						for indexind in Setting.setting.category[selected_name][i]["array"]:
 							#print(indexind.data[indexind.metadata.find(index)])
 							valuetext.text = Setting.translate(indexind.data[indexind.metadata.find(index)])
+							
 				elif layer == 2:
 					var index := 0
 					for type in Setting.setting.category[selected_name][i]["array"]:
@@ -172,22 +183,31 @@ func option():
 					valuetext.text = Setting.translate(Setting.setting.category[selected_name][i]["array"][current])
 				else:
 					valuetext.text = Setting.setting.category[selected_name][i]["array"][current]
+					valuetext.position.y += FIX_ENGFONT_Y
+					
 			"bool":
 				if current:
 					if !Setting.eng():
 						valuetext.text = Setting.translate(str(current))
 					else:
 						valuetext.text = "on"
+						valuetext.position.y += FIX_ENGFONT_Y
+						
 				else:
 					if !Setting.eng():
 						valuetext.text = Setting.translate(str(current))
 					else:
 						valuetext.text = "off"
+						valuetext.position.y += FIX_ENGFONT_Y
+						
 			#それ以外
 			_:
 				valuetext.text = str(current)
+				if Setting.eng():
+					valuetext.position.y += FIX_ENGFONT_Y
 		
 		new_item.scale = Vector2(1,1)
+
 		new_item.visible = true
 		list.add_child(new_item)
 		ind += 1
@@ -257,6 +277,9 @@ func gf_speak(text: String):
 	gf_spr.stop()
 
 func _process(_delta):
+	if list.get_child_count() == 0:
+		return
+		
 	var selectList = [select, select2, select3, select4]
 	var child = list.get_child(selectList[layer])
 	if child:
@@ -372,7 +395,7 @@ func _process(_delta):
 					var size_total := 0
 					for index in range(select3):
 						size_total += Setting.setting.category["visuals and ui"]["engine type"]["array"][index]["metadata"].size()
-					print(select4 + size_total)
+					#print(select4 + size_total)
 					Setting.s_set("visuals and ui", "engine type", select4 + size_total)
 					select3 = 0
 					select4 = 0
@@ -436,7 +459,7 @@ func _unhandled_key_input(event):
 		Audio.a_cancel()
 		bind[select3] = event.as_text()
 		Setting.s_set("keybind", str(keyCount) + "k bind", bind)
-		print(bind)
+		#print(bind)
 		bindtext.text = bind[select3]
 		bindtext.show()
 		await get_tree().create_timer(0).timeout

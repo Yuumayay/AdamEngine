@@ -20,10 +20,10 @@ bumpin_scale = Vector2(1.02, 1.02)
 load_img = "menuDesat"
 
 [node name="Template" type="RichTextLabel" parent="."]
-visible = false
 clip_contents = false
-offset_right = 252.0
-offset_bottom = 91.0
+offset_right = 63.0
+offset_bottom = 27.0
+scale = Vector2(5, 5)
 theme_override_fonts/normal_font = ExtResource("3_n65er")
 bbcode_enabled = true
 scroll_active = false
@@ -31,10 +31,12 @@ autowrap_mode = 0
 script = ExtResource("4_x5sm4")
 
 [node name="Icon" type="Sprite2D" parent="Template"]
+scale = Vector2(0.2, 0.2)
 offset = Vector2(70, 45)
 hframes = 3
 script = ExtResource("2_1uuha")
-bumpin_scale = Vector2(0.95, 0.95)
+og_scale = Vector2(0.2, 0.2)
+bumpin_scale = Vector2(0.196, 0.196)
 
 [node name="Error" type="Label" parent="Template/Icon"]
 visible = false
@@ -137,8 +139,9 @@ texture = ExtResource("8_ltwua")
 layout_mode = 0
 offset_left = 680.0
 offset_top = 22.0
-offset_right = 1035.0
-offset_bottom = 112.0
+offset_right = 746.0
+offset_bottom = 39.0
+scale = Vector2(5, 5)
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "1.00"
 horizontal_alignment = 2
@@ -146,11 +149,11 @@ uppercase = true
 
 [node name="Difficulty" type="Label" parent="Info/DiffPanel"]
 layout_mode = 0
-offset_left = 358.0
-offset_top = 30.0
-offset_right = 682.0
-offset_bottom = 120.0
-scale = Vector2(0.8, 0.8)
+offset_left = 266.0
+offset_top = 22.0
+offset_right = 359.0
+offset_bottom = 40.0
+scale = Vector2(5, 5)
 theme_override_fonts/font = ExtResource("3_n65er")
 text = "normal"
 horizontal_alignment = 1

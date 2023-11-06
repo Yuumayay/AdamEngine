@@ -83,9 +83,9 @@ vertical_alignment = 1
 [node name="Intro Text" type="Label" parent="UI"]
 offset_left = 59.0
 offset_top = 220.0
-offset_right = 348.0
-offset_bottom = 310.0
-scale = Vector2(4, 4)
+offset_right = 292.0
+offset_bottom = 308.0
+scale = Vector2(5, 5)
 theme_override_fonts/font = ExtResource("2_yeaf2")
 horizontal_alignment = 1
 uppercase = true

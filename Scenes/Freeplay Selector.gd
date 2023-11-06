@@ -71,7 +71,7 @@ func _ready():
 				if icon.get_size() == Vector2(450, 150):
 					new_song.get_node("Icon").hframes = 3
 				new_song.get_node("Icon").texture = icon
-				new_song.get_node("Icon").position.x += songname.length() * 54.5
+				new_song.get_node("Icon").position.x += songname.length() * 55/5
 			
 				new_song.visible = true
 				add_child(new_song)
