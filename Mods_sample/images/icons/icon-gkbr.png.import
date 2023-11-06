@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://lndd3en1bq2f"
-path="res://.godot/imported/icon-gkbr.png-15c143ea337ba2b2256260b7c195d091.ctex"
+path="res://.godot/imported/icon-gkbr.png-84b74b0e9b0747eb525581569f5564a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Mods/images/icons/icon-gkbr.png"
-dest_files=["res://.godot/imported/icon-gkbr.png-15c143ea337ba2b2256260b7c195d091.ctex"]
+source_file="res://Mods_sample/images/icons/icon-gkbr.png"
+dest_files=["res://.godot/imported/icon-gkbr.png-84b74b0e9b0747eb525581569f5564a6.ctex"]
 
 [params]
 

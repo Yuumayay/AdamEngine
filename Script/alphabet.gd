@@ -16,6 +16,7 @@ var last_text: String
 var last_type: int
 var alphabet
 
+
 signal text_ready
 
 func _process(_delta):

@@ -61,7 +61,10 @@ func _ready():
 			i.add_theme_constant_override("outline_size", 25)
 			i.add_theme_color_override("font_outline_color", Color(0, 0, 0))
 			i.text = Setting.translate(i.text)
-	
+	else:
+		for i in get_children():
+			i.scale = Vector2(5,5)
+		
 	for i in get_children():
 		listChild.append(i.duplicate())
 

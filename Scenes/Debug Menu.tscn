@@ -28,10 +28,11 @@ offset_bottom = 145.0
 color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [node name="TheDebugMenu" type="RichTextLabel" parent="."]
-offset_left = 295.0
+offset_left = 314.0
 offset_top = 27.0
-offset_right = 1037.0
-offset_bottom = 117.0
+offset_right = 458.0
+offset_bottom = 51.0
+scale = Vector2(5, 5)
 theme_override_fonts/normal_font = ExtResource("4_vhxar")
 bbcode_enabled = true
 text = "[shake rate=10 level=20]THE DEBUG MENU[/shake]"
@@ -99,11 +100,11 @@ offset_right = 479.0
 offset_bottom = 750.0
 
 [node name="Label" type="RichTextLabel" parent="CanvasLayer"]
-offset_left = 8.0
-offset_top = 488.0
-offset_right = 990.0
-offset_bottom = 924.0
-scale = Vector2(0.5, 0.5)
+offset_left = 17.0
+offset_top = 490.0
+offset_right = 200.0
+offset_bottom = 588.0
+scale = Vector2(2.5, 2.5)
 theme_override_fonts/normal_font = ExtResource("4_vhxar")
 bbcode_enabled = true
 text = "[shake rate=10 level=20]DO NOT ENTER

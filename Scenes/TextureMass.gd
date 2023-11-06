@@ -41,8 +41,8 @@ func _on_button_button_down():
 
 
 func _on_button_mouse_entered():
-	chart._on_button_mouse_entered()
+	chart._on_button_mouse_exited()
 
 
 func _on_button_mouse_exited():
-	chart._on_button_mouse_exited()
+	pass

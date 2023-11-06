@@ -7,7 +7,7 @@ var week: String
 func accepted(selected: bool):
 	var t = get_tree().create_tween()
 	if selected:
-		t.tween_property(self, "scale", Vector2(1, 1), 0.1)
+		t.tween_property(self, "scale", Vector2(5, 5), 0.1)
 		for i in range(10):
 			modulate = Color(1, 1, 1, 0)
 			await get_tree().create_timer(0.05).timeout
