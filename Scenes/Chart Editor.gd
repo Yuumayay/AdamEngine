@@ -466,7 +466,11 @@ func _ready():
 			var json = File.f_read(Game.edit_jsonpath, ".json")
 			loadJson(json)
 	init()
-
+	
+	for i in $Menu.get_children():
+		if i is LineEdit:
+			i.connect("mouse_entered", _on_button_mouse_entered)
+			i.connect("mouse_exited", _on_button_mouse_exited)
 
 func init():
 	data[EVENT].icon_name = TYPE_ICON[EVENT]
@@ -520,10 +524,7 @@ func init():
 	draw_menu()
 	draw_all()
 	
-	for i in $Menu.get_children():
-		if i is LineEdit:
-			i.connect("mouse_entered", _on_button_mouse_entered)
-			i.connect("mouse_exited", _on_button_mouse_exited)
+
 			
 
 func loadFromAnotherFile_Old(song):
