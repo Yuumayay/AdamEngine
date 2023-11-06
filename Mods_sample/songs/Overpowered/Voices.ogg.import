@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://c64mxwwum74hx"
-path="res://.godot/imported/Voices.ogg-b654002f3d6242a470ef1a3a588af113.oggvorbisstr"
+path="res://.godot/imported/Voices.ogg-2c7d00e6376d0757fcd2d3aefe477818.oggvorbisstr"
 
 [deps]
 
-source_file="res://Mods/songs/Overpowered/Voices.ogg"
-dest_files=["res://.godot/imported/Voices.ogg-b654002f3d6242a470ef1a3a588af113.oggvorbisstr"]
+source_file="res://Mods_sample/songs/Overpowered/Voices.ogg"
+dest_files=["res://.godot/imported/Voices.ogg-2c7d00e6376d0757fcd2d3aefe477818.oggvorbisstr"]
 
 [params]
 

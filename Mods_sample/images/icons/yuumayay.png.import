@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ehlucckpfpyk"
-path="res://.godot/imported/yuumayay.png-8f5280d1e989dde3c69364c6f15c6316.ctex"
+path="res://.godot/imported/yuumayay.png-d0a0ade45f224f97e594f0af95eb225d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Mods/images/icons/yuumayay.png"
-dest_files=["res://.godot/imported/yuumayay.png-8f5280d1e989dde3c69364c6f15c6316.ctex"]
+source_file="res://Mods_sample/images/icons/yuumayay.png"
+dest_files=["res://.godot/imported/yuumayay.png-d0a0ade45f224f97e594f0af95eb225d.ctex"]
 
 [params]
 

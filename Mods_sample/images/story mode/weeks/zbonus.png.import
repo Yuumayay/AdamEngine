@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d7gnyp753w7m"
-path="res://.godot/imported/zbonus.png-a561ca493652944b28701d9ea4f57afc.ctex"
+path="res://.godot/imported/zbonus.png-bca15e9902027c78e5f7dc05850445d6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Mods/images/story mode/weeks/zbonus.png"
-dest_files=["res://.godot/imported/zbonus.png-a561ca493652944b28701d9ea4f57afc.ctex"]
+source_file="res://Mods_sample/images/story mode/weeks/zbonus.png"
+dest_files=["res://.godot/imported/zbonus.png-bca15e9902027c78e5f7dc05850445d6.ctex"]
 
 [params]
 
