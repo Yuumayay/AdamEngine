@@ -519,6 +519,12 @@ func init():
 	set_all_notes()
 	draw_menu()
 	draw_all()
+	
+	for i in $Menu.get_children():
+		if i is LineEdit:
+			i.connect("mouse_entered", _on_button_mouse_entered)
+			i.connect("mouse_exited", _on_button_mouse_exited)
+			
 
 func loadFromAnotherFile_Old(song):
 		#MOD（psych, adam)のアイコン、キャラクターの読み込み
@@ -1349,10 +1355,10 @@ func _on_load_json_window_file_selected(path):
 var shortCut = true
 # チャート画面をマウスオーバーしたらショートカットオン
 func _on_button_mouse_entered():
-	shortCut = true
+	shortCut = false
 
 func _on_button_mouse_exited():
-	shortCut = false
+	shortCut = true
 	
 
 

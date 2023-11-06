@@ -1323,10 +1323,14 @@ position = Vector2(640, 360)
 
 [node name="Icons" type="CanvasLayer" parent="."]
 
-[connection signal="mouse_entered" from="CanvasLayer/button" to="." method="_on_button_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/button" to="." method="_on_button_mouse_exited"]
+[connection signal="tree_entered" from="CanvasLayer" to="." method="_on_button_mouse_exited"]
+[connection signal="mouse_entered" from="CanvasLayer/button" to="." method="_on_button_mouse_exited"]
 [connection signal="button_down" from="Rect/Button" to="Rect" method="_on_button_button_down"]
+[connection signal="mouse_entered" from="Menu/ColorRect" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Menu/ColorRect" to="." method="_on_button_mouse_exited"]
 [connection signal="text_changed" from="Menu/SongDiff" to="." method="_on_song_diff_text_changed"]
 [connection signal="file_selected" from="Menu/SaveJSONWindow" to="." method="_on_save_json_window_file_selected"]
+[connection signal="mouse_entered" from="Menu/SaveJSONWindow" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Menu/SaveJSONWindow" to="." method="_on_button_mouse_exited"]
 [connection signal="file_selected" from="Menu/LoadJSONWindow" to="." method="_on_load_json_window_file_selected"]
 [connection signal="toggled" from="Menu/LoadAudioByDifficulty" to="." method="_on_load_audio_by_difficulty_toggled"]
