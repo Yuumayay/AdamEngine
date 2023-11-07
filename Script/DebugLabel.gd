@@ -5,7 +5,7 @@ var beat := 0
 var adam := ["A", "D", "M"]
 
 func _process(_delta):
-	scale = lerp(scale, Vector2(1, 1), 0.1)
+	scale = lerp(scale, Vector2(5, 5), 0.1)
 	position = lerp(position, Vector2(295, 27), 0.1)
 	if floor(int(Audio.a_get_beat("Debug Menu", 1)) / 16) % 2 == 1:
 		if beat != Audio.a_get_beat("Debug Menu", 2) * 10:
