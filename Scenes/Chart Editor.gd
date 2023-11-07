@@ -1012,10 +1012,12 @@ func generateJson() -> Dictionary:
 	
 	for section in chartData.notes:
 		section.sectionNotes.sort_custom(sort_ascending) #整列
-		for i in section.sectionNotes:
+		for i in range(len(section.sectionNotes)):
 			#if note.player_type == 0: # EVENT kuso イベントはイベントでループする TODO
 			#	jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type ])
-			i.erase(UID)
+			var n = section.sectionNotes[i]
+			section.sectionNotes[i] = [n[0], n[1], n[2], n[3]]
+			
 			sectionNotes_n += 1
 		section_n += 1
 		
@@ -1422,16 +1424,17 @@ func _on_import_midi_dialog_file_selected(path):
 	var extension = path.get_extension()
 	var basename = path.get_basename()
 	
-	var file = path.get_file()
-	fileName = file.get_basename()
-	loadPath = basename
+	var dat = $Menu/MIDIInfoDialog.midi2fnf(path)
 	
-	var smf = SMF.new()
-	var midi = smf.read_file(path)
-	
-	print(midi)
+	#chartData.notes = dat["song"]["notes"].duplicate(true)
+	chartData.notes = null
+	chartData.notes = dat["song"]["notes"].duplicate(true)
+	#loadJson(dat.duplicate(true))
 	$Menu/ImportMIDIDialog.hide()
+	
+	redraw_notes()
 	
 
 func _on_import_midi_pressed():
 	$Menu/ImportMIDIDialog.show()
+	

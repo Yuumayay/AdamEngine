@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bn6j7ish2vl78"]
+[gd_scene load_steps=6 format=3 uid="uid://bn6j7ish2vl78"]
 
 [ext_resource type="Script" path="res://Script/Bumpin.gd" id="3_ycnpj"]
+[ext_resource type="Script" path="res://Script/MIDI2FNF.gd" id="4_fbems"]
 [ext_resource type="Script" path="res://Scenes/Chart Editor.gd" id="4_taosd"]
 [ext_resource type="FontFile" uid="uid://donwtlho2smyl" path="res://Assets/Fonts/nokiafc22.ttf" id="6_o2uja"]
 
@@ -1311,11 +1312,13 @@ position = Vector2i(40, 40)
 size = Vector2i(583, 659)
 ok_button_text = "開く"
 file_mode = 0
-filters = PackedStringArray("midi", "mid", "smf")
+access = 2
+filters = PackedStringArray("*.mid", "*.midi", "*.smf")
 
 [node name="MIDIInfoDialog" type="ConfirmationDialog" parent="Menu"]
 position = Vector2i(200, 200)
 size = Vector2i(200, 106)
+script = ExtResource("4_fbems")
 
 [node name="VFlowContainer" type="VFlowContainer" parent="Menu/MIDIInfoDialog"]
 offset_left = 8.0
