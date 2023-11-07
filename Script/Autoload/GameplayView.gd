@@ -3,8 +3,8 @@ extends Node
 ## CONSTS ##
 const note_spawn_y: Array = [-600, 1320]
 const strum_pos_og: Array = [Vector2(150, 620), Vector2(150, 100)]
-const version_text: String = "Adam Engine 1.0"
-const version_text_color: Color = Color("ffb7ce")
+const version_text: String = "Adam Engine 1.1"
+const version_text_color: Color = Color(1, 0.75686275959015, 0.49019607901573)
 
 const gfspeak := {
 	"common": 
