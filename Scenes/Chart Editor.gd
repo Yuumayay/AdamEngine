@@ -519,13 +519,9 @@ func init():
 			Audio.a_set("Voices", "", bpm)
 		Audio.a_set("Inst", Paths.p_song(songPath, "Inst"), bpm)
 	
-	erase_all_notes()
-	set_all_notes()
+	redraw_notes()
 	draw_menu()
-	draw_all()
 	
-
-			
 
 func loadFromAnotherFile_Old(song):
 		#MOD（psych, adam)のアイコン、キャラクターの読み込み
@@ -574,6 +570,9 @@ func loadFromAnotherFile_Old(song):
 					folder = folder.replacen("/data/song data/" + song, "")
 					if FileAccess.file_exists(songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")):
 						noteXML = songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows/default.xml")
+						for file in DirAccess.get_files_at(songPath.replacen("songs/" + song, "shared/images/ui skins/default/arrows")):
+							if file.get_file() != "default.xml" and file.get_extension() == "xml":
+								Game.specialNotes.append(Game.load_XMLSprite(file).sprite_frames)
 					jsonPathChara[j] = jsonPathChara[j].replacen("assets/", "mods/")
 					jsonPathChara[j] = jsonPathChara[j].replacen("characters/" + songData.song["player" + str(j + 1)] + ".json", "character data/" + songData.song["player" + str(j + 1)] + "/config.json")
 				if song and FileAccess.file_exists(jsonPathChara[j]):
@@ -781,6 +780,7 @@ func set_key_count_all():
 #		data[j].key_count = value
 #	draw_all()
 
+# すべてのノートのノードを生成
 func set_all_notes():
 	for section in chartData.notes:
 		for i in section["sectionNotes"]:
@@ -1009,12 +1009,15 @@ func generateJson() -> Dictionary:
 	var section_n := 0
 	var sectionNotes_n := 0
 	var jsonNotes = json["song"]["notes"]
+	
 	for section in chartData.notes:
 		section.sectionNotes.sort_custom(sort_ascending) #整列
-		for i in section.sectionNotes:
+		for i in range(len(section.sectionNotes)):
 			#if note.player_type == 0: # EVENT kuso イベントはイベントでループする TODO
 			#	jsonNotes[section_n]["sectionNotes"].append([note.ms, note.dir - 1, note.sus, note.note_type ])
-			i.erase(UID)
+			var n = section.sectionNotes[i]
+			section.sectionNotes[i] = [n[0], n[1], n[2], n[3]]
+			
 			sectionNotes_n += 1
 		section_n += 1
 		
@@ -1051,6 +1054,11 @@ func loadJson(json):
 	
 	init()
 
+# ノートの再描画
+func redraw_notes():
+	erase_all_notes()
+	set_all_notes()
+	draw_all()
 
 func get_difficulty_and_songname(text : String):
 	var sp: Array = text.split("-")
@@ -1135,7 +1143,13 @@ func key_check():
 		grid_text_set()
 		draw_all()
 		updateZoom()
-
+	
+	if Input.is_action_just_pressed("chart_copy"):
+		copy_section()
+		
+	if Input.is_action_just_pressed("chart_paste"):
+		paste_section()
+		
 func grid_text_set():
 	gridandzoom.text = "Zoom: " + str(chart_zoom) + "x\nGrid: 1/" + str(16 / grid)
 
@@ -1227,19 +1241,23 @@ func rev_dir_fnfdir(mustHit, dir):
 	
 	return dir
 
-# ノートを置く
+# ノートを置く!
 func on_mouse_down_set_note( texturemass ):
 	var t = texturemass.type
 	if t != SECTION_INFO:
 		# ms　へのコンバート
 		var i = texturemass
 		var type = i.type
+		print(type)
 	
 		var x = fix_grid(get_local_mouse_position().x)
 		var dir = (x - i.position.x)  / MASS_SIZE
 		if dir >= data[type].key_count: #範囲外から押される（決定ボタンでこのイベントが送られたパターン
-			return 
-		var mustHit = chartData.notes[cur_section].mustHitSection
+			return
+			
+		var sec_id = texturemass.section
+			
+		var mustHit = chartData.notes[sec_id].mustHitSection
 		
 		var y = fix_grid(get_local_mouse_position().y, grid)
 		
@@ -1248,9 +1266,14 @@ func on_mouse_down_set_note( texturemass ):
 		var sus := 0
 		var distance := 0.0
 		var key = data[type].key_count
+		
 		# ボタンとラインおく
-		var note = set_note_and_line(x, y, sus, dir, key)
-		var sec_id = texturemass.section
+		var note
+		if type != EVENT:
+			note = set_note_and_line(x, y, sus, dir, key)
+		else:
+			#TODO EVENTのとき
+			return
 		
 		if type != EVENT:
 			var line = note.line
@@ -1271,17 +1294,22 @@ func on_mouse_down_set_note( texturemass ):
 		var ms = y_to_ms(y) 
 		var susms = susy_to_ms(sus)
 		
+		# ms, fnfdir, susのms, 特殊ノーツID, 管理用ユニークID
 		chartData.notes[sec_id]["sectionNotes"].append([ms, calc_fnfdir(mustHit, t, dir), susms, 0, note.uid])
 		print(chartData.notes[sec_id]["sectionNotes"][-1])
 		
 		updateZoom()
+		redraw_notes()
+		
 	else:
 		# section iconの場合、何もせずリドロー
 		redraw_sectioninfo()
+		
 
 # section iconの生成と再描画
 @onready var Secs = $Secs
 var sec_icon_pr = preload("res://Scenes/ChartEditor/sec_icon.tscn")
+
 func redraw_sectioninfo():
 	var sec_id := 0
 	for sec in chartData.notes:
@@ -1331,6 +1359,30 @@ func ms_to_y(ms): # msからyへ
 	
 	return y + MASS_OFFSET_Y
 
+# Ctrl+Cでセクションをコピーする
+var clipboard_note = []
+func copy_section():
+	var sec_id = cur_section # ターゲットはカレントセクション
+	var ms_per_beat :float = (60.0 / bpm) * 1000.0
+	var sec_start_ms = ms_per_beat * 4 * sec_id #セクション（4ビート）の開始ms
+
+	clipboard_note = chartData.notes[sec_id]["sectionNotes"].duplicate(true)
+	for i in range(len(clipboard_note)):
+		clipboard_note[i][0] -= sec_start_ms
+
+func paste_section():
+	var sec_id = cur_section # ターゲットはカレントセクション
+	var ms_per_beat :float = (60.0 / bpm) * 1000.0
+	var sec_start_ms = ms_per_beat * 4 * sec_id #セクション（4ビート）の開始ms
+	
+	var new_note = clipboard_note.duplicate(true)
+	for i in range(len(clipboard_note)):
+		new_note[i][0] += sec_start_ms
+		
+	chartData.notes[sec_id]["sectionNotes"] = new_note.duplicate(true)
+	
+	redraw_notes()
+
 
 func _on_save_json_window_file_selected(path):
 	var extension = path.get_extension()
@@ -1361,11 +1413,28 @@ func _on_button_mouse_entered():
 func _on_button_mouse_exited():
 	shortCut = true
 	
-
-
 func _on_load_audio_by_difficulty_toggled(toggled_on):
 	loadAudioByDifficulty = toggled_on
 
-
 func _on_song_diff_text_changed(new_text):
 	cur_diff = new_text
+
+
+func _on_import_midi_dialog_file_selected(path):
+	var extension = path.get_extension()
+	var basename = path.get_basename()
+	
+	var dat = $Menu/MIDIInfoDialog.midi2fnf(path)
+	
+	#chartData.notes = dat["song"]["notes"].duplicate(true)
+	chartData.notes = null
+	chartData.notes = dat["song"]["notes"].duplicate(true)
+	#loadJson(dat.duplicate(true))
+	$Menu/ImportMIDIDialog.hide()
+	
+	redraw_notes()
+	
+
+func _on_import_midi_pressed():
+	$Menu/ImportMIDIDialog.show()
+	

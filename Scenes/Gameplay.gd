@@ -301,6 +301,8 @@ func note_spawn_load():
 		new_note.dir = Game.dir[note_count]
 		new_note.ms = Game.ms[note_count]
 		new_note.sus = Game.sus[note_count]
+		if Game.note_type != []:
+			new_note.note_type = Game.note_type[note_count]
 		if Setting.s_get("gameplay", "downscroll"):
 			new_note.up_or_down = 1
 		else:
@@ -623,4 +625,3 @@ func moveSong(what):
 	else:
 		Game.is3D = false
 	Trans.t_trans("Gameplay")
-

@@ -5,6 +5,12 @@
 [node name="StageEditorSprite" type="TextureRect"]
 script = ExtResource("2_wk22w")
 
+[node name="ColorPicker" type="ColorPicker" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 298.0
+offset_bottom = 576.0
+
 [node name="PosLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -18,3 +24,4 @@ grow_vertical = 0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="color_changed" from="ColorPicker" to="." method="_on_color_picker_color_changed"]

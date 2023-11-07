@@ -20,8 +20,20 @@ var intro_texts: PackedStringArray = intro_text_data.split("\n")
 var random: int = randi_range(0, intro_texts.size() - 1)
 var intro_text: PackedStringArray = intro_texts[random].split("--")
 
+#func menu_volume():
+	#Audio.a_volume_set("Freaky Menu", -80)
+	#await get_tree().create_timer(5)
+	#
+	#for i in range(800):
+	#	Audio.a_volume_add("Freaky Menu", 0.1)
+	#	await get_tree().create_timer(0.5)
+
+		
 func _ready():
+	#Audio.a_volume_set("Freaky Menu", -80)
+	#menu_volume()
 	#print(intro_text)
+	print("start")
 	
 	#discord_sdk.app_id = 1133432665505280140
 	#discord_sdk.state = "In Title"
@@ -31,8 +43,6 @@ func _ready():
 	
 	Game.game_mode = Game.TITLE
 	Game.edit_jsonpath = ""
-	
-	Audio.a_volume_set("Freaky Menu", -40)
 	
 	if Audio.a_check("Freaky Menu"):
 		introend()
@@ -75,8 +85,6 @@ func _process(_delta):
 			beat_gf = Audio.a_get_beat("Freaky Menu", 4)
 			$Logo/gfpos/GF.frame = int(beat_gf) % 2 * 15
 	else:
-		if Audio.get_node("Freaky Menu").volume_db < 0:
-			Audio.a_volume_add("Freaky Menu", 1)
 		if beat == time[ind]:
 			if texts[ind] == "<erase>":
 				introtext.text = ""

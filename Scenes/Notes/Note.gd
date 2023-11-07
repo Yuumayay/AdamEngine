@@ -5,6 +5,7 @@ extends AnimatedSprite2D
 @export var ms: float
 @export var sus: int
 @export var type: int # note type 特殊ノーツのタイプ！
+@export var note_type: String
 @export var player: int
 @export var hit_ms: float
 @export var free_f: bool = false
@@ -54,7 +55,13 @@ func _ready():
 	dir = clamp(dir, 0, Game.key_count[Game.KC_BF] + Game.key_count[Game.KC_DAD] + Game.key_count[Game.KC_GF] - 1)
 	if player == 1:
 		kc = 0
-	sprite_frames = arrowSpriteFrames
+	if note_type == "default" or note_type == "":
+		sprite_frames = arrowSpriteFrames
+	else:
+		for i in Game.specialNotes:
+			var spName = i.get_file().replace(".xml", "")
+			if spName == note_type:
+				sprite_frames = i
 	if Setting.s_get("gameplay", "downscroll"):
 		spawn_y = View.note_spawn_y[0]
 	else:

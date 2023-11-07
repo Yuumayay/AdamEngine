@@ -114,6 +114,8 @@ func _ready():
 		var user_lang = OS.get_locale_language()
 		if user_lang == "ja":
 			Setting.s_set("language", "language", Setting.JPN)
+		elif user_lang == "en":
+			Setting.s_set("language", "language", Setting.ENG)
 		f_save("user://ae_options_data", ".json", Setting.setting)
 	
 	if not FileAccess.file_exists("user://ae_score_data.json"):

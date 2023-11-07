@@ -12,20 +12,23 @@ enum {MUST_HIT, GF_SECTION} # アイコンの種類。
 func _on_button_button_down():
 	var sec = Chart.chartData.notes[section]
 	match icontype:
-		MUST_HIT:
+		MUST_HIT: # MUSTHITが押された
 			var mustHit = sec.mustHitSection
 			#mustHit = !mustHit
+			
 			# すべてを反転する必要がある
-			for note in sec.sectionNotes:
-				var fnfdir = note[Chart.DIR]
+			#for note in sec.sectionNotes:
+			#	var fnfdir = note[Chart.DIR]
 				
-				var dir = Chart.rev_dir_fnfdir(mustHit, fnfdir)
-				var t = Chart.rev_type_fnfdir(mustHit, fnfdir)
+			#	var dir = Chart.rev_dir_fnfdir(mustHit, fnfdir)
+			#	var t = Chart.rev_type_fnfdir(mustHit, fnfdir)
 				
-				var newfnfdir = Chart.calc_fnfdir(!mustHit, t, dir)
-				note[Chart.DIR] = newfnfdir
+			#	var newfnfdir = Chart.calc_fnfdir(!mustHit, t, dir)
+			#	note[Chart.DIR] = newfnfdir
 			
 			Chart.chartData.notes[section].mustHitSection = !mustHit
+			
+			Chart.redraw_notes()
 			
 		GF_SECTION:
 			pass

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c6v5xug8ylw45"]
 
-[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/menuDesat.png" id="1_224nq"]
+[ext_resource type="Texture2D" uid="uid://djptj4td21w6u" path="res://Assets/Images/UI/FNF/menuDesat.png" id="1_224nq"]
 [ext_resource type="Script" path="res://Scenes/Modchart Editor.gd" id="1_p7cxk"]
 [ext_resource type="Script" path="res://Script/ModchartCodeEdit.gd" id="2_1l5dw"]
 [ext_resource type="Script" path="res://Script/ModchartList.gd" id="31_88pp6"]

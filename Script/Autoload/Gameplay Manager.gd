@@ -174,6 +174,7 @@ var cur_song_path: String
 var cur_song_data_path: String
 var chara_image_path: Array
 var noteXML: String
+var specialNotes: Array
 var chara_json: Array
 var cur_diff: String = "normal" #現在の難易度（文字列
 var cur_stage: String = "stage"
@@ -181,6 +182,7 @@ var stage_json: Dictionary
 var player1: String = "bf"
 var player2: String = "dad"
 var player3 = "gf"
+var note_type: Array
 
 func get_diff_i():
 	var n = 0
@@ -416,6 +418,11 @@ func setup(data):
 				dir.append(ind[1])
 			
 			sus.append(ind[2])
+			if ind.size() == 4:
+				pass
+			elif ind.size() == 5:
+				if ind[4] is String:
+					note_type.append(ind[4])
 	emit_signal("game_ready")
 
 func what_engine(data):
