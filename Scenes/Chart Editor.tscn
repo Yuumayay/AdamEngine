@@ -1129,6 +1129,15 @@ focus_mode = 0
 theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Reload Audio"
 
+[node name="ImportMIDI" type="Button" parent="Menu"]
+offset_left = 604.0
+offset_top = 683.0
+offset_right = 761.0
+offset_bottom = 714.0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("6_o2uja")
+text = "Import MIDI"
+
 [node name="SongName" type="LineEdit" parent="Menu"]
 offset_left = 1043.0
 offset_top = 37.0
@@ -1228,9 +1237,9 @@ theme_override_fonts/font = ExtResource("6_o2uja")
 text = "Dad name:"
 
 [node name="Label6" type="Label" parent="Menu"]
-offset_left = 495.0
+offset_left = 318.0
 offset_top = 676.0
-offset_right = 725.0
+offset_right = 548.0
 offset_bottom = 719.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_o2uja")
@@ -1251,25 +1260,25 @@ theme_override_font_sizes/font_size = 30
 text = "Zoom: 1x
 Grid: 1/16"
 
-[node name="BetaText" type="Label" parent="Menu"]
-offset_left = 870.0
+[node name="ShortCutText" type="Label" parent="Menu"]
+offset_left = 862.0
 offset_top = 430.0
 offset_right = 1272.0
-offset_bottom = 729.0
+offset_bottom = 664.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("6_o2uja")
-text = "A = Prev section
-D = Next section
+text = "A / D = Prev / Next section
 Space = Play & Stop
 Mouse wheel = Scroll
 Scroll + Shift = 4x speed
 Scroll + Ctrl = Scroll X
 Scroll + Alt = Zoom
 Click + Drag = Change note sustain
+Ctrl+C / Ctrl+V = Copy / Paste section
 
-Chart Editor BETA"
+Adam Chart Editor"
 horizontal_alignment = 2
 
 [node name="BPM" type="SpinBox" parent="Menu"]
@@ -1296,6 +1305,41 @@ step = 0.1
 value = 1.0
 alignment = 1
 
+[node name="ImportMIDIDialog" type="FileDialog" parent="Menu"]
+title = "Open a MIDI file"
+position = Vector2i(40, 40)
+size = Vector2i(583, 659)
+ok_button_text = "開く"
+file_mode = 0
+filters = PackedStringArray("midi", "mid", "smf")
+
+[node name="MIDIInfoDialog" type="ConfirmationDialog" parent="Menu"]
+position = Vector2i(200, 200)
+size = Vector2i(200, 106)
+
+[node name="VFlowContainer" type="VFlowContainer" parent="Menu/MIDIInfoDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 57.0
+
+[node name="Label" type="Label" parent="Menu/MIDIInfoDialog/VFlowContainer"]
+layout_mode = 2
+text = "MIDI
+"
+
+[node name="TextEdit" type="TextEdit" parent="Menu/MIDIInfoDialog/VFlowContainer"]
+layout_mode = 2
+
+[node name="TextEdit2" type="TextEdit" parent="Menu/MIDIInfoDialog/VFlowContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Menu/MIDIInfoDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 57.0
+
 [node name="SaveJSONWindow" type="FileDialog" parent="Menu"]
 title = "Save a file"
 position = Vector2i(50, 50)
@@ -1311,9 +1355,9 @@ file_mode = 0
 access = 2
 
 [node name="LoadAudioByDifficulty" type="CheckBox" parent="Menu"]
-offset_left = 721.0
+offset_left = 544.0
 offset_top = 672.0
-offset_right = 745.0
+offset_right = 568.0
 offset_bottom = 696.0
 scale = Vector2(2.25, 2.25)
 focus_mode = 0
@@ -1328,7 +1372,9 @@ position = Vector2(640, 360)
 [connection signal="button_down" from="Rect/Button" to="Rect" method="_on_button_button_down"]
 [connection signal="mouse_entered" from="Menu/ColorRect" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Menu/ColorRect" to="." method="_on_button_mouse_exited"]
+[connection signal="pressed" from="Menu/ImportMIDI" to="." method="_on_import_midi_pressed"]
 [connection signal="text_changed" from="Menu/SongDiff" to="." method="_on_song_diff_text_changed"]
+[connection signal="file_selected" from="Menu/ImportMIDIDialog" to="." method="_on_import_midi_dialog_file_selected"]
 [connection signal="file_selected" from="Menu/SaveJSONWindow" to="." method="_on_save_json_window_file_selected"]
 [connection signal="mouse_entered" from="Menu/SaveJSONWindow" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Menu/SaveJSONWindow" to="." method="_on_button_mouse_exited"]

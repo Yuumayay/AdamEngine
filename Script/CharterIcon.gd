@@ -42,31 +42,31 @@ func init():
 	var popup = menubutton.get_popup()
 	
 	if p_type != EVENT:
-		var subpopup = PopupMenu.new()
-		subpopup.name = "modchart"
+		#var subpopup = PopupMenu.new()
+		#subpopup.name = "modchart"
 		var subpopup2 = PopupMenu.new()
 		subpopup2.name = "keycount"
 		
-		popup.add_item("Set character")
-		popup.add_separator()
+		#popup.add_item("Set character")
+		#popup.add_separator()
 		popup.add_item("Set keycount")
 		popup.add_separator()
-		popup.add_item("Set arrow skin")
-		popup.add_separator()
-		popup.add_item("Set modchart")
-		popup.add_separator()
-		popup.add_item("Follow camera")
-		popup.add_separator()
+		#popup.add_item("Set arrow skin")
+		#popup.add_separator()
+		#popup.add_item("Set modchart")
+		#popup.add_separator()
+		#popup.add_item("Follow camera")
+		#popup.add_separator()
 		popup.add_item("Clear notes")
 		popup.add_separator()
 		popup.add_item("Clear all notes")
 		
-		popup.add_child(subpopup)
-		popup.set_item_submenu(6, "modchart")
-		subpopup.add_item("Health drain")
+		#popup.add_child(subpopup)
+		#popup.set_item_submenu(6, "modchart")
+		#subpopup.add_item("Health drain")
 		
 		popup.add_child(subpopup2)
-		popup.set_item_submenu(2, "keycount")
+		popup.set_item_submenu(0, "keycount")
 		subpopup2.add_item("1k")
 		subpopup2.add_item("2k")
 		subpopup2.add_item("3k")
@@ -86,7 +86,7 @@ func init():
 		subpopup2.add_item("17k")
 		subpopup2.add_item("18k")
 		subpopup2.add_item("99k")
-		subpopup.id_pressed.connect(modchart_pressed)
+		#subpopup.id_pressed.connect(modchart_pressed)
 		subpopup2.id_pressed.connect(keycount_pressed)
 	else:
 		popup.add_item("Clear section event")
@@ -101,14 +101,15 @@ func init():
 
 func item_pressed(id):
 	if p_type != EVENT:
-		if id == 0:
-			sceneroot.add_character(p_type)
-		elif id == 2:
-			sceneroot.clone_character(p_type, icon_name, key_count)
-		elif id == 4:
-			sceneroot.set_character(p_type, "face")
-		elif id == 8:
-			sceneroot.set_note_skin(p_type, "face")
+		pass
+		#if id == 0:
+		#	sceneroot.add_character(p_type)
+		#if id == 2:
+		#	sceneroot.clone_character(p_type, icon_name, key_count)
+		#elif id == 4:
+		#	sceneroot.set_character(p_type, "face")
+		#elif id == 8:
+		#	sceneroot.set_note_skin(p_type, "face")
 		#elif id == 18:
 		#	sceneroot.erase_character(p_type)
 

@@ -1,0 +1,19 @@
+{
+	"song": {
+		"player1": "bf",
+		"player2": "Adam",
+		"events": [],
+		"notes": [
+		],
+		"gfVersion": "gf",
+		"splashSkin": "noteSplashes",
+		"song": "BlankSong",
+		"validScore": true,
+		"stage": "stage",
+		"arrowSkin": "",
+		"needsVoices": true,
+		"speed": 5,
+		"bpm": 200,
+		"is3D": false
+	}
+}
