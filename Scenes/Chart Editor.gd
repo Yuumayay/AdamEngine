@@ -1009,8 +1009,9 @@ func generateJson() -> Dictionary:
 	var section_n := 0
 	var sectionNotes_n := 0
 	var jsonNotes = json["song"]["notes"]
+	var savechartData = chartData.duplicate(true)
 	
-	for section in chartData.notes:
+	for section in savechartData.notes:
 		section.sectionNotes.sort_custom(sort_ascending) #整列
 		for i in range(len(section.sectionNotes)):
 			#if note.player_type == 0: # EVENT kuso イベントはイベントでループする TODO
@@ -1021,7 +1022,9 @@ func generateJson() -> Dictionary:
 			sectionNotes_n += 1
 		section_n += 1
 		
-	return json
+	var savejson: Dictionary = {"song": savechartData}
+		
+	return savejson
 
 func loadJson(json):
 	var song = json.song
@@ -1124,32 +1127,33 @@ func key_check():
 		no_grid = true
 	else:
 		no_grid = false
-	if Input.is_action_just_pressed("chart_grid_up"):
+	if Input.is_action_just_pressed("chart_copy"):
+		copy_section()
+		
+	elif Input.is_action_just_pressed("chart_paste"):
+		paste_section()
+		
+	elif Input.is_action_just_pressed("chart_grid_up"):
 		grid *= 2
 		grid_text_set()
-	if Input.is_action_just_pressed("chart_grid_down"):
+	elif Input.is_action_just_pressed("chart_grid_down"):
 		grid /= 2
 		grid_text_set()
-	if Input.is_action_just_pressed("chart_zoom_up"):
+	elif Input.is_action_just_pressed("chart_zoom_up"):
 		cur_y = cur_y * 2 
 		chart_zoom *= 2
 		grid_text_set()
 		draw_all()
 		updateZoom()
 		
-	if Input.is_action_just_pressed("chart_zoom_down"):
+	elif Input.is_action_just_pressed("chart_zoom_down"):
 		cur_y = cur_y / 2
 		chart_zoom /= 2
 		grid_text_set()
 		draw_all()
 		updateZoom()
 	
-	if Input.is_action_just_pressed("chart_copy"):
-		copy_section()
-		
-	if Input.is_action_just_pressed("chart_paste"):
-		paste_section()
-		
+
 func grid_text_set():
 	gridandzoom.text = "Zoom: " + str(chart_zoom) + "x\nGrid: 1/" + str(16 / grid)
 

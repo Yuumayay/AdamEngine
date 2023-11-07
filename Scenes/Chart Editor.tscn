@@ -1307,7 +1307,7 @@ value = 1.0
 alignment = 1
 
 [node name="ImportMIDIDialog" type="FileDialog" parent="Menu"]
-title = "Open a MIDI file"
+title = "Open a File"
 position = Vector2i(40, 40)
 size = Vector2i(583, 659)
 ok_button_text = "開く"
