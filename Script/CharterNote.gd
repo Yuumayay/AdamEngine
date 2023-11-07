@@ -32,7 +32,7 @@ func _process(delta):
 		last_grid = chart.grid
 		button.size.y = 50 * last_grid
 		print(50 * last_grid)
-	if cam.position.y - 360 > position.y - 250:
+	if cam.position.y - 360 > position.y - 260:
 		if chart.playing and not hit: Audio.a_play("osu")
 		if not hit: hit = true
 	else:

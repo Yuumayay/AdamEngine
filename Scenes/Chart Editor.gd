@@ -1111,22 +1111,26 @@ func key_check():
 			playing = true
 			Audio.a_play("Inst", multi, 0.0, position_to_time())
 			Audio.a_play("Voices", multi, 0.0, position_to_time())
+			
 	if Input.is_action_just_pressed("game_editor_prev"): 
 		stop_audio()
 		if Input.is_action_pressed("game_shift"):
 			cur_y -= 800 * 4 * chart_zoom
 		else:
 			cur_y -= 800 * chart_zoom
+			
 	if Input.is_action_just_pressed("game_editor_next"):
 		stop_audio()
 		if Input.is_action_pressed("game_shift"):
 			cur_y += 800 * 4 * chart_zoom
 		else:
 			cur_y += 800 * chart_zoom
+			
 	if Input.is_action_pressed("game_shift"):
 		no_grid = true
 	else:
 		no_grid = false
+		
 	if Input.is_action_just_pressed("chart_copy"):
 		copy_section()
 		
