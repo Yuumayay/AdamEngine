@@ -18,7 +18,6 @@ extends Node2D
 @onready var savejsonwindow: FileDialog = $Menu/SaveJSONWindow
 @onready var loadjson = $Menu/LoadJSON
 @onready var loadjsonwindow: FileDialog = $Menu/LoadJSONWindow
-@onready var gridandzoom = $Menu/GridAndZoom
 @onready var song_diff = $Menu/SongDiff
 
 @onready var note_pr = Game.load_XMLSprite("Assets/Images/Notes/Default/default.xml")
@@ -467,6 +466,7 @@ func _ready():
 			loadJson(json)
 	init()
 	
+	# menuの入力項目はショートカットをオフに
 	for i in $Menu.get_children():
 		if i is LineEdit:
 			i.connect("mouse_entered", _on_button_mouse_entered)
@@ -1104,6 +1104,7 @@ func key_check():
 		Game.edit_jsonpath = "user://ae_chart_temp" + ".json"
 		File.f_save("user://ae_chart_temp", ".json", generateJson())
 		Trans.t_trans("Gameplay")
+		
 	if Input.is_action_just_pressed("game_space"):
 		if playing:
 			stop_audio()
@@ -1140,9 +1141,12 @@ func key_check():
 	elif Input.is_action_just_pressed("chart_grid_up"):
 		grid *= 2
 		grid_text_set()
+		
 	elif Input.is_action_just_pressed("chart_grid_down"):
 		grid /= 2
+		
 		grid_text_set()
+		
 	elif Input.is_action_just_pressed("chart_zoom_up"):
 		cur_y = cur_y * 2 
 		chart_zoom *= 2
@@ -1159,7 +1163,11 @@ func key_check():
 	
 
 func grid_text_set():
-	gridandzoom.text = "Zoom: " + str(chart_zoom) + "x\nGrid: 1/" + str(16 / grid)
+	grid = clampf(grid, 0.25, 1)
+	chart_zoom = clampf(chart_zoom, 0.25, 4)
+	
+	$Menu/Zoom.text = "Zoom: " + str(chart_zoom) + "x"
+	$Menu/Grid.text = "Grid: 1/" + str(16 / grid)
 
 # グリッド この関数でX,Yグリッドセット
 func fix_grid(x, grid = 1.0):
@@ -1194,7 +1202,8 @@ func updateZoom():
 			else:
 				line.set_point_position(1, Vector2(0, susms_to_y(i[SUS])  + MASS_SIZE/2) )
 				line.show()
-
+	
+	redraw_sectioninfo()
 
 # FNFのキモいデータ形式fnfdirへ変換
 func calc_fnfdir(mustHit, type, dir):
@@ -1307,7 +1316,6 @@ func on_mouse_down_set_note( texturemass ):
 		print(chartData.notes[sec_id]["sectionNotes"][-1])
 		
 		updateZoom()
-		redraw_notes()
 		
 	else:
 		# section iconの場合、何もせずリドロー
@@ -1326,10 +1334,10 @@ func redraw_sectioninfo():
 			if !n:
 				n = sec_icon_pr.instantiate()
 				n.name = get_secicon_name(sec_id, i)
-				n.position.y = MASS_OFFSET_Y + ONE_SECTION_H * sec_id + i*MASS_SIZE
 				n.section = sec_id
 				n.icontype = i
 				Secs.add_child(n)
+			n.position.y = MASS_OFFSET_Y + ONE_SECTION_H*chart_zoom * sec_id + i*MASS_SIZE
 			n.set_icon()
 		
 		sec_id += 1
@@ -1414,12 +1422,14 @@ func _on_load_json_window_file_selected(path):
 		Game.edit_jsonpath = basename+ "." + extension
 
 var shortCut = true
-# チャート画面をマウスオーバーしたらショートカットオン
+# メニュー画面をマウスオーバーしたらショートカットを切る
 func _on_button_mouse_entered():
 	shortCut = false
+	print("ShortCut Off")
 
 func _on_button_mouse_exited():
 	shortCut = true
+	print("ShortCut On")
 	
 func _on_load_audio_by_difficulty_toggled(toggled_on):
 	loadAudioByDifficulty = toggled_on
@@ -1428,16 +1438,15 @@ func _on_song_diff_text_changed(new_text):
 	cur_diff = new_text
 
 
+# midi import 
 func _on_import_midi_dialog_file_selected(path):
 	var extension = path.get_extension()
 	var basename = path.get_basename()
 	
 	var dat = $Menu/MIDIInfoDialog.midi2fnf(path)
 	
-	#chartData.notes = dat["song"]["notes"].duplicate(true)
 	chartData.notes = null
 	chartData.notes = dat["song"]["notes"].duplicate(true)
-	#loadJson(dat.duplicate(true))
 	$Menu/ImportMIDIDialog.hide()
 	
 	redraw_notes()
@@ -1446,3 +1455,19 @@ func _on_import_midi_dialog_file_selected(path):
 func _on_import_midi_pressed():
 	$Menu/ImportMIDIDialog.show()
 	
+
+
+func _on_grid_button_pressed():
+	grid /= 2
+	if grid < 0.25:
+		grid = 1
+	grid_text_set()
+
+
+func _on_zoom_button_pressed():
+	chart_zoom *= 2
+	if chart_zoom > 4:
+		chart_zoom = 0.25
+	grid_text_set()
+	draw_all()
+	updateZoom()

@@ -1248,9 +1248,28 @@ text = "Load Audio
 By Difficulty:"
 horizontal_alignment = 2
 
-[node name="GridAndZoom" type="Label" parent="Menu"]
+[node name="Zoom" type="Label" parent="Menu"]
 offset_left = 8.0
 offset_top = 642.0
+offset_right = 172.0
+offset_bottom = 680.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_o2uja")
+theme_override_font_sizes/font_size = 30
+text = "Zoom: 1x"
+
+[node name="ZoomButton" type="Button" parent="Menu/Zoom"]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 35.0
+focus_mode = 0
+flat = true
+
+[node name="Grid" type="Label" parent="Menu"]
+offset_left = 8.0
+offset_top = 683.0
 offset_right = 174.0
 offset_bottom = 721.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -1258,8 +1277,16 @@ theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("6_o2uja")
 theme_override_font_sizes/font_size = 30
-text = "Zoom: 1x
-Grid: 1/16"
+text = "Grid: 1/16"
+
+[node name="GridButton" type="Button" parent="Menu/Grid"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -1.0
+offset_right = 166.0
+offset_bottom = 33.0
+focus_mode = 0
+flat = true
 
 [node name="ShortCutText" type="Label" parent="Menu"]
 offset_left = 862.0
@@ -1317,31 +1344,31 @@ filters = PackedStringArray("*.mid", "*.midi", "*.smf")
 
 [node name="MIDIInfoDialog" type="ConfirmationDialog" parent="Menu"]
 position = Vector2i(200, 200)
-size = Vector2i(200, 106)
+size = Vector2i(384, 262)
 script = ExtResource("4_fbems")
 
 [node name="VFlowContainer" type="VFlowContainer" parent="Menu/MIDIInfoDialog"]
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 192.0
-offset_bottom = 57.0
+offset_right = 376.0
+offset_bottom = 213.0
 
 [node name="Label" type="Label" parent="Menu/MIDIInfoDialog/VFlowContainer"]
 layout_mode = 2
-text = "MIDI
+text = "Import MIDI to FNF
+How to use / ツカイカタ
+
+C5 - D#5: DAD
+C6 - D#6: BF
+
+C#7:  mustHitSection
 "
-
-[node name="TextEdit" type="TextEdit" parent="Menu/MIDIInfoDialog/VFlowContainer"]
-layout_mode = 2
-
-[node name="TextEdit2" type="TextEdit" parent="Menu/MIDIInfoDialog/VFlowContainer"]
-layout_mode = 2
 
 [node name="HFlowContainer" type="HFlowContainer" parent="Menu/MIDIInfoDialog"]
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 192.0
-offset_bottom = 57.0
+offset_right = 376.0
+offset_bottom = 213.0
 
 [node name="SaveJSONWindow" type="FileDialog" parent="Menu"]
 title = "Save a file"
@@ -1370,13 +1397,14 @@ position = Vector2(640, 360)
 
 [node name="Icons" type="CanvasLayer" parent="."]
 
-[connection signal="tree_entered" from="CanvasLayer" to="." method="_on_button_mouse_exited"]
 [connection signal="mouse_entered" from="CanvasLayer/button" to="." method="_on_button_mouse_exited"]
 [connection signal="button_down" from="Rect/Button" to="Rect" method="_on_button_button_down"]
 [connection signal="mouse_entered" from="Menu/ColorRect" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Menu/ColorRect" to="." method="_on_button_mouse_exited"]
 [connection signal="pressed" from="Menu/ImportMIDI" to="." method="_on_import_midi_pressed"]
 [connection signal="text_changed" from="Menu/SongDiff" to="." method="_on_song_diff_text_changed"]
+[connection signal="pressed" from="Menu/Zoom/ZoomButton" to="." method="_on_zoom_button_pressed"]
+[connection signal="pressed" from="Menu/Grid/GridButton" to="." method="_on_grid_button_pressed"]
 [connection signal="file_selected" from="Menu/ImportMIDIDialog" to="." method="_on_import_midi_dialog_file_selected"]
 [connection signal="file_selected" from="Menu/SaveJSONWindow" to="." method="_on_save_json_window_file_selected"]
 [connection signal="mouse_entered" from="Menu/SaveJSONWindow" to="." method="_on_button_mouse_entered"]
